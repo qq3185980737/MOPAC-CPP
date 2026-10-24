@@ -2,12 +2,8 @@
 
 `mopac_cpp` is a complete, 1-based, bitwise-verified translation of the MOPAC2016
 semiempirical molecular-orbital package (679 Fortran source files, ~120,000 lines)
-into C++17 (MSVC 2022, SSE2, Intel MKL). It is the subject of three companion
-submissions — a software description (SoftwareX), a methodology paper (Computer
-Physics Communications), and a study of exact versus pseudo diagonalization
-(International Journal of Quantum Chemistry) — and provides the verification
-pipeline, the ULP-attribution protocol, and the two deterministic methods
-(FBDR, GAB) described therein.
+into C++17 (MSVC 2022, SSE2, Intel MKL). It provides the verification pipeline, the ULP-attribution protocol, and the
+two deterministic methods (FBDR, GAB) documented in this repository.
 
 ## What this is
 
@@ -83,7 +79,7 @@ variable:
 
 Both paths keep bitwise fidelity to the Fortran reference in single-point mode;
 EF-optimized geometries agree with the reference within the ULP-sensitivity band
-of the manuscript (e.g., hexadecane ΔHf = −90.18 kcal/mol vs exp. −89.60), while
+of the verification documentation (e.g., hexadecane ΔHf = −90.18 kcal/mol vs exp. −89.60), while
 the default path keeps bitwise fidelity to the Fortran reference. The `FULLDIAG`
 keyword and the `MOPAC_FULL_DIAG` variable are equivalent and interchangeable.
 
@@ -110,11 +106,10 @@ With all variables unset the binary is bitwise identical to the official path.
   the ULP replay of disputed `dgemm` calls, the FBDR thread-independence matrix
   (1/4/8/16 threads), and the GAB 24-molecule regression were executed during
   the verification campaign; their inputs and recorded outputs are provided
-  under `run_test/`, and the procedures are described in the manuscript.
+  under `run_test/`, and the procedures are described in `run_test/` and `docs/diagnostics/`.
 
-The GAMESS CCSD(T)/CBS benchmark data cited in the papers are summarized in the
-accompanying manuscripts; the full input/output files are available from the
-authors on request.
+The GAMESS CCSD(T)/CBS benchmark data are summarized in `regression/abinitio/`;
+the full input/output files are included in the repository.
 
 ## License
 
@@ -125,23 +120,8 @@ own terms.
 
 ## Citation
 
-(Citations to be completed upon publication of the accompanying manuscripts.)
+MOPAC-CPP (this repository), release tag v1.1.0:
+https://github.com/qq3185980737/MOPAC-CPP
 
-Software description (SoftwareX):
-
-    @article{...,
-      title  = {MOPAC-CPP: a bitwise-reproducible C++17 translation of the
-                MOPAC2016 semiempirical molecular-orbital package},
-      journal = {SoftwareX},
-      year    = {2026}
-    }
-
-Methodology (Computer Physics Communications):
-
-    @article{...,
-      title  = {Bitwise-Reproducibility Verification and Deterministic Numerical
-                Methods for Scientific-Software Migration, with a Full MOPAC2016
-                (Fortran to C++) Case Study},
-      journal = {Computer Physics Communications},
-      year    = {2026}
-    }
+A software/methodology paper describing this work is under review; this section will
+be updated upon publication.

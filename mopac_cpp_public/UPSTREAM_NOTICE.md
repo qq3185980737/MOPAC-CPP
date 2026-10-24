@@ -19,3 +19,6 @@ MOPAC-CPP is a C++17 translation of MOPAC2016.
 - Users who plan to redistribute or commercially use MOPAC-CPP should review
   the license status of the upstream MOPAC source and, if in doubt, contact
   the MOPAC authors.
+
+See also `LICENSE-UPSTREAM-BSD-3.txt` (full BSD 3-Clause text of the
+MOPAC2016 archive) and `THIRD_PARTY_NOTICES.md` (third-party components).

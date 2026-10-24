@@ -24,3 +24,7 @@ _*.tmp
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# ---- Visual Studio per-user state ----
+.vs/
+*.user

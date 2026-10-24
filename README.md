@@ -37,8 +37,8 @@ MIT — see `LICENSE.txt`. This is an independent translation project, not
 affiliated with the MOPAC authors. The Fortran reference (MOPAC2016) is
 governed by its own terms (see `mopac_cpp_public/UPSTREAM_NOTICE.md`).
 
-## Manuscripts
+## Documentation
 
-Three companion submissions describe this work: a software description
-(SoftwareX), a methodology paper (Computer Physics Communications), and a
-study of exact versus pseudo diagonalization (Int. J. Quantum Chem.).
+See `mopac_cpp_public/docs/` for the verification-pipeline figures and the
+OpenCL notes. Verification procedures and regression data are under
+`mopac_cpp_public/regression/` and `mopac_cpp_public/run_test/`.
