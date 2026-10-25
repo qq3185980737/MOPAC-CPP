@@ -1,6 +1,25 @@
 // diag_for_GPU.cpp — C++ translation of MOPAC 2016 "diag_for_GPU.F90".
 // Pseudo-diagonalisation over the occupied/virtual MO intersection (CPU path;
 // GPU branches execute the equivalent CPU computation).
+
+//
+// ============================================================================
+// 【中文导读】diag_for_GPU() —— 官方默认的“伪对角化”路径
+// ----------------------------------------------------------------------------
+// 名字沿用 GPU 移植，但这里执行的是原版 diag_for_GPU.F90 的 CPU 等价计算：
+// 不是对整个 Fock 矩阵做 dsyevd，而是在“占据轨道×虚轨道”交叉块上做
+// Jacobi/Givens 旋转（pseudo-diagonalisation），逐步把该块消到足够小。
+// 流程：
+//   1) 把打包的 fao 解包成列主序方阵 fmo；
+//   2) 用 dgemm 算占据-虚块（依 nocc<nvirt 分两种乘法顺序）；
+//   3) 找块内最大元素，超过门限就对相应 (i,j) 做 Givens 旋转（drot），
+//      同时更新 vector（轨道系数矩阵）；
+//   4) 恢复 MKL 线程数。
+// 关键点：必须调用 MKL dgemm/drot 而不是手写循环——官方逐位一致依赖同样的
+// 求和顺序；注释里记录了串行回退导致 ULP 差异、进而使 EF 几何优化发散的
+// 案例。入参 nocc=0 或 nocc=norbs 时直接返回（无占据或全占据，无需旋转）。
+// ============================================================================
+
 #include "diag_for_GPU.h"
 #include "molkst_C.h"
 #include <algorithm>
@@ -34,6 +53,10 @@ void diag_for_GPU(std::vector<double>& fao, std::vector<double>& vector, int noc
                   std::vector<double>& eig, int mdim, int icalcn) {
     diag_for_GPU(fao.data(), vector.data(), nocc, eig.data(), mdim, icalcn);
 }
+
+// 实现入口：fao 为 1-based 打包下三角；vector 为列主序轨道系数（原地旋转）；
+// eig 为轨道能量；norbs/mpack 为矩阵规模与打包长度。
+
 void diag_for_GPU(double* fao, double* vector, int nocc, double* eig,
                   int norbs, int mpack) {
     if (nocc == norbs || nocc == 0) return;
@@ -102,6 +125,9 @@ void diag_for_GPU(double* fao, double* vector, int nocc, double* eig,
             }
     };
 #endif
+
+    // 两种矩阵乘法顺序：占据数少于虚轨道 vs 虚轨道不超过占据数。
+
     if (nocc < nvirt) {
         // fck(n,nocc) = fmo(n,n) * vector(n,nocc)
         gemm_nn(n, n, nocc, fmo.data(), vector, fck.data());
@@ -138,11 +164,17 @@ void diag_for_GPU(double* fao, double* vector, int nocc, double* eig,
     }
     _tg += std::chrono::duration_cast<std::chrono::microseconds>(
                std::chrono::steady_clock::now() - _b).count();
+
+    // 找占据-虚块最大元素：门限 tiny 取它的 5%，bigeps 限制旋转角大小。
+
     int i = idamax(nocc * nvirt, fmo.data(), 1);
     double tiny = std::fabs(fmo[i]) * 0.05;
     double bigeps = 1.5e-7;
     int ij = 0;
     auto _d = std::chrono::steady_clock::now();
+
+    // 对占据 i 与虚轨道 j 的每一对做 Givens 旋转，直到块内元素足够小。
+
     for (int ii = 1; ii <= nocc; ++ii)
         for (int jj = lumo; jj <= n; ++jj) {
             double x = fmo[ij];

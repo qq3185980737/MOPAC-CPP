@@ -1,0 +1,62 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+c12_BFGS.mop
+ Geometry optimization using BFGS
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 114
+ Job: c12_BFGS
+Final heat of formation =       1231.60390 kcal/mol
+GRADIENT NORM           =       5614.04679
+
+
+MOPAC Job: "c12_BFGS.mop" ended normally on Mon Oct 26 01:21:30 2026

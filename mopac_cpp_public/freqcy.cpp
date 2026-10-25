@@ -1,10 +1,19 @@
+// ============================================================================
+// 【中文导读】freqcy.cpp —— 振动频率计算（freqcy.F90）
+// ----------------------------------------------------------------------------
+// 对质量加权 Hessian 做对角化得到简正频率（cm^-1），处理虚频/零模、
+// 可选对称性（symtrz）与热力学量；1-based 打包矩阵、单位换算依赖 funcon_C。
+// ============================================================================
+
 // freqcy.cpp — C++ translation of MOPAC 2016 "freqcy.F90".
 #include "freqcy.h"
 #include <cmath>
+#include <cstdio>
 #include <algorithm>
 #include <vector>
 #include <string>
 #include "molkst_C.h"
+#include "symmetry_C.h"
 #include "common_arrays_C.h"
 #include "funcon_C.h"
 #include "to_screen_C.h"
@@ -57,7 +66,17 @@ void freqcy(std::vector<double>& fmatrx,
             for (int i = 1; i <= 3; ++i)
                 for (int j = 1; j <= 3 * numat; ++j)
                     deldip_flat[(j - 1) * 3 + (i - 1)] = deldip[i][j];
-            symt(fmatrx.data(), deldip_flat.data(), ff.data());
+            {
+            std::fprintf(stderr, "CXXPRE-SYMT");
+            for (int kk = 1; kk <= 6; ++kk) std::fprintf(stderr, " %.14f", fmatrx[kk]);
+            std::fprintf(stderr, "\n");
+        }
+        symt(fmatrx.data(), deldip_flat.data(), ff.data());
+        {
+            std::fprintf(stderr, "CXXPOST-SYMT");
+            for (int kk = 1; kk <= 6; ++kk) std::fprintf(stderr, " %.14f", fmatrx[kk]);
+            std::fprintf(stderr, "\n");
+        }
             if (sumerr < 1e-6) break;
         }
     }
@@ -79,7 +98,15 @@ void freqcy(std::vector<double>& fmatrx,
     }
     if (!ts) frame(fmatrx, numat, 1);
     std::vector<double> cnorml_flat(nvar * nvar + 1, 0.0);
+    {
+        double s = 0.0;
+        for (int i = 1; i <= nvar * (nvar + 1) / 2; ++i) s += fmatrx[i];
+        std::fprintf(stderr, "CXXPRE %.14f %.14f %.14f %.14f\n", fmatrx[1], fmatrx[2], fmatrx[3], s);
+    }
     rsp(fmatrx.data() + 1, nvar, freq.data() + 1, cnorml_flat.data() + 1);
+    std::fprintf(stderr, "CXXEIG");
+    for (int k = 1; k <= (nvar < 9 ? nvar : 9); ++k) std::fprintf(stderr, " %.14f", freq[k]);
+    std::fprintf(stderr, "\n");
     phase_lock(cnorml_flat, nvar);
     if (eorc && nvar == 3 * numat) symtrz(cnorml_flat.data(), freq.data(), 2, 1);
     for (int i = 1; i <= nvar; ++i) {
@@ -158,5 +185,8 @@ void freqcy(std::vector<double>& fmatrx,
             linear += i;
         }
     }
+    // Store the normal-mode eigenvectors for FORCE printing and IRC seeding;
+    // previously they stayed local and global cnorml was left at zero.
+    to_screen_C::cnorml.assign(cnorml_flat.begin(), cnorml_flat.end());
 }
 

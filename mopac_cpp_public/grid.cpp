@@ -1,6 +1,18 @@
 // grid.cpp — C++ translation of MOPAC 2016 "grid.F90".
 // GRID: run a 2-D grid of SCF/geometry optimizations over two internal
 // coordinates and store the lowest-energy geometry for each grid point.
+
+//
+// ============================================================================
+// 【中文导读】grid() —— 二维反应坐标网格扫描（GRID）
+// ----------------------------------------------------------------------------
+// 对应 grid.F90。对两个内部坐标（由 GRID 关键字给出变量与范围/步长）做
+// 二维扫描，每个网格点做 SCF 或几何优化，记录最低能量构型；输出 .grid/
+// archive 表，供势能面分析。
+// 实现分四遍蛇形遍历（逐行/逐列，正反两个方向），复用相邻点的初始几何
+// 以加速收敛：第 1 遍左→右，第 2 遍反向，第 3 遍上→下，第 4 遍反向。
+// ============================================================================
+
 #include "grid.h"
 #include "chanel_C.h"
 #include "common_arrays_C.h"
@@ -42,6 +54,8 @@ extern void wrttxt(int);
 extern void bonds();
 extern void to_screen(const std::string&);
 extern void mopend(const std::string&);
+
+// grid(): 主入口；四遍蛇形扫描，每点复用相邻构型作为初猜。
 
 void grid() {
     using namespace chanel_C;
@@ -87,6 +101,9 @@ void grid() {
     xy.assign(3, std::vector<double>(4 * (size_t)npts1 * npts2 + 1, 0.0));
 
     // First pass: left-to-right, snake over rows.
+    // 中文：四遍扫描——第 1/2 遍沿行正反走，第 3/4 遍沿列正反走，避免每个
+    // 网格点都从零开始优化（也保证能量面连续）。
+
     k = 0;
     for (i = 1; i <= npts1; ++i)
         for (j = 1; j <= npts2; ++j) {

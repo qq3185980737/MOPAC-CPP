@@ -3,6 +3,32 @@
 // molecule in Cartesian coordinates. Also accumulates the nuclear energy
 // ENUCLR, handles an applied electric field (FIELD keyword) and the QM/MM
 // embedding charges (mol.in).
+
+//
+// ============================================================================
+// 【中文导读】hcore() —— 构建单电子矩阵 H 与双电子积分 W
+// ----------------------------------------------------------------------------
+// 对应 hcore.F90（307 行）。对每个原子对 (i,j)：
+//   1. 同原子块：把单电子积分 uspd 放到 H 的对角线；
+//   2. 异原子块：h1elec() 算单电子项并累加进 H；rotate()（孤立分子）或
+//      solrot()（周期性 id!=0）算双电子积分 W 和电子-核吸引项 e1b/e2a，
+//      同时累加核-核排斥能 ENUCLR；
+//   3. 一中心双电子积分块由 wstore() 写入 W 的对应位置。
+// 另外处理：FIELD 电场（fldon 分支）、QM/MM 外部电荷（QMMM + mol.in）、
+// COSMO 介电校正（useps -> addnuc/addhcr）。
+//
+// 数据约定（最容易读错的地方）：
+//   - H/W 都是下三角打包的一维数组（mpack = norbs*(norbs+1)/2），1-based；
+//   - W 按原子对顺序向尾部追加，kr 是当前写指针；id!=0 时还会维护第二个
+//     矩阵 wk（J 矩阵）；
+//   - h1elec() 写 9x9 列主序块；C++ 里用 di[100] 且从 di[11] 开始（前 10 个
+//     元素是 padding），所以看到 &di[11]、di[11+(k-1)*9+(i2-1)] 不必意外；
+//   - e1b/e2a 是 0-based 打包数组（rotate/solrot 直接按下标写），与 F90 的
+//     1-based 切片相差一位，代码里有注释说明。
+//
+// 调试：keywrd 含 HCORE 时打印 H（vecprt）和 W（逐元素 printf）。
+// ============================================================================
+
 #include "hcore.h"
 #include "molkst_C.h"
 #include "common_arrays_C.h"
@@ -58,6 +84,9 @@ void hcore() {
     using namespace parameters_C;
     using namespace overlaps_C;
     using namespace cosmo_C;
+
+    // 每个算例只初始化一次：icalcn != numcal 表示新算例（对应 F90 的 SAVE +
+    // first 逻辑）。初始化包括截断参数、QMMM 电荷读取、FIELD 电场解析。
 
     static bool first = true, debug = false, lmolaris_qmmm = false;
     static int icalcn = 0, ione = 1;
@@ -148,6 +177,9 @@ void hcore() {
         efield[2] = yf * constv;
         efield[3] = zf * constv;
     }
+
+    // 若关键字给定的电场非零，则 H 的对角块要额外加电场势能项（fldon）。
+
     bool fldon = false;
     if (efield[1] != 0.0 || efield[2] != 0.0 || efield[3] != 0.0) {
         fldon = true;
@@ -155,6 +187,9 @@ void hcore() {
     enuclr = 0.0;
     std::fill(h.begin(), h.begin() + mpack, 0.0);
     int kr = 1;
+
+    // 主循环：逐原子 i 构建 H 的行块，并处理 i 与更早原子 j 的所有原子对。
+
     for (int i = 1; i <= numat; ++i) {
         int ia = nfirst[i], ib = nlast[i], ni = nat[i];
         // First fill the diagonals and off-diagonals on the same atom.
@@ -195,6 +230,10 @@ void hcore() {
         }
         if (lmolaris_qmmm) enuclr = enuclr + vqc[i] / fpc_9 * tore[nat[i]];
         // Fill the atom-other-atom one-electron matrix <PSI(lambda)|PSI(sigma)>.
+
+        // 与前面原子的相互作用。ione 控制是否包含 j=i 的自身对：孤立分子
+        // ione=1（j 只到 i-1），周期性体系 id!=0 时 ione=0（j 到 i）。
+
         int im1 = i - ione;
         for (int j = 1; j <= im1; ++j) {
             double half = 1.0;
@@ -271,6 +310,10 @@ void hcore() {
                 }
             }
         }
+
+        // 把该原子的“一中心双电子积分块”写到 W 的当前位置，kr 随之推进；
+        // 具体展开见文件末尾的 wstore()。
+
         int ii = ib - ia + 1;
         ii = (ii * (ii + 1)) / 2;
         if (id != 0) {
@@ -280,6 +323,8 @@ void hcore() {
         // loop; fock2's kk advances per atom (pairs then fock1dorbs), aligned.
         if (ii != 0) wstore(&w[kr], kr, ni, ii);
     }
+
+    // COSMO：介电校正分别加到核-核项（ENUCLR）和电子项（H）上。
 
     if (useps) {
         // Dielectric correction to the core-core interaction is added to ENUCLR.
@@ -301,10 +346,21 @@ void hcore() {
     }
 }
 
+// wstore()：填充一中心双电子积分块——s/p 的 (ss|ss)、(sp|sp)、(pp|pp)、
+// (pp|p'p')，以及 d 轨道的 243 个 repd 表项；按列主序（W(ij,kl) 线性化 =
+// (kl-1)*ilim + ij）写入 w[kr...]，最后 kr += ilim*ilim。
+//
+// 注意：hcore.h 里对 wstore 的英文注释（“按 cutof2 保留/丢弃积分块”）与实际
+// 实现不符；wstore 在本文件中无条件写入并推进 kr，以本实现为准。
+
 void wstore(double* w, int& kr, int ni, int ilim) {
     // F90 mndod.F90:2055: fill the one-center two-electron block and
     // unconditionally advance kr by ilim^2.
     // Official Fortran w(ij,kl) is column-major: linear = (kl-1)*ilim + ij.
+
+    // 中文：这里用 lambda 保留 Fortran 的二维访问语义；w 是一维平铺，
+    // 因此 (ij,kl) 的线性偏移是 (kl-1)*ilim + (ij-1)。
+
     auto W=[&](int ij,int kl)->double& { return w[(kl-1)*ilim + (ij-1)]; };
     for (int i = 0; i < ilim * ilim; ++i) w[i] = 0.0;
     int ip = 1;

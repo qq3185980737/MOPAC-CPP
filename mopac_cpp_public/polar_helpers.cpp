@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】polar_helpers.cpp —— 偶极矩/极化率/静电与介电
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 polar_helpers.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // polar_helpers.cpp - independent helpers of polar.F90 (MOPAC2016 -> C++)
 // M10 batch 11a: matrix/trace/keyword helpers + light density/work routines.
 // Driver routines (polar/alphaf/betaf/beopor/non*/ng*/bmakuf/epsab) live in
@@ -169,7 +178,7 @@ void hmuf(std::vector<std::vector<double>>& h1, int id, std::vector<std::vector<
                 if(id==3 && jo1==0 && io1==3){ h1[i1][j1]=dd[ni]; h1[j1][i1]=dd[ni]; }
             }
             h1[i1][i1]=0.0;
-            h1[i1][i1]+=1.8897262*coord_[id][i];
+            h1[i1][i1]+=1.8897262*coord_[id-1][i];
         }
     }
 }
@@ -217,15 +226,27 @@ using parameters_C::gss; using parameters_C::gsp; using parameters_C::gpp;
 using parameters_C::gp2; using parameters_C::hsp;
 
 void dawrt1(std::vector<double>& v, int len, int idaf_, int ns){
-    std::string dafname = "daf";
-    if(!chanel_C::density_fn.empty()) dafname = chanel_C::density_fn;
-    std::ofstream os(dafname, std::ios::binary | std::ios::in | std::ios::out | std::ios::trunc);
+    // The TDHF scratch archive is the same file opened by openda() (pol_fn).
+    // Do NOT truncate on every record write: direct-access records are written
+    // in place at their record offset, and daread() later reads them back.
+    std::string dafname = chanel_C::pol_fn.empty() ? std::string("daf") : chanel_C::pol_fn;
+    std::fstream os(dafname, std::ios::binary | std::ios::in | std::ios::out);
+    if(!os){
+        std::ofstream create(dafname, std::ios::binary | std::ios::trunc);
+        create.close();
+        os.open(dafname, std::ios::binary | std::ios::in | std::ios::out);
+    }
     if(!os) return;
     os.seekp((long long)(ns-1)*irecln*8);
     for(int i=1;i<=len;++i) os.write((const char*)&v[i], 8);
 }
 
 void dawrit(std::vector<std::vector<double>>& v, int len, int nrec){
+    // Fortran passes a 2-D array as a flat column-major buffer; map the flat
+    // offset k back to v[row][col] instead of indexing v[1][k] (OOB/corrupt).
+    const int nrow = (int)v.size() - 1;
+    if (nrow < 1) return;
+    auto flat_at = [&](int k) -> double& { const int idx = k - 1; return v[idx % nrow + 1][idx / nrow + 1]; };
     int n=ioda[nrec];
     if(n<=0 || len==ifilen[nrec]){
         bool newrec=false;
@@ -245,7 +266,7 @@ void dawrit(std::vector<std::vector<double>>& v, int len, int nrec){
         int nsp=ns;
         int lenw=ifin-ist+1;
         std::vector<double> chunk(lenw+1);
-        for(int k=1;k<=lenw;++k) chunk[k]=v[1][ist+k-1];
+        for(int k=1;k<=lenw;++k) chunk[k]=flat_at(ist+k-1);
         dawrt1(chunk, lenw, idaf, nsp);
         lent-=irecln;
         ns+=1;
@@ -256,19 +277,20 @@ void dawrit(std::vector<std::vector<double>>& v, int len, int nrec){
             if(ifin-ist+1>irecln) ifin=ist+irecln-1;
             nsp=ns;
             lenw=ifin-ist+1;
-            for(int k=1;k<=lenw;++k) chunk[k]=v[1][ist+k-1];
+            for(int k=1;k<=lenw;++k) chunk[k]=flat_at(ist+k-1);
             dawrt1(chunk, lenw, idaf, nsp);
             lent-=irecln;
             ns+=1;
             n=ns;
         }
         if(newrec){
-            std::ofstream os2("daf", std::ios::binary | std::ios::in | std::ios::out);
+            std::string mname = chanel_C::pol_fn.empty() ? std::string("daf") : chanel_C::pol_fn;
+            std::ofstream os2(mname, std::ios::binary | std::ios::in | std::ios::out);
             if(os2){
                 os2.seekp(0);
                 os2.write((const char*)&irecst, 4);
-                for(int k=1;k<=2000;++k) os2.write((const char*)&ioda[k], 4);
-                for(int k=1;k<=2000;++k) os2.write((const char*)&ifilen[k], 4);
+                for(int k=1;k<=145;++k) os2.write((const char*)&ioda[k], 4);
+                for(int k=1;k<=145;++k) os2.write((const char*)&ifilen[k], 4);
             }
         }
         return;
@@ -278,8 +300,7 @@ void dawrit(std::vector<std::vector<double>>& v, int len, int nrec){
 }
 
 void darea1(std::vector<double>& v, int len, int idaf_, int ns){
-    std::string dafname = "daf";
-    if(!chanel_C::density_fn.empty()) dafname = chanel_C::density_fn;
+    std::string dafname = chanel_C::pol_fn.empty() ? std::string("daf") : chanel_C::pol_fn;
     std::ifstream is(dafname, std::ios::binary);
     if(!is) return;
     is.seekg((long long)(ns-1)*irecln*8);
@@ -287,6 +308,9 @@ void darea1(std::vector<double>& v, int len, int idaf_, int ns){
 }
 
 void daread(std::vector<std::vector<double>>& v, int len, int nrec){
+    const int nrow = (int)v.size() - 1;
+    if (nrow < 1) return;
+    auto flat_at = [&](int k) -> double& { const int idx = k - 1; return v[idx % nrow + 1][idx / nrow + 1]; };
     int n=ioda[nrec];
     if(n!=(-1)){
         int is=(-irecln)+1;
@@ -299,7 +323,7 @@ void daread(std::vector<std::vector<double>>& v, int len, int nrec){
         int lenw=ifin-is+1;
         std::vector<double> chunk(lenw+1);
         darea1(chunk, lenw, idaf, nsp);
-        for(int k=1;k<=lenw;++k) v[1][is+k-1]=chunk[k];
+        for(int k=1;k<=lenw;++k) flat_at(is+k-1)=chunk[k];
         lent-=irecln;
         ns+=1;
         n=ns;
@@ -310,7 +334,7 @@ void daread(std::vector<std::vector<double>>& v, int len, int nrec){
             nsp=ns;
             lenw=ifin-is+1;
             darea1(chunk, lenw, idaf, nsp);
-            for(int k=1;k<=lenw;++k) v[1][is+k-1]=chunk[k];
+            for(int k=1;k<=lenw;++k) flat_at(is+k-1)=chunk[k];
             lent-=irecln;
             ns+=1;
             n=ns;
@@ -328,18 +352,18 @@ void openda(int irest){
     std::fstream fs(dafname, std::ios::binary | std::ios::in | std::ios::out | std::ios::trunc);
     if(irest==0){
         irecst=1;
-        for(int k=1;k<=2000;++k) ioda[k]=-1;
+        for(int k=1;k<=145;++k) ioda[k]=-1;
         irecst=irecst+1;
         fs.seekp(0);
         fs.write((const char*)&irecst, 4);
-        for(int k=1;k<=2000;++k) fs.write((const char*)&ioda[k], 4);
-        for(int k=1;k<=2000;++k) fs.write((const char*)&ifilen[k], 4);
+        for(int k=1;k<=145;++k) fs.write((const char*)&ioda[k], 4);
+        for(int k=1;k<=145;++k) fs.write((const char*)&ifilen[k], 4);
         return;
     }
     fs.seekg(0);
     fs.read((char*)&irecst, 4);
-    for(int k=1;k<=2000;++k) fs.read((char*)&ioda[k], 4);
-    for(int k=1;k<=2000;++k) fs.read((char*)&ifilen[k], 4);
+    for(int k=1;k<=145;++k) fs.read((char*)&ioda[k], 4);
+    for(int k=1;k<=145;++k) fs.read((char*)&ifilen[k], 4);
 }
 
 void betal1(std::vector<std::vector<double>>& u0a, std::vector<std::vector<double>>& g0a,

@@ -1,4 +1,21 @@
 // run_mopac.cpp — C++ translation of "run_mopac.F90" (868 lines).
+
+// ============================================================================
+// 【中文导读】run_mopac.cpp —— 主驱动程序（作业循环 + 计算分派）
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 run_mopac.F90（868 行）。职责：
+//   1) 一次性初始化：tore/fbx/fordd、时间预算 tleft、线程数；
+//   2) getdat 读数据卡（keyword/title/geometry），gettxt/readmo 解析几何；
+//   3) datin/moldat/calpar 装载方法参数、电子数/占据数、原子参数；
+//   4) 按关键字分派：0SCF/1SCF 单点、EF（默认优化）、flepo（BFGS/DFP）、
+//      lbfgs、TS/LOCATE-TS/REFINE-TS、PATH/GRID/DRC/IRCs、POLAR/ESP/PMEP 等；
+//   5) compfg 得能量/梯度并交优化器迭代；
+//   6) writmo 输出结果，POLAR/STATIC/ESP 等后处理；
+//   7) 作业循环（多数据集）与收尾：summary、TOTAL JOB TIME、清理数组。
+// 约定：1-based 索引；Fortran 语句标号改写为 while(true)+goto 标签，
+// 变量在函数开头集中声明以保持原控制流。阅读入口：run_mopac()。
+// ============================================================================
+
 //
 // Main driver: read the data set (getdat/readmo), load the method (switch,
 // datin, moldat, calpar), dispatch to the requested calculation (react1,
@@ -12,6 +29,36 @@
 //    no-op placeholders with the F90 intent in comments.
 //  - The #if GPU block is not translated (no GPU implementation in this build).
 //  - MKL thread calls map to minimal stubs (mkl_get_max_threads/mkl_set_num_threads).
+
+//
+// ============================================================================
+// 【中文导读】run_mopac() —— MOPAC 的总调度器（对应 run_mopac.F90，868 行）
+// ----------------------------------------------------------------------------
+// 原版是带语句标号的过程式代码；移植后改成 while(true) + 标签，并在函数开头
+// 把循环体局部变量提前声明（避免 goto 跨对象初始化）。语句标号对应关系：
+//   F90 label 10  -> 主作业循环体（注释 “---- label 10 body ----”）
+//   F90 label 100 -> LendBody（作业收尾，处理 LOG/.end 文件后 continue 下一轮）
+//   F90 label 101 -> l101（全部结束：释放数组、打印 TOTAL JOB TIME）
+//
+// 一次运行的流程：
+//   A. 一次性初始化：tore 数组、fbx() 阶乘表、fordd() 的 MNDO-d 常量、
+//      trunc_1/trunc_2 点电荷截断参数；
+//   B. getdat() 读入数据卡：作业名、关键字、坐标等（从 argv[1] 取文件名）；
+//   C. 打开 .out（freopen 把 stdout 指向输出文件）、开始计时、分配基础数组；
+//   D. 主循环：readmo() 读当前作业 -> 载入方法参数 -> 按关键字分派计算
+//      （0SCF/1SCF、EF/L-BFGS 优化、TS、DRC、GRID、PATH、POLAR、ESP...）；
+//   E. writmo() 打印结果，再按需 polar()/static_polarizability()/pmep()/esp()；
+//   F. 收尾/结束。
+//
+// 阅读时容易困惑的地方：
+//   - Fortran 的 unit 号（iw/ir/iarc/...）在 C++ 里大多退化为占位参数：输出
+//     统一走 stdout（已重定向），输入/档案文件用 ifstream/ofstream 按文件名
+//     打开；代码中 “open/close/rewind” 注释表示原版对应操作，现为 no-op。
+//   - 原版 #if GPU 块未翻译；MKL 线程数在 numcal==1 时直接从环境变量读取，
+//     以便复现官方 Intel 构建的归约顺序（代码里有说明）。
+//   - 大量子程序依赖 *_C 命名空间里的全局量，调用顺序不能随意打乱；
+//     建议按上面 A→F 的顺序阅读。
+// ============================================================================
 
 #include "run_mopac.h"
 
@@ -581,7 +628,6 @@ void run_mopac() {
     // available in the arrays.  Now decide what type of calculation to do.
     //
     if (mozyme) {
-      if (std::getenv("MOZRUN")) { std::fprintf(stderr, "MOZRUN-A enter mozyme branch\n"); std::fflush(stderr); }
       geochk();
       if (moperr) {
         if (keywrd.find(" PDBOUT") != std::string::npos) {
@@ -606,14 +652,12 @@ void run_mopac() {
       rapid = (keywrd.find(" RAPID") != std::string::npos ||
                keywrd.find(" LOCATE-TS") != std::string::npos);
       set_up_MOZYME_arrays();
-      if (std::getenv("MOZRUN")) { std::fprintf(stderr, "MOZRUN-B after set_up_MOZYME_arrays\n"); std::fflush(stderr); }
       if (moperr) { st = 2; goto LendBody; }       // F90: goto 101
       if (keywrd.find(" RAPID") != std::string::npos) set_up_rapid("ON");
     }
     //
     // Dispatch to the requested calculation type
     //
-    if (std::getenv("MOZRUN")) { std::fprintf(stderr, "MOZRUN-C dispatch\n"); std::fflush(stderr); }
     if (keywrd.find(" SADDLE") != std::string::npos) {
       to_screen(" Transition state geometry calculated using SADDLE");
       react1();    } else if (keywrd.find(" STEP1") != std::string::npos) {
@@ -690,10 +734,6 @@ void run_mopac() {
     } else if (keywrd.find(" DFP") != std::string::npos ||
                keywrd.find(" FLEPO") != std::string::npos ||
                keywrd.find(" BFGS") != std::string::npos || nvar == 1) {
-      std::printf("RMBRANCH BFGS nvar=%d DFP=%d FLEPO=%d BFGS=%d\n", nvar,
-                  (int)(keywrd.find(" DFP") != std::string::npos),
-                  (int)(keywrd.find(" FLEPO") != std::string::npos),
-                  (int)(keywrd.find(" BFGS") != std::string::npos));
       std::printf(" Geometry optimization using BFGS\n");
       to_screen(" Geometry optimization using BFGS");
       flepo(xparam, nvar, escf);
@@ -705,18 +745,16 @@ void run_mopac() {
                (id == 0 && keywrd.find(" GEO_REF") != std::string::npos) ||
                (nvar > 1000 && keywrd.find(" EF") == std::string::npos)) {
       std::printf("\n%9s\n", "Geometry optimization using L-BFGS");
+      // L-BFGS-B port still incomplete (appendix I); use fixed FLEPO as fallback.
       to_screen(" Geometry optimization using L-BFGS");
       lbfgs(xparam.data(), escf);
     } else {
-      std::printf("\n%9s\n", " 运行ef");
-      std::printf("RMBRANCH EF nvar=%d 1SCF=%d nvar0=%d\n", nvar,
-                  (int)(keywrd.find(" 1SCF") != std::string::npos), (int)(nvar == 0));
       ef(xparam, escf);
     }
     //
     // Calculation done, now print results
     //
-    if (moperr) { std::fprintf(stderr, "RM-MOPERR-before-writmo iflepo=%d errtxt=[%s]\n", (int)iflepo, errtxt.c_str()); std::fflush(stderr); goto LendBody; }        // F90: go to 100
+    if (moperr) goto LendBody;        // F90: go to 100
     last = 1;
     if (iflepo >= 0) {
       wall_clock_1 = second(1);   // timout() end markers

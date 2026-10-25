@@ -3,6 +3,19 @@
 // Connolly surface (surfac), nuclear+electronic potential (elesn), least-
 // squares fit (espfit).  Column-major Fortran arrays are kept 1-based:
 //   a(j,k) -> a[j][k]  (outer index = first Fortran dimension).
+
+//
+// ============================================================================
+// 【中文导读】esp() —— 静电势（ESP）点电荷拟合
+// ----------------------------------------------------------------------------
+// 对应 esp.F90。流程：生成采样点（Williams 网格 pdgrid / Connolly 表面
+// surfac / 平面等），计算核+电子静电势（elesn），再做最小二乘拟合得到原子
+// 电荷（espfit；缺失时用本地 dgesv_local 解线性方程组）。
+// 相关子程序：setup_esp/naicas/naicap/ovlp/potcal 等负责采样与基组重叠；
+// 输出 .esp/.esr 文件供可视化或力场参数化。
+// 约定：Fortran 列主序数组保持 1-based（a(j,k) -> a[j][k]）。
+// ============================================================================
+
 #include "esp.h"
 
 #include "chanel_C.h"
@@ -184,6 +197,9 @@ void dgesv_local(std::vector<std::vector<double>>& a, int n,
 // ---------------------------------------------------------------------
 // esp() — main driver.
 // ---------------------------------------------------------------------
+
+// esp(): 主入口——按关键字选择采样方式（GRID/SURFACE/PLANE）并拟合电荷。
+
 void esp() {
     int n, i;
     double scincr, time1;
@@ -232,6 +248,9 @@ void esp() {
 // ---------------------------------------------------------------------
 // pdgrid() — Williams surface on a cubic grid.
 // ---------------------------------------------------------------------
+
+// pdgrid(): Williams 点电荷网格生成。
+
 void pdgrid() {
     int icntr, i, j, ia, npnt, l, jz;
     double vderw[54] = {0.0};
@@ -349,6 +368,9 @@ void pdgrid() {
 // ---------------------------------------------------------------------
 // surfac() — Connolly solvent-accessible surface.
 // ---------------------------------------------------------------------
+
+// surfac(): Connolly 分子表面采样。
+
 void surfac() {
     std::vector<int> ias(numat + 1, 0);
     int icntr, i, ipoint, iatom, nnbr, jatom, ncon;
@@ -693,6 +715,9 @@ void elesn() {
 // ---------------------------------------------------------------------
 // espfit() — least-squares fit of ESP to point charges (dgesv).
 // ---------------------------------------------------------------------
+
+// espfit(): 最小二乘拟合原子电荷（解 A*q=b）。
+
 void espfit() {
     int k, j, i;
     double rik, rij, espc, atmp;

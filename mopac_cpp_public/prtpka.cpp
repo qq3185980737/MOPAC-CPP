@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】prtpka.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 prtpka.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // prtpka.cpp — C++ translation of MOPAC 2016 "prtpka.F90".
 // Calculates and prints the pKa values for an organic molecule with an
 // ionizable hydrogen attached to an oxygen atom.
@@ -197,9 +206,9 @@ void prtpka(int* ipKa_sorted, double* pKa_sorted, int* ipKa_unsorted,
         pKa_sorted[i] = 0.0;
         pKa_unsorted[i] = 0.0;
     }
-    std::printf("METH pre: am1=%d pm7=%d pm6=%d mndo=%d rm1=%d mndod=%d pm3=%d pm7ts=%d\n",
+    std::fprintf(chanel_C::out_unit(), "METH pre: am1=%d pm7=%d pm6=%d mndo=%d rm1=%d mndod=%d pm3=%d pm7ts=%d\n",
                 molkst_C::method_am1, molkst_C::method_pm7, molkst_C::method_pm6, molkst_C::method_mndo, molkst_C::method_rm1, molkst_C::method_mndod, molkst_C::method_pm3, molkst_C::method_pm7_ts);
-    std::printf("METH uss8=%f upp8=%f gss8=%f uss1=%f ussam1_8=%f\n",
+    std::fprintf(chanel_C::out_unit(), "METH uss8=%f upp8=%f gss8=%f uss1=%f ussam1_8=%f\n",
                 parameters_C::uss[8], parameters_C::upp[8], parameters_C::gss[8],
                 parameters_C::uss[1], parameters_for_AM1_C::ussam1[8]);
     std::fflush(stdout);
@@ -315,11 +324,7 @@ void prtpka(int* ipKa_sorted, double* pKa_sorted, int* ipKa_unsorted,
     }
     for (i = 1; i <= loop; ++i) pKa_unsorted[i] -= 200.0;
     no = loop;
-    std::printf("METH pre-switch uss8=%f\n", parameters_C::uss[8]); std::fflush(stdout);
     switch_method();
-    std::printf("METH post-switch uss8=%f gss8=%f uss1=%f\n",
-                parameters_C::uss[8], parameters_C::gss[8], parameters_C::uss[1]);
-    std::fflush(stdout);
     iseps = store_iseps;
     useps = store_useps;
     i = mpack;

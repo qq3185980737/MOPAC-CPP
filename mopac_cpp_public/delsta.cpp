@@ -1,17 +1,24 @@
 // delsta.cpp — C++ translation of MOPAC 2016 "delsta.F90".
+//
+// ============================================================================
+// 【中文导读】delsta() —— MOZYME 局部电荷/密度差分辅助
+// ----------------------------------------------------------------------------
+// 对应 delsta.F90。用 ijbo 定位原子对在 H/P/F 中的块起点，计算局部电荷
+// 差分；2026-10 已删除局部空 ijbo，改调真实实现。
+// ============================================================================
+
 #include "delsta.h"
 
 #include <cmath>
 
 #include "funcon_C.h"
 #include "molkst_C.h"
+#include "ijbo.h"
 #include "parameters_C.h"
 
 using namespace funcon_C;
 using namespace molkst_C;
 using namespace parameters_C;
-
-namespace { int ijbo(int, int) { return 0; } }
 
 void delsta(const std::vector<int>& nat, const std::vector<int>& iorbs,
             const std::vector<double>& p,

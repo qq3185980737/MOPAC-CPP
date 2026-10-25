@@ -1,0 +1,156 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                             MNDO CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:30 2026  *
+ *  MNDO       - The MNDO Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+MNDO 1SCF
+ water MNDO
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+  H: (MNDO): M.J.S. DEWAR, W. THIEL, J. AM. CHEM. SOC., 99, 4899, (1977)
+  O: (MNDO): M.J.S. DEWAR, W. THIEL, J. AM. CHEM. SOC., 99, 4899, (1977)
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+MNDO 1SCF
+ water MNDO
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              MNDO CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:30 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -60.62020 KCAL/MOL =    -253.63492 KJ/MOL
+
+
+          TOTAL ENERGY            =       -351.41124 EV
+          ELECTRONIC ENERGY       =       -498.92643 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        147.51519 EV
+          COSMO AREA              =         42.49 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.19 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         12.191932 EV
+          HOMO LUMO ENERGIES (EV) =        -12.192  5.345
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51400
+            H     2    O     1     0.58600
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.000 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000     0.000000000     0.000000000
+   2    H        0.000000000     0.757000000     0.586000000
+   3    H        0.000000000    -0.757000000     0.586000000
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES
+ -39.80381 -18.82288 -14.57691 -12.19193   5.34503   6.44181
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.318207        6.3182     1.82304     4.49517
+    2          H           0.159103        0.8409     0.84090
+    3          H           0.159103        0.8409     0.84090
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.000     0.896     0.896
+ HYBRID        -0.000     0.000     0.895     0.895
+ SUM           -0.000    -0.000     1.790     1.790
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.82304   2.00000   1.10768   1.38748
+    2  H   0.84090
+    3  H   0.84090
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.04 SECONDS
+
+ == MOPAC DONE ==

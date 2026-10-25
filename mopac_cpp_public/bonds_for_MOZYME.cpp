@@ -1,3 +1,10 @@
+// ============================================================================
+// 【中文导读】bonds_for_MOZYME.cpp —— MOZYME 键级/价数（bonds_for_MOZYME.F90）
+// ----------------------------------------------------------------------------
+// 按 MOZYME 的局域轨道密度计算原子间键级与价数，按降序选择排序输出连接表；
+// 打印部分是占位，数值/排序逻辑按 Fortran 逐行翻译。1-based 打包下三角。
+// ============================================================================
+
 // bonds_for_MOZYME.cpp — C++ translation of MOPAC 2016
 // "bonds_for_MOZYME.F90". Printing is stubbed; the bond-sum and valency
 // logic plus the descending selection sort are translated faithfully.

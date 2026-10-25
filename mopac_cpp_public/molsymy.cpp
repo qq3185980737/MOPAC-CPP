@@ -1,4 +1,13 @@
-// molsymy.cpp — C++ translation of MOPAC point-group symmetry driver.
+// ============================================================================
+// 【中文导读】molsymy.cpp —— MOZYME 局域轨道/成键
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 molsymy.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
+// molsymy.cpp 鈥?C++ translation of MOPAC point-group symmetry driver.
 #include "molsymy.h"
 #include "symmetry_C.h"
 #include "common_arrays_C.h"
@@ -13,6 +22,8 @@
 #include "mopend.h"
 #include "mult33.h"
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <vector>
 #include <string>
 using namespace common_arrays_C;
@@ -73,7 +84,7 @@ void molsym(double* coord, int& ierror, double* r) {
                     std::fabs(f[2])+std::fabs(f[4])+std::fabs(f[5])<0.01;
             for (i=1;i<=3;++i){for(j=1;j<=3;++j)R(i,j)=0;R(i,i)=1;}
         } else {
-            rsp(f, 3, ew, r);
+            rsp(&f[1], 3, ew, r);  // f is 1-based packed; rsp expects 0-based packed pointer
             sum = R(1,1)*(R(2,2)*R(3,3)-R(3,2)*R(2,3)) +
                   R(1,2)*(R(2,3)*R(3,1)-R(2,1)*R(3,3)) +
                   R(1,3)*(R(2,1)*R(3,2)-R(2,2)*R(3,1));
@@ -100,9 +111,9 @@ void molsym(double* coord, int& ierror, double* r) {
             goto L250;
         }
         if (reorie) {
-            if (!cubic && ew[3]-ew[2] < 1e-2*ew[3]) {
+            if (!cubic && ew[2]-ew[1] < 1e-2*ew[2]) {
                 for (i=1;i<=3;++i){ rxy=-R(i,1); R(i,1)=R(i,3); R(i,3)=rxy; }
-                rxy=ew[1]; ew[1]=ew[3]; ew[3]=rxy;
+                rxy=ew[0]; ew[0]=ew[2]; ew[2]=rxy;
             }
             axis = std::fabs(ew[0]-ew[1]) < 0.01*ew[1];
         } else {
@@ -499,6 +510,7 @@ void cartab() {
         igroup = g; break;
     }
     if (keywrd.find(" NOSYM") != std::string::npos) igroup = 1;
+    symmetry_C::igroup = igroup;  // expose to force/thermo (was left at 0)
     int istart = nope[igroup];
     int igp = nrep[igroup];
     name = allrep[igp];

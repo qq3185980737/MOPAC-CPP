@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】moldat_helpers.cpp —— MOZYME 局域轨道/成键
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 moldat_helpers.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // moldat_helpers.cpp — C++ translation of moldat.F90 internal subprograms:
 //   setcup      (lines 897-1035):  CUTOFP and unit-cell counts for periodic runs,
 //   setup_nhco  (lines 1250-1323): MM correction to -(C=O)-(NH)- linkages.

@@ -1,0 +1,47 @@
+
+
+                     SUMMARY OF RM1 CALCULATION, Site No:  999
+
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:44 2026
+
+           Empirical Formula: C O  =     2 atoms
+
+RM1 1SCF
+ co RM1
+
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED                 
+     SCF FIELD WAS ACHIEVED                                   
+
+          HEAT OF FORMATION       =        -13.73167 KCAL/MOL =     -57.45332 KJ/MOL
+          TOTAL ENERGY            =       -440.49638 EV
+          ELECTRONIC ENERGY       =       -680.65015 EV
+          CORE-CORE REPULSION     =        240.15376 EV
+          DIPOLE                  =          0.14319 DEBYE    POINT GROUP:       C*v 
+          NO. OF FILLED LEVELS    =          5
+          IONIZATION POTENTIAL    =         12.985029 EV
+          HOMO LUMO ENERGIES (EV) =        -12.985  1.551
+          MOLECULAR WEIGHT        =         28.0104
+          COSMO AREA              =         57.61 SQUARE ANGSTROMS
+          COSMO VOLUME            =         40.07 CUBIC ANGSTROMS
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            O     2    C     1     1.12800
+            C     1    C     1     0.00000
+            C     1    O     2     0.00000
+          SCF CALCULATIONS        =          1
+          WALL-CLOCK TIME         =          0.001 SECONDS
+          COMPUTATION TIME        =          0.001 SECONDS
+
+
+          FINAL GEOMETRY OBTAINED
+RM1 1SCF
+ co RM1
+
+  C     0.00000000 +1   0.00000000 +1   0.00000000 +1
+  O     0.00000000 +1   0.00000000 +1   1.12800000 +1
+ 

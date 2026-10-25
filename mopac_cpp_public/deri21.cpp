@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】deri21.cpp —— 最小二乘正交基（对应 deri21.F90）
+// ----------------------------------------------------------------------------
+// 对 A'A 做打包矩阵本征分解，取累积方差达到阈值的前 ncut 个方向，构造
+// B = A*V*diag(|lambda|^-1/2)（截断后正交化）；供 deri2 的 CI 梯度/Lagrange
+// 步骤使用。布局：a/b 为 0-based 列主序（对应 F90 a(minear,nvar_nvo)），
+// 与 C++ 内部 1-based 打包数组相互转换时要注意列主序。
+// ============================================================================
+
 // deri21.cpp — C++ translation of MOPAC 2016 "deri21.F90".
 // Least-squares orthonormal basis: eigendecomposition of A'A (packed), then
 // B = A * V * diag(|lambda|^-1/2) truncated at cumulative variance cutoff.

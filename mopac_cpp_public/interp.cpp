@@ -1,4 +1,17 @@
 // interp.cpp
+// ============================================================================
+// 【中文导读】interp() —— EF 优化器的能量/梯度插值（Camp-King 轨迹）
+// ----------------------------------------------------------------------------
+// 对应 interp.F90。作用：在 EF 的旧点与当前点之间用三次样条/二次插值构造
+// 能量与梯度，用于（a）一维线搜索取极小、（b）外推下一步的 Hessian 修正。
+// 主要函数：
+//   - spline(): 一维三次样条，求区间内的极小点（linmin 式搜索）；
+//   - interp(): 多维版本——把旧点/新点的能量与梯度投影到搜索方向，构造
+//     插值多项式并给出步长（mode=1/2/3 对应不同调用阶段）。
+// 约定：所有向量 1-based；矩阵列主序平铺（np×np 块），注释里保留了 F90
+// 的数组切片含义。
+// ============================================================================
+
 #include "interp.h"
 #include <algorithm>
 #include <cmath>
@@ -17,6 +30,8 @@ using funcon_C::pi;
 using molkst_C::keywrd;
 using molkst_C::numcal;
 using molkst_C::norbs;
+
+// spline(): 一维三次样条求极小（返回 xmin），用于线搜索。
 
 void spline(double* x, double* f, double* df, double xhigh, double xlow,
             double& xmin, int npnts) {
@@ -59,6 +74,8 @@ check:
         if (fm2 <= fmin) { xmin=xk+x[kk]; fmin=fm2; dfmin=(3*a*xk+2*b)*xk+c; }
     }
 }
+
+// interp(): 多维插值主入口；mode 表示调用阶段（起步/正常/终点）。
 
 void interp(int np, int nq, int& mode, double e, double* fp, double* cp,
             double* theta, double* vec_interp, double* fock_interp,

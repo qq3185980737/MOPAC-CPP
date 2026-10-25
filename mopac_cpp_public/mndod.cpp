@@ -1,4 +1,27 @@
 // mndod.cpp — MNDO-d (d-orbital) Hamiltonian routines (from mndod.F90).
+//
+// ============================================================================
+// 【中文导读】mndod.cpp —— MNDO-d（含 d 轨道）方法的核心积分与参数表
+// ----------------------------------------------------------------------------
+// 对应 mndod.F90。文件内函数大致分四组：
+//   A. 参数表初始化：inid()（按元素填 po/ddp 等）、inighd()（d 轨道 Slater-
+//      Condon 参数，调用 scprm/eiscor）、fbx()（阶乘/Pascal 表）、fordd()（d 轨道常量/索引表）；
+//   B. 双电子积分：poij()/reppd()/reppd2()/rijkl()/rotatd()/rotmat()/
+//      spcore()/tx()/w2mat()/wstore()/charg()/elenuc()——把 Slater-Condon
+//      参数换算成 (ij|kl) 积分，并旋转到分子坐标系；
+//   C. 一电子/核吸引：elenuc() 等；
+//   D. 导数辅助：aijm()/ddpo()（文件末尾，按原子组装 d 轨道参数导数）。
+//
+// 数据约定：与 Fortran 原文一致，1-based；积分表 repd[Int][element]、
+// intij/intkl/intrep 是 243 项 d 轨道积分索引；po/ddp 按 [轨道类型][原子]
+// 平铺。很多数组维度带 +1 padding（下标 0 不用）。
+//
+// 阅读建议：先看 inid() 了解参数如何按元素初始化，再看 reppd()/rotatd()
+// 了解 (ss|ss)...(dd|dd) 积分如何组装，最后看 aijm()/ddpo() 了解解析导数。
+// 函数体里大量魔数（0.5、sqrt(2)、243、107 等）都直接来自原版，改动前务必
+// 与 mndod.F90 对照。
+// ============================================================================
+
 #include "mndod.h"
 #include "parameters_C.h"
 #include "common_arrays_C.h"
@@ -9,6 +32,7 @@
 #include <cstring>
 extern double libm_exp(double);
 extern "C" double exp_ftn(double);
+extern "C" double log_ftn(double);
 namespace mndod_C {
 extern std::vector<std::vector<int>> indexd, indx, ind2;
 extern std::vector<int> isym;
@@ -27,6 +51,8 @@ void aijm(int ni);
 void ddpo(int ni);
 void scprm(int ni,double&,double&,double&,double&,double&,double&,double&,double&,double&,double&,double&,double&);
 void eiscor(double,double,double,double,double,int);
+
+// inid(): 按元素初始化 d 轨道相关参数表（po、ddp 等），对应 F90 的 inid()。
 
 void inid(){
     for(int ni=1;ni<=107;++ni){
@@ -52,6 +78,9 @@ void inid(){
 }
 
 namespace mndod_C { extern std::vector<std::vector<double>> repd; }
+
+// inighd(): 生成元素 ni 的 d 轨道 Slater-Condon 参数（r066...r246）。
+
 void inighd(int ni){
     const double s3=1.7320508, s5=2.23606797, s15=3.87298334;
     if(!dorbs[ni]) return;
@@ -112,6 +141,8 @@ void inighd(int ni){
     f0pd[ni]=r036; f2pd[ni]=r236; g1pd[ni]=r155; g3pd[ni]=r355;
 }
 
+// poij()：双电子积分核心之一（由 Slater-Condon 参数计算 (ij|kl)）。
+
 double poij(int l, double d, double fg){
     const double epsil=1e-8, g1=0.382, g2=0.618;
     if(l==0) return 0.5*ev/fg;
@@ -142,6 +173,8 @@ double poij(int l, double d, double fg){
 }
 
 extern void to_point(double rij, double& point, double& cnst);
+
+// reppd(): 计算一对原子间的双电子积分（(ss|ss) 等），输出 ri 数组与 gab。
 
 void reppd(int ni, int nj, double rij, std::vector<double>& ri, double& gab){
     const double td=2.0, pp=0.5;
@@ -411,6 +444,8 @@ using mndod_C::sp; using mndod_C::sd; using mndod_C::pp; using mndod_C::dp; usin
 using mndod_C::cored;
 using mndod_C::inddd;
 
+// rotatd(): 把原子对的双电子积分从局部坐标旋转到分子坐标，写入 w。
+
 void rotatd(int ni,int nj,const std::vector<double>& ci,const std::vector<double>& cj,
             std::vector<double>& w,int& kr,double& enuc){
     int met[46]={0,1,2,3,2,3,3,2,3,3,3,4,5,5,5,6,4,5,5,5,6,6,4,5,5,5,6,6,6,4,5,5,5,6,6,6,6,4,5,5,5,6,6,6,6,6}; // F90 data met ends with 5*6
@@ -615,6 +650,8 @@ void rotmat(int nj,int ni,const std::vector<double>& coordi,const std::vector<do
     }
 }
 
+// spcore()/tx()/w2mat()/wstore()：积分块的写回与打包（s/p/d 分块）。
+
 void spcore(int ni,int nj,double r,double core[11][3]){
     double pxy[8]={0,1.0,-0.5,-0.5,0.5,0.25,0.25,0.5};
     for(int q=1;q<=4;++q){ core[q][1]=0; core[q][2]=0; }
@@ -814,6 +851,9 @@ extern std::vector<std::vector<int>> indpp, inddp, inddd;
 
 
 using mndod_C::indpp; using mndod_C::inddp; using mndod_C::inddd;
+
+// elenuc(): 电子-核吸引项，直接累加进一电子矩阵 h。
+
 void elenuc(int ia,int ib,int ja,int jb,std::vector<double>& h){
     int k=ia,l=ib,n=1;
     while(true){
@@ -925,11 +965,11 @@ void fbx(){
 }
 
 double rsc(int k,int na,double ea,int nb,double eb,int nc,double ec,int nd,double ed){
-    double aea=std::log(ea), aeb=std::log(eb), aec=std::log(ec), aed=std::log(ed);
+    double aea=log_ftn(ea), aeb=log_ftn(eb), aec=log_ftn(ec), aed=log_ftn(ed);
     int nab=na+nb, ncd=nc+nd;
     double ecd=ec+ed, eab=ea+eb, e=ecd+eab;
     int n=nab+ncd;
-    double ae=std::log(e), a2=std::log(2.0), acd=std::log(ecd), aab=std::log(eab);
+    double ae=log_ftn(e), a2=log_ftn(2.0), acd=log_ftn(ecd), aab=log_ftn(eab);
     double ff=fx[n]/std::sqrt(fx[2*na+1]*fx[2*nb+1]*fx[2*nc+1]*fx[2*nd+1]);
     double c=ev*ff*exp_ftn(na*aea+nb*aeb+nc*aec+nd*aed+0.5*(aea+aeb+aec+aed)+a2*(n+2)-ae*n);
     double s0=1.0/e, s1=0.0, s2=0.0;
@@ -956,6 +996,9 @@ std::vector<std::vector<int>> indpp(4,std::vector<int>(4,0));
 std::vector<std::vector<int>> inddp(6,std::vector<int>(4,0));
 std::vector<std::vector<int>> inddd(6,std::vector<int>(6,0));
 }
+
+// fordd(): 预先计算 MNDO-d 相关的常量/索引表（供 inid/aijm/ddpo 使用）。
+
 void fordd(){
     for(int i=1;i<=9;++i) for(int j=1;j<=i;++j){
         indexd[i][j]=-(j*(j-1))/2+i+9*(j-1);
@@ -1848,6 +1891,9 @@ static double aijl(double z1, double z2, int n1, int n2, int l) {
         * std::pow(2.0*z2/(z1+z2), n2) * std::sqrt(2.0*z2/(z1+z2))
         * std::pow(2.0, l) / std::pow(z1+z2, l);
 }
+
+// aijm()/ddpo()：文件末尾的导数辅助（对应 mndod.F90 尾部），按原子组装
+// d 轨道参数的一阶导数项。
 
 void aijm(int ni) {
     double z1 = zs[ni], z2 = zp[ni], z3 = zd[ni];

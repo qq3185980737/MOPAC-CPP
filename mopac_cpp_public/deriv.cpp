@@ -6,6 +6,25 @@
 // or dcart (variationally optimized) -> optional field / pressure terms ->
 // jcarin builds the Jacobian of the coordinate transformation -> mxm maps
 // Cartesian derivatives to internal-coordinate gradients.
+
+//
+// ============================================================================
+// 【中文导读】deriv() —— 由笛卡尔梯度得到内坐标梯度
+// ----------------------------------------------------------------------------
+// 对应 deriv.F90。一次能量计算后，本函数把 Cartesian 导数转成优化器需要的
+// 内部坐标导数 gradnt。流程：
+//   1) 首次调用按关键字初始化（RESTART/SADDLE/FIELD/PRECISE/PM6-D、
+//      AIDER 读取外部 ab initio 导数等）；
+//   2) 由 geo 生成笛卡尔坐标 coord（gmetry），必要时 symtry；
+//   3) 取笛卡尔导数：half-electron/CI 且非 NOANCI 时用 dernvo（解析），
+//      否则用 dcart（变分优化/有限差分）；
+//   4) 加 post-SCF 校正（PM6/PM7 色散、H 键）与电场、压力项；
+//   5) jcarin 构造坐标变换 Jacobian，mxm 分段映射到内坐标梯度；
+//   6) 检查内/笛卡尔梯度一致性（geochk），slow/deritr 迭代修正，AIDER 校正。
+// 注意：nvar==0 直接返回；AIDER 会读输入文件尾部的外部导数；1-based 行/列
+// 与 Fortran 一致。
+// ============================================================================
+
 #include "deriv.h"
 
 #include <cmath>
@@ -62,6 +81,8 @@ static double dot3(const double* a, const double* b, int n) {
     for (int i = 0; i < n; ++i) s += a[i] * b[i];
     return s;
 }
+
+// deriv(): 主入口。geo 为 1-based 几何（geo[坐标类型][原子]），gradnt 返回内坐标梯度。
 
 void deriv(const std::vector<std::vector<double>>& geo,
            std::vector<double>& gradnt) {
@@ -163,6 +184,7 @@ void deriv(const std::vector<std::vector<double>>& geo,
         change[1] = fpw_ftn(10.0, idelta);
         change[2] = fpw_ftn(10.0, idelta);
     }
+    std::fprintf(stderr, "NVAR deriv %d\n", nvar);
     if (nvar == 0) return;
 
     double gnorm = 0.0;
@@ -187,14 +209,25 @@ void deriv(const std::vector<std::vector<double>>& geo,
     gmetry(const_cast<std::vector<std::vector<double>>&>(geo), coord);
     // COORD now holds the Cartesian coordinates.
 
+    // 中文：此后 coord 是笛卡尔坐标；接下来按 halfe/noanci 选择解析或差分导数路径。
+
     if (halfe && !noanci && numat > 1) {
         dernvo();
         if (moperr) return;
     } else {
         // Variationally optimized derivatives.
+
+        // 中文：变分优化导数路径——dcart 做有限差分，结果写入 dxyz（1-based）。
+
         std::vector<std::vector<double>> dxyz2d(
             4, std::vector<double>(numat + 1, 0.0));
         dcart(coord, dxyz2d);
+    if (std::getenv("DXYZ_DEBUG")) {
+        std::fprintf(stderr, "CXXDXYZ");
+        for (int j = 1; j <= (3 * numat < 9 ? 3 * numat : 9); ++j)
+            std::fprintf(stderr, " %.14f", dxyz2d[(j - 1) % 3 + 1][(j - 1) / 3 + 1]);
+        std::fprintf(stderr, "\n");
+    }
         for (int k = 1; k <= 3; ++k)
             for (int i = 1; i <= numat; ++i) dxyz[3 * (i - 1) + k] = dxyz2d[k][i];
     }
@@ -238,6 +271,9 @@ void deriv(const std::vector<std::vector<double>>& geo,
         }
     }
 
+    // 中文：坐标变换 Jacobian 分段计算（jcarin），再 mxm 映射到 gradnt；
+    // step 是 10^-7 量级的差分步长（change[] 在首次调用时设置）。
+
     double step = change[0];
     int nstep = nw2 / (3 * numat * l123);
     for (int i = 1; i <= nvar; i += nstep) {
@@ -245,9 +281,20 @@ void deriv(const std::vector<std::vector<double>>& geo,
         int ncol = 0;
         jcarin(xparam.data(), step, precis, work2.data(), ncol, i, j);
         mxm(work2.data(), j - i + 1, &dxyz[1], ncol, &gradnt[i], 1);
+        if (std::getenv("G2_DEBUG")) {
+            static int ncall_g2 = 0;
+            ++ncall_g2;
+            std::fprintf(stderr, "CXXG2 %d %d %d", ncall_g2, i, j);
+            for (int k = 1; k <= (nvar < 9 ? nvar : 9); ++k) std::fprintf(stderr, " %.14f", gradnt[k]);
+            std::fprintf(stderr, "\n");
+        }
     }
     step = precis ? 0.5 / step : 1.0 / step;
     for (int i = 1; i <= nvar; ++i) gradnt[i] *= step;
+
+        // 中文：一致性检查——若内坐标梯度很小但笛卡尔梯度很大，说明坐标变换
+        // 有问题（常见于近线性键角），会直接 mopend 终止。
+
         if (geochk) {
             sum = dot3(&gradnt[1], &gradnt[1], nvar);
             if (sum < 2.0 &&
@@ -263,6 +310,9 @@ void deriv(const std::vector<std::vector<double>>& geo,
                 }
             }
         }
+
+    // 中文：slow/deritr 路径——对近简并/CI 体系迭代修正导数（NOANCI 时启用）。
+
     if (slow) {
         deritr();
         icalcn = numcal;
@@ -283,4 +333,17 @@ void deriv(const std::vector<std::vector<double>>& geo,
         for (int i = 1; i <= nvar; ++i) gradnt[i] = gradnt[i] + aicorr[i];
     }
     (void)chanel_C::iw;
+    if (std::getenv("GRADEND_DEBUG")) {
+        static int ncall_end = 0;
+        ++ncall_end;
+        std::fprintf(stderr, "CXXGRADEND %d", ncall_end);
+        double sumx = 0.0;
+        for (int k = 1; k <= nvar; ++k) sumx += xparam[k];
+        double sump = 0.0;
+        for (int k = 1; k <= norbs; ++k) sump += common_arrays_C::p[k];
+        std::fprintf(stderr, " %.14f %.14f", sumx, sump);
+        for (int k = 1; k <= (nvar < 9 ? nvar : 9); ++k)
+            std::fprintf(stderr, " %.14f", gradnt[k]);
+        std::fprintf(stderr, "\n");
+    }
 }

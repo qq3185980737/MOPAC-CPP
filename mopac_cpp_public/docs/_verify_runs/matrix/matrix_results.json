@@ -1,0 +1,674 @@
+[
+ {
+  "mol": "water",
+  "method": "MNDO",
+  "ref": {
+   "hof": -60.6202,
+   "elec": -498.92643,
+   "core": 147.51519,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -60.6202,
+   "elec": -498.92643,
+   "core": 147.51519,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "water",
+  "method": "AM1",
+  "ref": {
+   "hof": -59.21901,
+   "elec": -493.63917,
+   "core": 145.07737,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -59.21901,
+   "elec": -493.63917,
+   "core": 145.07737,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "water",
+  "method": "PM3",
+  "ref": {
+   "hof": -53.2433,
+   "elec": -473.75448,
+   "core": 148.85534,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -53.2433,
+   "elec": -473.75448,
+   "core": 148.85534,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "water",
+  "method": "PM6",
+  "ref": {
+   "hof": -54.20387,
+   "elec": -457.70112,
+   "core": 138.62804,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -54.20387,
+   "elec": -457.70112,
+   "core": 138.62804,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "water",
+  "method": "PM7",
+  "ref": {
+   "hof": -57.79103,
+   "elec": -469.01375,
+   "core": 146.33491,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -57.79103,
+   "elec": -469.01375,
+   "core": 146.33491,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "water",
+  "method": "RM1",
+  "ref": {
+   "hof": -57.83716,
+   "elec": -489.04192,
+   "core": 143.47071,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -57.83716,
+   "elec": -489.04192,
+   "core": 143.47071,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "methane",
+  "method": "MNDO",
+  "ref": {
+   "hof": -11.52275,
+   "elec": -390.73429,
+   "core": 205.66097,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -11.52275,
+   "elec": -390.73429,
+   "core": 205.66097,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "methane",
+  "method": "AM1",
+  "ref": {
+   "hof": -7.89131,
+   "elec": -386.5274,
+   "core": 203.33576,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -7.89131,
+   "elec": -386.5274,
+   "core": 203.33576,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "methane",
+  "method": "PM3",
+  "ref": {
+   "hof": -13.01421,
+   "elec": -384.57789,
+   "core": 204.04241,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -13.01421,
+   "elec": -384.57789,
+   "core": 204.04241,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "methane",
+  "method": "PM6",
+  "ref": {
+   "hof": -12.25465,
+   "elec": -393.38869,
+   "core": 216.21993,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -12.25465,
+   "elec": -393.38869,
+   "core": 216.21993,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "methane",
+  "method": "PM7",
+  "ref": {
+   "hof": -14.37948,
+   "elec": -389.85919,
+   "core": 212.81704,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -14.37948,
+   "elec": -389.85919,
+   "core": 212.81704,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "methane",
+  "method": "RM1",
+  "ref": {
+   "hof": -13.88284,
+   "elec": -391.46082,
+   "core": 208.70082,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -13.88284,
+   "elec": -391.46082,
+   "core": 208.70082,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ammonia",
+  "method": "MNDO",
+  "ref": {
+   "hof": -6.14933,
+   "elec": -436.66156,
+   "core": 186.43165,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -6.14933,
+   "elec": -436.66156,
+   "core": 186.43165,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ammonia",
+  "method": "AM1",
+  "ref": {
+   "hof": -6.66637,
+   "elec": -432.63329,
+   "core": 184.06896,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -6.66637,
+   "elec": -432.63329,
+   "core": 184.06896,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ammonia",
+  "method": "PM3",
+  "ref": {
+   "hof": -2.54648,
+   "elec": -391.46296,
+   "core": 182.84057,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -2.54648,
+   "elec": -391.46296,
+   "core": 182.84057,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ammonia",
+  "method": "PM6",
+  "ref": {
+   "hof": -2.97618,
+   "elec": -407.93118,
+   "core": 187.43158,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -2.97618,
+   "elec": -407.93118,
+   "core": 187.43158,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ammonia",
+  "method": "PM7",
+  "ref": {
+   "hof": -3.4874,
+   "elec": -412.51936,
+   "core": 185.79997,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -3.4874,
+   "elec": -412.51936,
+   "core": 185.79997,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ammonia",
+  "method": "RM1",
+  "ref": {
+   "hof": -6.1846,
+   "elec": -437.84946,
+   "core": 184.93338,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -6.1846,
+   "elec": -437.84946,
+   "core": 184.93338,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "co",
+  "method": "MNDO",
+  "ref": {
+   "hof": -3.75328,
+   "elec": -691.20675,
+   "core": 242.68166,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -3.75328,
+   "elec": -691.20675,
+   "core": 242.68166,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "co",
+  "method": "AM1",
+  "ref": {
+   "hof": -2.72693,
+   "elec": -688.51547,
+   "core": 241.48868,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -2.72693,
+   "elec": -688.51547,
+   "core": 241.48868,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "co",
+  "method": "PM3",
+  "ref": {
+   "hof": -19.6884,
+   "elec": -648.37401,
+   "core": 236.95489,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -19.6884,
+   "elec": -648.37401,
+   "core": 236.95489,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "co",
+  "method": "PM6",
+  "ref": {
+   "hof": -13.54823,
+   "elec": -641.8719,
+   "core": 228.96237,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -13.54823,
+   "elec": -641.8719,
+   "core": 228.96237,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "co",
+  "method": "PM7",
+  "ref": {
+   "hof": -18.15324,
+   "elec": -655.248,
+   "core": 237.84574,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -18.15324,
+   "elec": -655.248,
+   "core": 237.84574,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "co",
+  "method": "RM1",
+  "ref": {
+   "hof": -13.73167,
+   "elec": -680.65015,
+   "core": 240.15376,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": -13.73167,
+   "elec": -680.65015,
+   "core": 240.15376,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ethylene",
+  "method": "MNDO",
+  "ref": {
+   "hof": 15.6736,
+   "elec": -743.64564,
+   "core": 431.84057,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 15.6736,
+   "elec": -743.64564,
+   "core": 431.84057,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ethylene",
+  "method": "AM1",
+  "ref": {
+   "hof": 16.83827,
+   "elec": -739.03056,
+   "core": 428.68501,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 16.83827,
+   "elec": -739.03056,
+   "core": 428.68501,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ethylene",
+  "method": "PM3",
+  "ref": {
+   "hof": 16.88358,
+   "elec": -721.86294,
+   "core": 423.98354,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 16.88358,
+   "elec": -721.86294,
+   "core": 423.98354,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ethylene",
+  "method": "PM6",
+  "ref": {
+   "hof": 16.05366,
+   "elec": -746.77651,
+   "core": 448.22325,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 16.05366,
+   "elec": -746.77651,
+   "core": 448.22325,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ethylene",
+  "method": "PM7",
+  "ref": {
+   "hof": 14.29865,
+   "elec": -738.6097,
+   "core": 439.71105,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 14.29865,
+   "elec": -738.6097,
+   "core": 439.71105,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "ethylene",
+  "method": "RM1",
+  "ref": {
+   "hof": 15.18872,
+   "elec": -745.96304,
+   "core": 439.18586,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 15.18872,
+   "elec": -745.96304,
+   "core": 439.18586,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "silane",
+  "method": "MNDO",
+  "ref": {
+   "hof": 18.66565,
+   "elec": -297.0611,
+   "core": 153.66833,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 18.66565,
+   "elec": -297.0611,
+   "core": 153.66833,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "silane",
+  "method": "AM1",
+  "ref": {
+   "hof": 6.98641,
+   "elec": -291.29646,
+   "core": 153.2743,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 6.98641,
+   "elec": -291.29646,
+   "core": 153.2743,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "silane",
+  "method": "PM3",
+  "ref": {
+   "hof": 13.1727,
+   "elec": -265.1487,
+   "core": 131.90075,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 13.1727,
+   "elec": -265.1487,
+   "core": 131.90075,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "silane",
+  "method": "PM6",
+  "ref": {
+   "hof": 7.94182,
+   "elec": -265.36983,
+   "core": 138.56045,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 7.94182,
+   "elec": -265.36983,
+   "core": 138.56045,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "silane",
+  "method": "PM7",
+  "ref": {
+   "hof": 16.7792,
+   "elec": -314.30884,
+   "core": 160.03086,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 16.7792,
+   "elec": -314.30884,
+   "core": 160.03086,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "silane",
+  "method": "RM1",
+  "ref": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  },
+  "cpp": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  }
+ },
+ {
+  "mol": "feo",
+  "method": "MNDO",
+  "ref": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  },
+  "cpp": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  }
+ },
+ {
+  "mol": "feo",
+  "method": "AM1",
+  "ref": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  },
+  "cpp": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  }
+ },
+ {
+  "mol": "feo",
+  "method": "PM3",
+  "ref": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  },
+  "cpp": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  }
+ },
+ {
+  "mol": "feo",
+  "method": "PM6",
+  "ref": {
+   "hof": 77.74934,
+   "elec": -1057.02944,
+   "core": 339.5497,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 77.74934,
+   "elec": -1057.02944,
+   "core": 339.5497,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "feo",
+  "method": "PM7",
+  "ref": {
+   "hof": 97.6798,
+   "elec": -1063.77962,
+   "core": 375.53221,
+   "scf_ok": true
+  },
+  "cpp": {
+   "hof": 97.6798,
+   "elec": -1063.77962,
+   "core": 375.53221,
+   "scf_ok": true
+  }
+ },
+ {
+  "mol": "feo",
+  "method": "RM1",
+  "ref": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  },
+  "cpp": {
+   "hof": null,
+   "elec": null,
+   "core": null,
+   "scf_ok": false
+  }
+ }
+]

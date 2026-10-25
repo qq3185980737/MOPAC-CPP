@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】gettxt.cpp —— 输入卡前三行与关键字处理（gettxt.F90）
+// ----------------------------------------------------------------------------
+// 读取 MOPAC 输入的前三行：关键字行（支持 '+'/'&' 续行）、注释行、标题行；
+// 合并 SETUP 文件（关键字+参数），去重处理（' -' 语法），并把 keywrd 规整为
+// 首尾各一个空格的 MOPAC 约定形式（否则行首关键字如 DRC/1SCF 匹配失败）。
+// 相关修复见 docs/TRANSLATION_GAPS.md §15。
+// ============================================================================
+
 // gettxt.cpp — C++ translation of MOPAC 2016 "gettxt.F90".
 // Reads the first three lines of a MOPAC input file: the keyword line
 // (with optional continuation via '+' or '&'), the comment line and the
@@ -121,6 +130,11 @@ void gettxt() {
     keywrd = refkey[0];
     oldkey = keywrd;
     upcase(keywrd, len_trim(keywrd));
+    // MOPAC 的 keywrd 约定：首尾各有一个空格，所有关键字匹配都用 find(" KEY")。
+    // 此前这里未加前导空格，导致行首关键字（如 DRC、1SCF）匹配失败，
+    // DRC 会被误派发到 EF 分支。2026-10 修复。
+    if (!keywrd.empty() && keywrd[0] != ' ') keywrd = " " + keywrd;
+    if (keywrd.empty() || keywrd.back() != ' ') keywrd += ' ';
     zero_scf = (keywrd.find("0SCF") != std::string::npos);
     int ipath = 0;
     for (int i = len_trim(input_fn); i >= 2; --i) {

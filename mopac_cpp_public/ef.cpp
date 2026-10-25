@@ -5,6 +5,29 @@
 // prthes (print), updhes (Powell/BFGS update).
 // Conventions: matrices are column-major flat vectors, 1-based indexing
 // (index i+(j-1)*nvar = row i, column j), same as common_arrays_C::hesinv.
+
+//
+// ============================================================================
+// 【中文导读】ef() —— Eigenvector-Following (EF) 几何优化器
+// ----------------------------------------------------------------------------
+// 对应 ef.F90（2279 行）。EF 用 Hessian 的本征向量确定搜索方向：沿最小
+// 本征值（过渡态）或全部正本征值（极小点）方向做 P-RFO/QA 步进，适合
+// 过渡态搜索与鞍点优化；run_mopac 的默认优化分支也是 EF。
+// 文件内主要子程序：
+//   - ef()     驱动：主循环（模式跟随 → 求步长 → 更新坐标 → 收敛判断）
+//   - efstr()  初始化：读/估算 Hessian、设置模式跟踪与收敛参数
+//   - gethes() 数值 Hessian（对梯度做有限差分）
+//   - formd()  由 Hessian 本征值/本征向量构造 P-RFO/QA 位移
+//   - prjfc()  投影掉平动/转动（T/R）分量；调用 MKL dgemm 以保逐位一致
+//   - overlp() 模式跟随（mode following）：把新本征向量与旧模式匹配
+//   - updhes() Hessian 更新（Powell/BFGS）
+//   - prthes() 打印 Hessian/本征值；efsav() 负责重启文件读写
+// 数据结构：矩阵为列主序平铺、1-based（下标 i+(j-1)*nvar），与
+// common_arrays_C::hesinv 一致；坐标 xparam 也是 1-based。
+// 注意：EF 对 ULP 级差异非常敏感（本征向量交叉会导致步长跳变），因此
+// 代码中多处刻意调用 MKL 并保留与官方相同的线程/归约顺序。
+// ============================================================================
+
 #include "ef.h"
 #include <algorithm>
 #include <cmath>
@@ -297,6 +320,9 @@ static void efsav(double tt0, std::vector<double>& hess, double funct,
 // ---------------------------------------------------------------------------
 // efstr: initialization (ef.F90 lines 870-1094).
 // ---------------------------------------------------------------------------
+
+// efstr(): 每个算例初始化一次——Hessian 初值、模式跟踪开关、步长上限、收敛阈值。
+
 static void efstr(std::vector<double>& xparam, double& funct, int& ihess,
                   int& ntime, int& iloop, int& igthes, int& mxstep,
                   int& ireclc, int& iupd, double& dmax, double& ddmax,
@@ -631,6 +657,9 @@ void updhes(std::vector<double>& svec, std::vector<double>& tvec,
 // ---------------------------------------------------------------------------
 // gethes: numerical Hessian (ef.F90 lines 1535-1790).
 // ---------------------------------------------------------------------------
+
+// gethes(): 数值 Hessian。沿每个优化变量做小位移，用 compfg/deriv 的梯度差分。
+
 static void gethes(std::vector<double>& xparam, int igthes, int& iloop,
                    std::vector<double>& hess, std::vector<double>& pmat,
                    std::vector<double>& bmat, std::vector<double>& grad,
@@ -815,6 +844,10 @@ static void gethes(std::vector<double>& xparam, int igthes, int& iloop,
 // prjfc: remove translations/rotations for Cartesian optimization
 // (ef.F90 lines 1876-2118).
 // ---------------------------------------------------------------------------
+
+// prjfc(): 投影掉平动/转动（最多 6 个）分量，得到真正的振动子空间；
+// 与官方一致调用 MKL dgemm，保证归约顺序一致。
+
 static void prjfc(std::vector<double>& f, const std::vector<double>& xparam,
                   int nvar, std::vector<double>& cof, std::vector<double>& p,
                   const std::vector<double>& atmass, std::vector<double>& x,
@@ -984,6 +1017,10 @@ static void prjfc(std::vector<double>& f, const std::vector<double>& xparam,
 // ---------------------------------------------------------------------------
 // formd: form geometry step (NR / P-RFO / QA) (ef.F90 lines 1095-1534).
 // ---------------------------------------------------------------------------
+
+// formd(): EF 核心——把 Hessian 对角化，按 P-RFO/QA 公式求位移；过渡态沿最小
+// 本征值方向，极小点沿全部正本征值方向。
+
 static void formd(const std::vector<double>& eigval,
                   const std::vector<double>& fx, int nvar, double dmax,
                   double ddmin, bool ts, bool& lorjk, bool rrscal, bool donr,
@@ -1342,6 +1379,10 @@ L1040:
 // ---------------------------------------------------------------------------
 // ef: main EF optimizer driver (ef.F90 lines 1-740).
 // ---------------------------------------------------------------------------
+
+// ef(): 主循环。每步顺序：数值/更新 Hessian → formd 求步长 → 更新几何 →
+// 重新算能量与梯度 → 判收敛（步长、梯度、能量变化）。
+
 void ef(std::vector<double>& xparam, double& funct) {
     static int icalcn = 0, igthes = 0, ihess, iloop, ireclc, iupd = 0, ldump,
                mxstep, ntime;
@@ -1427,19 +1468,6 @@ void ef(std::vector<double>& xparam, double& funct) {
     time1 = second(1);
     compfg(xparam, true, funct, true, grad, true);
     if (moperr) goto L1100;
-    {   // EFG-C1 probe: cycle-1 gradient (first 10) + funct, hex
-        unsigned char* pb = (unsigned char*)&funct;
-        std::fprintf(stderr, "EFG-C1 funct=");
-        for (int q = 7; q >= 0; --q) std::fprintf(stderr, "%02X", pb[q]);
-        std::fprintf(stderr, "\n");
-        for (int qi = 1; qi <= 10 && qi <= nvar; ++qi) {
-            unsigned char* pg = (unsigned char*)&grad[qi];
-            std::fprintf(stderr, "EFG-C1 g%d=", qi);
-            for (int q = 7; q >= 0; --q) std::fprintf(stderr, "%02X", pg[q]);
-            std::fprintf(stderr, "\n");
-        }
-        std::fflush(stderr);
-    }
     olde = funct;
     nflush = 1;
     absmin = 1.0e9;
@@ -1692,7 +1720,6 @@ void ef(std::vector<double>& xparam, double& funct) {
                 }
             }
             if (iprnt >= 3) prthes(eigval, nvar, hesinv, u);
-            std::fprintf(stderr, "EFM-C mxstep=%d nstep=%d iprnt=%d\n", mxstep, nstep, iprnt); std::fflush(stderr);
             if (mxstep == 0) {
                 nstep = 0;
                 goto L1030;

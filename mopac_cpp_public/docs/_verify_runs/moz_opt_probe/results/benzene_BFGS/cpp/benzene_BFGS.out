@@ -1,0 +1,327 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 01:21:18 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  BFGS       - USE THE BFGS GEOMETRY OPTIMIZER
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 MOZYME BFGS
+ benzene_BFGS
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          1.39700000  *   0.00000000  *   0.00000000  *
+     2       C          0.69850000  *   1.21000000  *   0.00000000  *
+     3       C         -0.69850000  *   1.21000000  *   0.00000000  *
+     4       C         -1.39700000  *   0.00000000  *   0.00000000  *
+     5       C         -0.69850000  *  -1.21000000  *   0.00000000  *
+     6       C          0.69850000  *  -1.21000000  *   0.00000000  *
+     7       H          2.48100000  *   0.00000000  *   0.00000000  *
+     8       H          1.24050000  *   2.14900000  *   0.00000000  *
+     9       H         -1.24050000  *   2.14900000  *   0.00000000  *
+    10       H         -2.48100000  *   0.00000000  *   0.00000000  *
+    11       H         -1.24050000  *  -2.14900000  *   0.00000000  *
+    12       H          1.24050000  *  -2.14900000  *   0.00000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         C        1.3970    0.0000    0.0000
+     2         C        0.6985    1.2100    0.0000
+     3         C       -0.6985    1.2100    0.0000
+     4         C       -1.3970    0.0000    0.0000
+     5         C       -0.6985   -1.2100    0.0000
+     6         C        0.6985   -1.2100    0.0000
+     7         H        2.4810    0.0000    0.0000
+     8         H        1.2405    2.1490    0.0000
+     9         H       -1.2405    2.1490    0.0000
+    10         H       -2.4810    0.0000    0.0000
+    11         H       -1.2405   -2.1490    0.0000
+    12         H        1.2405   -2.1490    0.0000
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: C6 H6  =    12 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D6h 
+ Geometry optimization using BFGS
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6393.529 HEAT:    24.2811840
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6308.876 HEAT:    23.3279930
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6312.503 HEAT:    23.3176181
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6308.587 HEAT:    23.3176181
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6282.229 HEAT:    23.2760704
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6287.852 HEAT:    23.2487627
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6300.252 HEAT:    23.2147109
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6289.820 HEAT:    23.2147109
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.556 HEAT:    23.2206735
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6296.954 HEAT:    23.1972949
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6280.760 HEAT:    23.1972949
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6291.119 HEAT:    23.2046478
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6287.701 HEAT:    23.2046478
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.821 HEAT:    23.2137731
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6296.968 HEAT:    23.1918628
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6280.815 HEAT:    23.1918628
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6290.824 HEAT:    23.1996771
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6289.088 HEAT:    23.1996771
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.871 HEAT:    23.2086543
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6295.634 HEAT:    23.1910074
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6297.941 HEAT:    23.1899783
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.501 HEAT:    23.1899783
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6290.711 HEAT:    23.1983643
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6289.398 HEAT:    23.1983643
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.722 HEAT:    23.2075601
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6295.386 HEAT:    23.1900915
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6297.491 HEAT:    23.1892668
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.165 HEAT:    23.1892668
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6291.045 HEAT:    23.1973776
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6288.767 HEAT:    23.1973776
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.508 HEAT:    23.2068700
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6295.740 HEAT:    23.1875920
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6297.615 HEAT:    23.1868979
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6285.328 HEAT:    23.1868979
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6291.874 HEAT:    23.1946889
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6288.501 HEAT:    23.1946889
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.566 HEAT:    23.2037026
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6296.560 HEAT:    23.1818365
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6279.118 HEAT:    23.1818365
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6291.997 HEAT:    23.1898097
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6295.003 HEAT:    23.1734330
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6294.574 HEAT:    23.1734330
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6283.244 HEAT:    23.1939685
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6284.598 HEAT:    23.1844711
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6286.485 HEAT:    23.1776076
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6288.984 HEAT:    23.1686700
+ TEST ON X SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:  6289.471 HEAT:    23.1669530
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+          THERE HAVE BEEN 3 ATTEMPTS TO REDUCE THE GRADIENT.
+          DURING THESE ATTEMPTS THE ENERGY DROPPED BY LESS THAN 0.3 KCAL/MOLE
+          FURTHER CALCULATION IS NOT JUSTIFIED AT THIS TIME.
+          TO CONTINUE, START AGAIN WITH THE WORD "PRECISE"
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME BFGS
+ benzene_BFGS
+ 
+
+
+     GRADIENT TEST NOT PASSED, BUT FURTHER WORK NOT JUSTIFIED
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 01:21:19 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         23.16493 KCAL/MOL =      96.92207 KJ/MOL
+
+
+          TOTAL ENERGY            =       -817.55290 EV
+          ELECTRONIC ENERGY       =      -3250.65817 EV
+          CORE-CORE REPULSION     =       2433.10527 EV
+          GRADIENT NORM           =       6291.11312
+
+          NO. OF FILLED LEVELS    =         15
+          MOLECULAR WEIGHT        =         78.1134
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H    10    H     7     4.95941
+            H    11    H     8     4.29612
+            C     5    C     2     0.00917
+
+
+          SCF CALCULATIONS        =        231
+ 
+          WALL-CLOCK TIME         =          0.784 SECONDS
+          COMPUTATION TIME        =          0.784 SECONDS
+
+
+
+       FINAL  POINT  AND  DERIVATIVES
+
+
+    1 C  -2249.032   471.768   -79.219     1.396     0.001    -0.001     2299.344
+    2 C  -1120.986 -2529.049   196.531     0.697     1.209     0.004     2773.323
+    3 C   1479.988 -1817.860   109.884    -0.698     1.208    -0.003     2346.711
+    4 C   2317.927   -77.425   106.964    -1.396     0.013     0.003     2321.686
+    5 C   1266.157  2119.811   105.089    -0.698    -1.209    -0.005     2471.395
+    6 C  -1524.144  1897.108   289.434     0.698    -1.209     0.001     2450.675
+    7 H   -565.308  -258.707  -119.115     2.480    -0.001    -0.000      633.001
+    8 H   -357.776  -409.812  -267.524     1.239     2.149    -0.001      606.233
+    9 H    233.678  -772.770  -251.767    -1.239     2.147    -0.001      845.674
+   10 H    874.367    65.486  -117.026    -2.480    -0.000    -0.000      884.591
+   11 H    248.959   790.148    13.455    -1.239    -2.147     0.000      828.550
+   12 H   -603.831   521.303    13.294     1.239    -2.148     0.000      797.838
+
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          1.39594821  *   0.00070842  *  -0.00058082  *
+     2       C          0.69744065  *   1.20893234  *   0.00378764  *
+     3       C         -0.69757939  *   1.20824956  *  -0.00289082  *
+     4       C         -1.39617167  *   0.01335823  *   0.00294801  *
+     5       C         -0.69779949  *  -1.20888590  *  -0.00456527  *
+     6       C          0.69803513  *  -1.20861793  *   0.00050771  *
+     7       H          2.47985146  *  -0.00053428  *  -0.00026633  *
+     8       H          1.23926274  *   2.14853753  *  -0.00139283  *
+     9       H         -1.23857374  *   2.14726230  *  -0.00052497  *
+    10       H         -2.47955833  *  -0.00007282  *  -0.00028698  *
+    11       H         -1.23876617  *  -2.14735359  *   0.00005431  *
+    12       H          1.23891794  *  -2.14757749  *   0.00003034  *
+
+                             CARTESIAN COORDINATES
+
+   1    C        1.395948207     0.000708424    -0.000580815
+   2    C        0.697440653     1.208932341     0.003787638
+   3    C       -0.697579391     1.208249560    -0.002890820
+   4    C       -1.396171670     0.013358228     0.002948013
+   5    C       -0.697799493    -1.208885901    -0.004565267
+   6    C        0.698035132    -1.208617926     0.000507710
+   7    H        2.479851457    -0.000534276    -0.000266331
+   8    H        1.239262743     2.148537525    -0.001392834
+   9    H       -1.238573736     2.147262298    -0.000524972
+  10    H       -2.479558334    -0.000072822    -0.000286979
+  11    H       -1.238766173    -2.147353586     0.000054305
+  12    H        1.238917938    -2.147577495     0.000030336
+
+
+           Empirical Formula: C6 H6  =    12 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          C          -0.147313        4.1473     1.08372     3.06360
+    2          C          -0.146754        4.1468     1.08347     3.06328
+    3          C          -0.148637        4.1486     1.08064     3.06800
+    4          C          -0.147481        4.1475     1.08362     3.06386
+    5          C          -0.146506        4.1465     1.08643     3.06008
+    6          C          -0.148807        4.1488     1.08384     3.06497
+    7          H           0.147586        0.8524     0.85241
+    8          H           0.147705        0.8523     0.85229
+    9          H           0.147859        0.8521     0.85214
+   10          H           0.147633        0.8524     0.85237
+   11          H           0.147143        0.8529     0.85286
+   12          H           0.147573        0.8524     0.85243
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.002    -0.001    -0.001     0.002
+ HYBRID        -0.000    -0.008    -0.000     0.008
+ SUM            0.001    -0.009    -0.001     0.009
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  C   1.08372   1.07568   0.98809   0.99983
+    2  C   1.08347   1.00965   1.05391   0.99972
+    3  C   1.08064   1.01053   1.05637   1.00110
+    4  C   1.08362   1.07572   0.98820   0.99994
+    5  C   1.08643   1.00972   1.05143   0.99892
+    6  C   1.08384   1.01070   1.05384   1.00042
+    7  H   0.85241
+    8  H   0.85229
+    9  H   0.85214
+   10  H   0.85237
+   11  H   0.85286
+   12  H   0.85243
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.79 SECONDS
+
+ == MOPAC DONE ==

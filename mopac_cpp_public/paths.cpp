@@ -2,6 +2,17 @@
 // Follow a user-supplied reaction coordinate (PATHS): at each step, set the
 // reaction-coordinate value and optimize with EF (default) or FLEPO/DFP.
 
+//
+// ============================================================================
+// 【中文导读】paths() —— 反应路径跟随（PATHS）
+// ----------------------------------------------------------------------------
+// 对应 paths.F90。按用户给定的反应坐标（PATHS 关键字）逐步改变坐标值，
+// 每个点用 EF（默认）或 FLEPO/DFP 优化其余变量，形成反应路径；结果写入
+// 输出与 PDB/轨迹文件。
+// 注意：每步会调用 writmo() 打印结果、dfpsav() 保存 Hessian 以便下一步
+// 热启动；路径点/步长/方向由关键字控制，出错时 mopend 终止。
+// ============================================================================
+
 #include "paths.h"
 
 #include <cmath>
@@ -28,6 +39,8 @@ double reada(const std::string& s, int pos);
 double second(int);
 void mopend(const std::string& s);
 void to_screen(const std::string& s);
+
+// paths(): 主入口——按 PATHS 关键字的坐标序列逐点优化。
 
 void paths() {
     using namespace common_arrays_C;

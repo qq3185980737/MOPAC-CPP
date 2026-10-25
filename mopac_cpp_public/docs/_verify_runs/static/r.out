@@ -1,0 +1,301 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 14:01:04 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  STATIC     - CALCULATE STATIC FIELD POLARIZABILITIES
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 1SCF STATIC
+ water static
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+PM7 1SCF STATIC
+ water static
+
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED                 
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 14:01:04 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.79103 KCAL/MOL =    -241.79769 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67884 EV
+          ELECTRONIC ENERGY       =       -469.01375 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        146.33491 EV
+          COSMO AREA              =         42.49 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.19 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         12.097923 EV
+          HOMO LUMO ENERGIES (EV) =        -12.098  4.047
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51400
+            H     2    O     1     0.58600
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.012 SECONDS
+          COMPUTATION TIME        =          0.016 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000     0.000000000     0.000000000
+   2    H        0.000000000     0.757000000     0.586000000
+   3    H        0.000000000    -0.757000000     0.586000000
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES  
+ -29.60428 -17.76780 -14.25074 -12.09792   4.04669   6.31025
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.645511        6.6455     1.81668     4.82883
+    2          H           0.322755        0.6772     0.67724
+    3          H           0.322755        0.6772     0.67724
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.000     1.817     1.817
+ HYBRID        -0.000     0.000     0.323     0.323
+ SUM           -0.000    -0.000     2.140     2.140
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81668   2.00000   1.35192   1.47691
+    2  H   0.67724
+    3  H   0.67724
+ ******************** FINITE-FIELD POLARIZABILITIES ********************
+
+    THE F-F METHOD IS PERFORMED USING BOTH AN ENERGY
+    AND DIPOLE MOMENT EXPANSION.  THESE RESULTS ARE
+    LISTED BELOW AS "H.o.F." AND "Dipole", RESPECTIVELY.
+
+          MOLECULAR WEIGHT =   18.02
+
+
+
+          ROTATIONAL CONSTANTS IN CM(-1)
+
+          A =   27.42137782   B =   14.59342916   C =    9.52454536
+
+
+
+           PRINCIPAL MOMENTS OF INERTIA IN UNITS OF 10**(-40)*GRAM-CM**2
+
+          A =        1.0208   B =        1.9182   C =        2.9390
+
+
+ ROTATION MATRIX FOR ORIENTATION OF MOLECULE:
+
+        -0.000000   -0.000000    1.000000
+         1.000000    0.000000    0.000000
+        -0.000000    1.000000    0.000000
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000   -0.0656   -0.0000
+     2         H        0.7570    0.5204    0.0000
+     3         H       -0.7570    0.5204    0.0000
+
+
+ ENERGY OF "REORIENTED" SYSTEM WITHOUT FIELD:      -57.79103 Kcal/mol
+
+
+ APPLIED ELECTRIC FIELD MAGNITUDE:         0.10284 VOLTS PER ANGSTROM
+    Step  1 of 36 done (+X)
+    Step  2 of 36 done (-X)
+    Step  3 of 36 done (+2X)
+    Step  4 of 36 done (-2X)
+    Step  5 of 36 done (+Y)
+    Step  6 of 36 done (-Y)
+    Step  7 of 36 done (+2Y)
+    Step  8 of 36 done (-2Y)
+    Step  9 of 36 done (+Y+X)
+    Step 10 of 36 done (+Y-X)
+    Step 11 of 36 done (-Y-X)
+    Step 12 of 36 done (-Y+X)
+    Step 13 of 36 done (+2Y+2X)
+    Step 14 of 36 done (+2Y-2X)
+    Step 15 of 36 done (-2Y-2X)
+    Step 16 of 36 done (-2Y+2X)
+    Step 17 of 36 done (+Z)
+    Step 18 of 36 done (-Z)
+    Step 19 of 36 done (+2Z)
+    Step 20 of 36 done (-2Z)
+    Step 21 of 36 done (+Z+X)
+    Step 22 of 36 done (+Z-X)
+    Step 23 of 36 done (-Z-X)
+    Step 24 of 36 done (-Z+X)
+    Step 25 of 36 done (+2Z+2X)
+    Step 26 of 36 done (+2Z-2X)
+    Step 27 of 36 done (-2Z-2X)
+    Step 28 of 36 done (-2Z+2X)
+    Step 29 of 36 done (+Z+Y)
+    Step 30 of 36 done (+Z-Y)
+    Step 31 of 36 done (-Z-Y)
+    Step 32 of 36 done (-Z+Y)
+    Step 33 of 36 done (+2Z+2Y)
+    Step 34 of 36 done (+2Z-2Y)
+    Step 35 of 36 done (-2Z-2Y)
+    Step 36 of 36 done (-2Z+2Y)
+
+
+ ****************************** DIPOLE ******************************
+
+
+                     H.o.F.         Dipole
+
+     X              0.000000      -0.000001
+     Y             -0.841870      -0.841953
+     X              0.000008       0.000009
+
+
+ MAGNITUDE:         0.841870       0.841953  (A.U.)
+                    2.139819       2.140030  (DEBYE)
+
+
+ ****************************** POLARIZABILITY ********************
+
+
+
+ Polarizability Tensor from Heat of Formation:
+
+
+                     1          2          3
+ ------------------------------------------
+          1  11.421850
+          2   0.002537  10.460885
+          3  -0.000253  -0.001843   7.149807
+
+
+
+
+    ROOT NO.    1           2           3
+
+             7.14981    10.46088    11.42186
+  
+         1   0.00006    -0.00264    -1.00000
+         2   0.00056     1.00000    -0.00264
+         3   1.00000    -0.00056     0.00006
+
+ Polarizability Tensor from Dipole Moment:
+
+
+                     1          2          3
+ ------------------------------------------
+          1  11.418625
+          2   0.014409  10.403422
+          3   0.008742  -0.003252   7.141135
+
+
+
+
+    ROOT NO.    1           2           3
+
+             7.14111    10.40322    11.41885
+  
+         1  -0.00205     0.01418     0.99990
+         2   0.00101    -0.99990     0.01418
+         3   1.00000     0.00103     0.00203
+
+
+ Average Polarizability from:     H.o.F         Dipole
+                                9.677514       9.654394  A.U.
+                                1.434014       1.430588  ANG.**3
+                            2.867951D-24   2.861099D-24  ESU
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

@@ -1,7 +1,18 @@
+// ============================================================================
+// 【中文导读】charst.cpp —— 态/组态对称性特征标（charst.F90）
+// ----------------------------------------------------------------------------
+// 计算 CI 组态或振动模式的对称性特征标，供 charmo/symoir 分配不可约表示。
+// 注意：minv/dtrans/matout 在当前移植中仍是外部占位（输出路径不全），
+// 数值特征标部分按 Fortran 公式逐项对应。
+// ============================================================================
+
 // charst.cpp — C++ translation of MOPAC 2016 "charst.F90".
 // minv / dtrans / matout are external stubs.
 
 #include "charst.h"
+#include "minv.h"
+#include "dtrans.h"
+#include "matout.h"
 
 #include <cmath>
 #include <vector>
@@ -14,12 +25,6 @@
 using namespace meci_C;
 using namespace symmetry_C;
 
-namespace {
-void minv(double*, int, double& det) { det = 1.0; }
-void dtrans(std::vector<double>&, int, bool&, const std::vector<std::vector<double>>&) {}
-void matout(const std::vector<std::vector<double>>&,
-            const std::vector<std::vector<double>>&, int, int, int) {}
-}
 
 double charst(const std::vector<std::vector<double>>& vects,
               const std::vector<int>& ntype, int istate, int ioper,

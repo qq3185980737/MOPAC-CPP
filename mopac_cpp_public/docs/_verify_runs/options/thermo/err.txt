@@ -1,0 +1,52 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+cpp.mop
+ Force constant calculation
+FMAT_DEBUG nv=9 nreal_in=3
+FMAT_DEBUG i=1 k=1 h=2.340105101 delta=0.011530
+FMAT_DEBUG i=1 k=2 h=-0.480346296 delta=0.011530
+FMAT_DEBUG i=1 k=3 h=0.000000000 delta=0.011530
+FMAT_DEBUG i=1 k=4 h=-2.016600760 delta=0.011530
+FMAT_DEBUG i=1 k=5 h=-0.151432853 delta=0.011530
+FMAT_DEBUG i=1 k=6 h=0.000000001 delta=0.011530
+FMAT_DEBUG i=1 k=7 h=-0.323504346 delta=0.011530
+FMAT_DEBUG i=1 k=8 h=0.631779152 delta=0.011530
+FMAT_DEBUG i=1 k=9 h=-0.000000000 delta=0.011530
+FMAT_DEBUG i=2 k=2 h=2.084283753 delta=0.013989
+FMAT_DEBUG i=2 k=3 h=0.000000001 delta=0.013989
+FMAT_DEBUG i=2 k=4 h=0.195624444 delta=0.013989
+FMAT_DEBUG i=2 k=5 h=-0.196899157 delta=0.013989
+FMAT_DEBUG i=2 k=6 h=0.000000000 delta=0.013989
+FMAT_DEBUG i=2 k=7 h=0.288969553 delta=0.013989
+FMAT_DEBUG i=2 k=8 h=-1.887384599 delta=0.013989
+FMAT_DEBUG i=2 k=9 h=0.000000001 delta=0.013989
+FMAT_DEBUG i=3 k=3 h=0.013534641 delta=0.028621
+FMAT_DEBUG i=3 k=4 h=0.000121874 delta=0.028621
+FMAT_DEBUG i=3 k=5 h=0.000006262 delta=0.028621
+FMAT_DEBUG i=3 k=6 h=-0.006750785 delta=0.028621
+FMAT_DEBUG i=3 k=7 h=-0.000024487 delta=0.028621
+FMAT_DEBUG i=3 k=8 h=0.000119546 delta=0.028621
+FMAT_DEBUG i=3 k=9 h=-0.006783856 delta=0.028621
+FMAT_DEBUG i=4 k=4 h=2.233971875 delta=0.009602
+FMAT_DEBUG i=4 k=5 h=-0.192756779 delta=0.009602
+FMAT_DEBUG i=4 k=6 h=-0.000000001 delta=0.009602
+FMAT_DEBUG i=4 k=7 h=-0.214319390 delta=0.009602
+FMAT_DEBUG i=4 k=8 h=0.010127795 delta=0.009602
+FMAT_DEBUG i=4 k=9 h=-0.000000000 delta=0.009602
+FMAT_DEBUG i=5 k=5 h=0.314763525 delta=0.021256
+FMAT_DEBUG i=5 k=6 h=0.000000000 delta=0.021256
+FMAT_DEBUG i=5 k=7 h=0.353563499 delta=0.021256
+FMAT_DEBUG i=5 k=8 h=-0.116410213 delta=0.021256
+FMAT_DEBUG i=5 k=9 h=0.000000000 delta=0.021256
+FMAT_DEBUG i=6 k=6 h=0.002685563 delta=0.028830
+FMAT_DEBUG i=6 k=7 h=-0.000006649 delta=0.028830
+FMAT_DEBUG i=6 k=8 h=0.000000139 delta=0.028830
+FMAT_DEBUG i=6 k=9 h=0.004066531 delta=0.028830
+FMAT_DEBUG i=7 k=7 h=0.532423083 delta=0.021259
+FMAT_DEBUG i=7 k=8 h=-0.647706736 delta=0.021259
+FMAT_DEBUG i=7 k=9 h=0.000000000 delta=0.021259
+FMAT_DEBUG i=8 k=8 h=2.004205752 delta=0.009828
+FMAT_DEBUG i=8 k=9 h=-0.000000001 delta=0.009828
+FMAT_DEBUG i=9 k=9 h=0.002723447 delta=0.028830

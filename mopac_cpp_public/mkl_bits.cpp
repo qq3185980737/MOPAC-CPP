@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】mkl_bits.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 mkl_bits.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // mkl_bits.cpp — C++ translation of MOPAC 2016 "mkl_bits.F90".
 // BLAS level-1/2/3 and LAPACK routines, column-major Fortran layout.
 // Semantics follow the standard Netlib BLAS/LAPACK definitions that
@@ -528,34 +537,40 @@ void dtrti2(char uplo, char diag, int n, double* a, int lda, int& info) {
     if (n < 0) { xerbla("DTRTI2", 1); return; }
     bool unit = lsame(diag, 'U');
     if (upper(uplo)) {
-        // X = U^{-1}: column j solved by back-substitution; a[i][i] already
-        // holds X[i][i] for i < j (processed in reverse column order).
-        for (int j = n - 1; j >= 0; --j) {
+        // LAPACK DTRTI2 (upper): x(1:j-1) = A(1:j-1,1:j-1) * A(1:j-1,j) with a
+        // reference-BLAS DTRMV ('U','N',DIAG) on the already inverted leading
+        // block, then x = -A(j,j) * x.
+        for (int jc = 0; jc < n; ++jc) {
             if (!unit) {
-                if (a[j + j * lda] == 0.0) { info = j + 1; return; }
-                a[j + j * lda] = 1.0 / a[j + j * lda];
+                if (a[jc + jc * lda] == 0.0) { info = jc + 1; return; }
+                a[jc + jc * lda] = 1.0 / a[jc + jc * lda];
             }
-            for (int i = j - 1; i >= 0; --i) {
-                double temp = a[i + j * lda];           // U[i][j]
-                for (int k = i + 1; k < j; ++k)         // U[i][k] * X[k][j]
-                    temp += a[i + k * lda] * a[k + j * lda];
-                a[i + j * lda] = -temp * a[j + j * lda] / a[i + i * lda];
+            double ajj = unit ? -1.0 : -a[jc + jc * lda];
+            // DTRMV('U','N',DIAG, jc, A, lda, A(0,jc), 1)
+            for (int jj = 0; jj < jc; ++jj) {
+                double temp = a[jj + jc * lda];
+                for (int ii = jj - 1; ii >= 0; --ii)
+                    a[ii + jc * lda] += temp * a[ii + jj * lda];
+                a[jj + jc * lda] = temp * (unit ? 1.0 : a[jj + jj * lda]);
             }
+            for (int ii = 0; ii < jc; ++ii) a[ii + jc * lda] *= ajj;
         }
     } else {
-        // X = L^{-1}: column j forward-substitution; a[i][i] is still the
-        // original diagonal for i > j, so divide by it.
-        for (int j = 0; j < n; ++j) {
+        // LAPACK DTRTI2 (lower), j from n-1 down to 0.
+        for (int jc = n - 1; jc >= 0; --jc) {
             if (!unit) {
-                if (a[j + j * lda] == 0.0) { info = j + 1; return; }
-                a[j + j * lda] = 1.0 / a[j + j * lda];
+                if (a[jc + jc * lda] == 0.0) { info = jc + 1; return; }
+                a[jc + jc * lda] = 1.0 / a[jc + jc * lda];
             }
-            for (int i = j + 1; i < n; ++i) {
-                double temp = a[i + j * lda];           // L[i][j]
-                for (int k = j + 1; k < i; ++k)         // L[i][k] * X[k][j]
-                    temp += a[i + k * lda] * a[k + j * lda];
-                a[i + j * lda] = -temp * a[j + j * lda] / a[i + i * lda];
+            double ajj = unit ? -1.0 : -a[jc + jc * lda];
+            // DTRMV('L','N',DIAG, n-jc-1, A(jc+1,jc+1), lda, A(jc+1,jc), 1)
+            for (int jj = n - 1; jj > jc; --jj) {
+                double temp = a[jj + jc * lda];
+                for (int ii = jj + 1; ii < n; ++ii)
+                    a[ii + jc * lda] += temp * a[ii + jj * lda];
+                a[jj + jc * lda] = temp * (unit ? 1.0 : a[jj + jj * lda]);
             }
+            for (int ii = jc + 1; ii < n; ++ii) a[ii + jc * lda] *= ajj;
         }
     }
 }

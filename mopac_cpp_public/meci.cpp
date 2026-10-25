@@ -5,6 +5,20 @@
 // matrix, and select the requested root. Print/analysis blocks (ciosci,
 // dmecip, spin-density tables, ESR output) are retained as comments.
 
+//
+// ============================================================================
+// 【中文导读】meci() —— 组态相互作用（MECI）驱动
+// ----------------------------------------------------------------------------
+// 对应 meci.F90。流程：
+//   1) 解析关键字（MICROS/C.I./ROOT 等），确定活性空间与微态数；
+//   2) 把 MO 系数、双电子积分变换到活性空间（ijkl）；
+//   3) 枚举 alpha/beta 微态（perm），构造 CI 矩阵（gse/diagi）；
+//   4) 对角化 CI 矩阵，取目标根，返回 CI 能量修正；
+//   5) 打印/分析（ciosci、dmecip、自旋密度、ESR）部分仍以注释保留在原位。
+// 数据约定：轨道/积分按 1-based 打包；CI 矩阵大小由微态数决定，nmos 很小时
+// 是完整 CI，较大时按 MICROS 限制激发级数。
+// ============================================================================
+
 #include "meci.h"
 
 #include <algorithm>
@@ -45,6 +59,8 @@ static inline int xyidx(int a, int b, int c, int d, int nmos) {
     return (d - 1) * nmos * nmos * nmos + (c - 1) * nmos * nmos +
            (b - 1) * nmos + (a - 1);
 }
+
+// meci(): 主入口，返回 CI 修正能量（加到 SCF 能量上）。
 
 double meci() {
     // Cleanup branch: numat == 0 deallocate all CI state.
@@ -213,6 +229,8 @@ double meci() {
             cfull[(col - 1) * norbs + (row - 1)] = c[row][col];
 
     // Two-electron integral transformation.
+    // 中文：双电子积分变换 (ij|kl) → 活性空间；这是 O(N^5) 的主要开销。
+
     dijkl.assign(norbs * nmos * (nmos * (nmos + 1) / 2), 0.0);
     xy.assign(nmos * nmos * nmos * nmos, 0.0);
     std::vector<double> cij(lm61), ckl(lm61), wcij(lm61);
@@ -432,6 +450,8 @@ double meci() {
     }
 
     // Build the CI matrix and diagonalize.
+    // 中文：组装 CI 矩阵（对角为微态能量，非对角为哈密顿矩阵元）并调用对角化。
+
     mecih(diag.data(), cimat.data(), nmos, &lab, xy.data());
 
     // Perturb diagonal to destroy exact degeneracies.

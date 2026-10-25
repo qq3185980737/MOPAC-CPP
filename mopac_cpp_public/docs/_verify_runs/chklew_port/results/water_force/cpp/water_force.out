@@ -1,0 +1,185 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 23:55:22 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  FORCE      - FORCE CALCULATION SPECIFIED
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 FORCE
+ water force opt
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+
+          HEAT OF FORMATION =       -57.791035 KCALS/MOLE
+
+
+          CARTESIAN COORDINATE DERIVATIVES
+
+   NUMBER  ATOM          X              Y              Z
+     1    O      -1.382958    -1.786518     0.000000
+     2    H       0.470391     1.064404     0.000000
+     3    H       0.912566     0.722113     0.000000
+
+
+
+          GRADIENT NORM =     2.79511
+
+
+          TIME FOR SCF CALCULATION =      0.00
+           TIME FOR DERIVATIVES     =      0.00
+
+
+          MOLECULAR WEIGHT =   18.02
+
+
+
+          ROTATIONAL CONSTANTS IN CM(-1)
+
+          A =   27.42137785   B =   14.59342916   C =    9.52454536
+
+
+
+           PRINCIPAL MOMENTS OF INERTIA IN UNITS OF 10**(-40)*GRAM-CM**2
+
+          A =        1.0208   B =        1.9182   C =        2.9390
+
+
+          ORIENTATION OF MOLECULE IN FORCE CALCULATION
+
+    NO.      ATOM         X         Y         Z
+     1       O   8   -0.0401   -0.0518    0.0000
+     2       H   1    0.9172   -0.0518    0.0000
+     3       H   1   -0.2800    0.8749    0.0000
+
+(To convert to Hartree/Bohr^2, multiply by (10^(-21) x N x a0^2)/(4.184 x 627.51) =   0.0642)
+
+
+          FORCE MATRIX IN MILLIDYNES/ANGSTROM
+
+
+                 O   1      H   2      H   3  
+ ------------------------------------------
+    O     1   6.433114
+    H     2   4.087485   4.538374
+    H     3   4.087069   0.854102   4.537813
+
+
+          HEAT OF FORMATION =       -57.791035 KCALS/MOLE
+
+          ZERO POINT ENERGY       10.120 KCAL/MOL
+
+
+          NORMAL COORDINATE ANALYSIS (Total motion = 1 Angstrom)
+
+
+  Root No.       1         2         3
+                 1 ????    2 ????    3 ????
+                2808.2    2863.7       0.0  
+          1   -0.0322   -0.0375   -0.0162
+          2   -0.0416    0.0290   -0.0209
+          3    0.0000    0.0000    0.0000
+          4    0.0784    0.4762    0.4757
+          5    0.4672    0.0000   -0.1034
+          6   -0.0000   -0.0000   -0.0000
+          7    0.4326    0.1194   -0.2193
+          8    0.1930   -0.4611    0.4346
+          9    0.0000   -0.0000   -0.0000
+
+
+          MASS-WEIGHTED COORDINATE ANALYSIS (NORMAL COORDINATES)
+
+
+  Root No.       1         2         3
+                 1 ????    2 ????    3 ????
+                2808.2    2863.7       0.0  
+          1   -0.1827   -0.2137   -0.0924
+          2   -0.2361    0.1654   -0.1193
+          3    0.0000    0.0000    0.0000
+          4    0.1116    0.6808    0.6831
+          5    0.6656    0.0001   -0.1485
+          6   -0.0000   -0.0000   -0.0000
+          7    0.6163    0.1707   -0.3149
+          8    0.2750   -0.6591    0.6240
+          9    0.0000   -0.0000   -0.0000
+
+
+          DESCRIPTION OF VIBRATIONS
+
+
+ VIBRATION    1    1????    ATOM PAIR        ENERGY CONTRIBUTION    RADIAL
+ FREQ.      1407.17       O   1 -- H   3            53.3% (122.0%)    66.5%
+ T-DIPOLE    1.0774       H   2 -- H   3            45.9% (113.2%)    23.4%
+ TRAVEL      0.1684       O   1 -- H   2             0.7% ( 14.5%)     0.0%
+ RED. MASS   1.6907
+ EFF. MASS   0.0000
+
+ VIBRATION    2    2????    ATOM PAIR        ENERGY CONTRIBUTION    RADIAL
+ FREQ.      2808.15       H   2 -- H   3            40.1% ( 27.6%)    14.0%
+ T-DIPOLE    0.7667       O   1 -- H   2            37.4% ( 26.7%)     0.0%
+ TRAVEL      0.1267       O   1 -- H   3            22.5% ( 20.7%)    16.7%
+ RED. MASS   1.4958
+ EFF. MASS   0.0000
+
+ VIBRATION    3    3????    ATOM PAIR        ENERGY CONTRIBUTION    RADIAL
+ FREQ.      2863.66       H   2 -- H   3            54.7% ( 40.4%)    23.4%
+ T-DIPOLE    0.3757       O   1 -- H   3            24.0% ( 26.7%)     7.7%
+ TRAVEL      0.1428       O   1 -- H   2            21.3% ( 25.2%)     0.0%
+ RED. MASS   1.1540
+ EFF. MASS   0.0000
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

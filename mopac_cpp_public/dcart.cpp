@@ -2,6 +2,21 @@
 // Cartesian energy derivatives by finite differences.
 // coord/dxyz are 1-based rows (coord[k-1][i], k=1..3); p/pa/pb 0-based packed
 // (common_arrays_C); MOZYME branch keeps structure with ijbo stubbed.
+
+//
+// ============================================================================
+// 【中文导读】dcart() —— 笛卡尔能量导数的有限差分实现
+// ----------------------------------------------------------------------------
+// 对应 dcart.F90。对每个原子沿 x/y/z 做小幅位移（步长见 deriv.cpp 的
+// change[]，10^-7 量级），用 compfg 的能量差得到笛卡尔梯度；MOZYME 体系
+// 另有基于 ijbo 的快速路径。
+// 约定：coord/dxyz 是 1-based 行（coord[k-1][i]，k=1..3），p/pa/pb 为打包
+// 矩阵；derp() 是 d(integral)/dr 的辅助函数（thread_local，因为并行循环
+// 会调用）。
+// 并行：MOPAC_DCART_OMP=1 时用 OpenMP 原子对循环（更快但归约顺序不同，
+// 不保证逐位一致，默认关闭）；串行路径与官方一致。
+// ============================================================================
+
 #include "dcart.h"
 
 #include <algorithm>
@@ -43,6 +58,8 @@ using namespace parameters_C;
 // link against it); full implementation belongs to the M04 batch.
 extern int ijbo(int, int);  // real implementation in ijbo.cpp
 
+// derp(): 双中心积分对原子间距的导数（解析式），供 dd 累加使用。
+
 double derp(double r) {
     // thread_local: derp() is called inside the dcart OpenMP atom-pair loop.
     static thread_local int icalcn = 0;
@@ -75,6 +92,8 @@ static bool dcart_omp_enabled() {
     return en;
 }
 
+// dcart(): 主入口。对每个原子/方向做 ±step 位移，返回 dxyz（1-based）。
+
 void dcart(std::vector<std::vector<double>>& coord,
            std::vector<std::vector<double>>& dxyz) {
     static int icalcn = 0;
@@ -90,9 +109,9 @@ void dcart(std::vector<std::vector<double>>& coord,
         large = keywrd.find("LARGE") != std::string::npos;
         debug = keywrd.find("DERIV") != std::string::npos ||
                 keywrd.find("DCART") != std::string::npos;
-        force = keywrd.find("PREC") != std::string::npos ||
-                keywrd.find("FORCE") != std::string::npos;
     }
+    force = keywrd.find("PREC") != std::string::npos ||
+            keywrd.find("FORCE") != std::string::npos;
     const int icuc = (l123 + 1) / 2;
     const int numtot = numat * l123;
     bool refeps = useps;
@@ -120,6 +139,8 @@ void dcart(std::vector<std::vector<double>>& coord,
     for (int i = 1; i <= numat; ++i) q[i] = tore[nat[i]] - q[i];
 
     // Per-atom work: computes pair contributions for atom ii into dd.
+    // 中文：把原子 ii 与所有 jj 的成对贡献累加进 dd（串行/并行共用）。
+
     // dd must be zeroed by the caller. Serial and OpenMP paths share this.
     auto work_ii = [&](int ii, std::vector<std::vector<double>>& dd) {
         const int iii = l123 * (ii - 1);
@@ -295,6 +316,12 @@ void dcart(std::vector<std::vector<double>>& coord,
                                 cdi[k + 2] -= chnge2;
                                 if (!force) cdi[k + 2] -= chnge2;
                                 const double deriv = half * (aa - ee) * const_ / chnge;
+            if (std::getenv("DCART_PAIR")) {
+                static int ncall_dbg = 0;
+                ++ncall_dbg;
+                std::fprintf(stderr, "CXXDCART %d %d %d %d %.16f %.16f %.16f\n",
+                             ncall_dbg, ii, jj, k, aa, ee, deriv);
+            }
 
                                 dd[k][iii + icuc] -= deriv;
                                 dd[k][jjj + kkkk] += deriv;
@@ -415,10 +442,10 @@ void dcart(std::vector<std::vector<double>>& coord,
     if (useps) {
         std::vector<double> flat(3 * numtot + 1, 0.0);
         for (int i = 1; i <= numtot; ++i)
-            for (int k = 1; k <= 3; ++k) flat[(i - 1) * 3 + k] = dxyz[k][i];
+            for (int k = 1; k <= 3; ++k) flat[(i - 1) * 3 + (k - 1)] = dxyz[k][i];
         diegrd(flat.data());
         for (int i = 1; i <= numtot; ++i)
-            for (int k = 1; k <= 3; ++k) dxyz[k][i] = flat[(i - 1) * 3 + k];
+            for (int k = 1; k <= 3; ++k) dxyz[k][i] = flat[(i - 1) * 3 + (k - 1)];
     }
     if (use_ref_geo) {
         for (int i = 1; i <= numat; ++i)

@@ -1,0 +1,149 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              RM1 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 15:53:01 2026  *
+ *  RM1        - The RM1 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+RM1 1SCF
+ h2 RM1
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       H          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.00000000  *   0.74000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         H        0.0000    0.0000    0.0000
+     2         H        0.0000    0.0000    0.7400
+
+  H: (RM1): G.B. ROCHA, R.O. FREIRE, A.M.SIMAS, J.J.P. STEWART, J. COMP. CHEM. 27, 1101 (2006)
+
+           Empirical Formula: H2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 1
+
+
+ -------------------------------------------------------------------------------
+RM1 1SCF
+ h2 RM1
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              RM1 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 15:53:01 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         -1.34545 KCAL/MOL =      -5.62938 KJ/MOL
+
+
+          TOTAL ENERGY            =        -28.49842 EV
+          ELECTRONIC ENERGY       =        -42.27966 EV  POINT GROUP:     D*h 
+          CORE-CORE REPULSION     =         13.78124 EV
+          COSMO AREA              =         27.21 SQUARE ANGSTROMS
+          COSMO VOLUME            =         13.01 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         14.805176 EV
+          HOMO LUMO ENERGIES (EV) =        -14.805  4.867
+          NO. OF FILLED LEVELS    =          1
+          MOLECULAR WEIGHT        =          2.0158
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     2    H     1     0.74000
+            H     1    H     1     0.00000
+            H     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.002 SECONDS
+          COMPUTATION TIME        =          0.002 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       H          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.00000000  *   0.74000000  *
+
+                             CARTESIAN COORDINATES
+
+   1    H        0.000000000     0.000000000     0.000000000
+   2    H        0.000000000     0.000000000     0.740000000
+
+
+           Empirical Formula: H2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+                  EIGENVALUES
+ -14.80518   4.86704
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       
+    1          H          -0.000000        1.0000     1.00000
+    2          H           0.000000        1.0000     1.00000
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000     0.000     0.000     0.000
+ HYBRID         0.000     0.000     0.000     0.000
+ SUM            0.000     0.000     0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s   
+    1  H   1.00000
+    2  H   1.00000
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

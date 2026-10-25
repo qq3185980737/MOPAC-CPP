@@ -1,7 +1,17 @@
+// ============================================================================
+// 【中文导读】write_cell.cpp —— 输出/文件写出
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 write_cell.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // write_cell.cpp — C++ translation of "write_cell" (moldat.F90 lines 1036-1118).
 // Prints unit-cell lengths/angles, empirical formula, density, and
 // heat-of-formation/gradient per formula unit.
 #include "write_cell.h"
+#include "chanel_C.h"
 
 #include <cmath>
 #include <cstdio>
@@ -91,6 +101,6 @@ void write_cell(int iprt) {
                   mol_weight * 1.e24 / fpc_10 / vol,
                   escf / z, gnorm / std::sqrt(z * 1.0));
     line = buf;
-    std::printf("%s\n", line.c_str());
+    std::fprintf(chanel_C::out_unit(), "%s\n", line.c_str());
   }
 }

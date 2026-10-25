@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】symr.cpp —— 对称性/特征标
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 symr.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // symr.cpp — C++ translation of MOPAC 2016 "symr.F90" (complete, incl. symp).
 // Build the full set of point-group symmetry operations R(9,*) and the atomic
 // mapping ipo(numat,120) from the user-supplied classes in elem.

@@ -2,6 +2,16 @@
 // Non-derivative nonlinear least-squares minimizer: Levenberg-Marquardt
 // with QR decomposition, Broyden rank-1 update, and orthogonal sidesteps.
 
+//
+// ============================================================================
+// 【中文导读】nllsq() —— 非线性最小二乘（Levenberg-Marquardt）优化器
+// ----------------------------------------------------------------------------
+// 对应 nllsq.F90。无导数最小二乘：用 QR 分解 + LM 阻尼求步长，Broyden
+// 秩一更新近似 Jacobian，配合正交侧移（orthogonal sidesteps）跳出局部极小。
+// 调用 compfg 算能量/梯度；locmin 做子空间线搜索；parsav 保存/恢复重启数据。
+// 收敛判据基于残差平方和 ssq 与梯度；关键字 NLLSQ/SIGMA 会走此路径。
+// ============================================================================
+
 #include <cmath>
 #include <cstdio>
 #include <vector>
@@ -31,8 +41,13 @@ using namespace common_arrays_C;
 using namespace molkst_C;
 
 namespace {
+
+// sgn(): Fortran SIGN(a,b) 的等价实现——返回 |x| 并带上 y 的符号。
+
 double sgn(double x, double y) { return y >= 0 ? std::fabs(x) : -std::fabs(x); }
 }
+
+// nllsq(): 主入口——LM 迭代：compfg 求残差/梯度 → QR 解步长 → 线搜索 → 收敛。
 
 void nllsq() {
     int m = nvar;

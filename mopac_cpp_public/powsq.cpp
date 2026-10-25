@@ -2,6 +2,18 @@
 // POWSQ geometry optimizer: minimises the gradient norm (eigenvector-following-like).
 // Includes internal line search "search" and restart I/O "powsav".
 
+//
+// ============================================================================
+// 【中文导读】powsq() —— POWSQ 优化器（最小化梯度范数）
+// ----------------------------------------------------------------------------
+// 对应 powsq.F90。POWSQ 是 MOPAC 的另一条优化路径（关键字 POWSQ），与 EF
+// 类似但目标是让梯度范数最小：用近似逆 Hessian、沿本征方向搜索，内部线
+// 搜索由 search_powsq() 完成；powsav() 负责重启文件的读写。
+// 流程：初始化（Hessian/步长）→ 逐方向线搜索（compfg 算能量/梯度）→
+// 更新近似 Hessian → 收敛/步数判断；NLLSQ/SIGMA/TS 等关键字可能切换到此路径。
+// 约定：xparam 1-based，Hessian 用列主序平铺。
+// ============================================================================
+
 #include "powsq.h"
 
 #include <algorithm>
@@ -151,6 +163,8 @@ void search_powsq(std::vector<double>& xp, double& alpha,
 }
 
 }  // namespace
+
+// powsq(): 主入口——初始化 Hessian/步长，进入逐方向搜索与收敛循环。
 
 void powsq() {
     using chanel_C::iw;

@@ -1,4 +1,36 @@
 // iter.cpp 鈥?SCF main loop (translated from iter.F90).
+
+// ============================================================================
+// 【中文导读】iter() —— SCF 自洽场迭代主循环（对应 iter.F90，1173 行）
+// ----------------------------------------------------------------------------
+// 目标：由单电子矩阵 H 和双电子积分 W 出发，迭代求 Fock 矩阵 F、密度矩阵 P、
+// 轨道能量 eigs，直到能量/密度变化小于阈值，返回电子能量 ee（单位 eV）。
+//
+// 迭代框架（代码按此顺序阅读即可）：
+//   1. 初始化：首次进入按关键字设置调试开关、收敛阈值(scfcrt/selcon)、初始
+//      密度（ATOMIC/OLDENS）、UHF/half-electron/CI 等模式；
+//   2. L250 迭代起点：按 level-shift 方案平移 eigs，组装 F = H + shift*P；
+//   3. L320：fock2() 加双电子部分，得到完整 F；
+//   4. 对角化：diag_for_GPU()（官方默认的“伪对角化”路径，名字沿用 GPU 移植）
+//      或 eigenvectors_LAPACK()（全对角化）；
+//   5. 由本征向量构建新密度（density_for_GPU/densit），cnvg() 给出密度变化 pl；
+//   6. L410/L490：比较能量差 diff 与 pl，判断是否收敛；
+//   7. L600：SCF 收尾——最终精确对角化一次、按需 meci()（CI）并累加能量。
+//
+// 数组约定与 Fortran 完全一致：下标从 1 开始；F/P/H 用下三角打包一维数组，
+// 元素 (i,j)（i>=j）偏移 = j*(j-1)/2+i；eigs/eigb 是按 MO 序号的一维数组；
+// c 类矩阵按 Fortran 列主序平铺（cflat[(col-1)*norbs + row-1]）。
+//
+// 原版语句标号：L180=重新开始 SCF；L250=迭代开始；L320=建 Fock；L410=收敛/
+// 能量比较；L470=撤销 level shift 后重算 F；L490=能量下界监控；L540=收敛标志
+// 更新；L600=SCF 收尾（post-SCF / CI）。
+//
+// 移植期新增（默认关闭，不影响与 Fortran 的逐位一致）：
+//   - DIIS（环境变量 MOPAC_FAST）：Pulay 外推加速，仅 RHF 非 CI 使用；
+//   - 全对角化（关键字 FULLDIAG / 环境变量 MOPAC_FULL_DIAG）；
+//   - HYBRID 关键字：收敛后做一次精确对角化以精修能量。
+// ============================================================================
+
 #include "iter.h"
 #include "iter_C.h"
 #include <algorithm>
@@ -6,6 +38,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <string>
+
+
 #include <vector>
 #include <iostream>
 #include <cstdio>
@@ -143,6 +177,9 @@ static void diis_extrapolate(std::vector<double>& f,
     }
 }
 
+// iter(): 求解一次 SCF。fulscf=false 时只构建一次 Fock（用于单点/调试）；
+// rand 控制首轮密度是否加随机扰动以打破对称性（默认 1.0 表示不加）。
+
 void iter(double& ee, bool fulscf, bool rand){
     auto _t0 = std::chrono::steady_clock::now();
     long long _tf2 = 0, _tdiag = 0, _tdens = 0, _tpseudo = 0, _tfull = 0;
@@ -151,28 +188,30 @@ void iter(double& ee, bool fulscf, bool rand){
     std::vector<std::vector<double>> diis_F, diis_E;  // DIIS window (Fock, residual)
     double diis_prev_norm = 1e30;
     int diis_bad = 0;
-    double selcon;
-    int l=0, icalcn=0, itrmax=2000, na2el=0, na1el=0, nb1el=0, ifill=0,
+    static thread_local double selcon;
+    static thread_local int l=0, icalcn=0, itrmax=2000, na2el=0, na1el=0, nb1el=0, ifill=0,
          irrr=5, jalp=0, ialp=0, jbet=0, ibet=0, ihomo=1, ihomob=1, i=0, j=0,
          iemin=0, iemax=0, iredy=1, niter=0, modea=0, modeb=0;
-    std::vector<double> q(numat+1,0.0), escf0(11,0.0), theta_(norbs+1,0.0);
-    double plb=0, scfcrt=1e-4, pl=1.0, bshift=-80.0, pltest=0.05, trans=0.2,
+    static thread_local std::vector<double> q, escf0, theta_;
+    static thread_local double plb=0, scfcrt=1e-4, pl=1.0, bshift=-80.0, pltest=0.05, trans=0.2,
            w1=0.5,w2=0.5, random=1.0, shift=0.0, shiftb=0.0, shfmax=20.0,
            ten=10.0, tenold=10.0, plchek=0.005, scorr=0.0, shfto=0.0, shftbo=0.0,
            titer0=0.0, eold=100.0, diff=0.0, enrgy_=23.060529, titer=0.0, escf=0.0,
            sellim=0.0, sum=0.0, eold_alpha_=0.0, eold_beta_=0.0;
-    bool debug=false,prtfok=false,prteig=false,prtden=false,prt1el=false,minprt=false,
+    static thread_local bool debug=false,prtfok=false,prteig=false,prtden=false,prt1el=false,minprt=false,
          newdg=false,prtpl=false,prtvec=false,camkin=false,ci=false,okpuly=false,
          oknewd=false,times=false,force=false,allcon=false,halfe=false,gs=false,
          capps=false,incitr=false,timitr=false,frst=true,bfrst=true,ready=false,
          glow=false,makea=true,makeb=true,getout=false,l_param=true;
-    std::string abprt[4]={"","","ALPHA"," BETA"};
-    int iopc_calcp=3;
-    md_test=true; is_PARAM=false; icalcn=0; ifill=0;
+    static thread_local std::string abprt[4]={"","","ALPHA"," BETA"};
+    static thread_local int iopc_calcp=3;
+    md_test=true; is_PARAM=false; ifill=0;
     ihomo=std::max(1,nclose+nalpha); ihomob=std::max(1,nclose+nbeta);
-    eold=100.0; ready=false; diff=0.0;
+    
     if ((int)cflat.size() <= norbs * norbs) { cflat.assign(norbs * norbs + 1, 0.0); cbflat.assign(norbs * norbs + 1, 0.0); }
     if(icalcn!=numcal){
+        if (q.size() < (size_t)numat+1) { q.assign(numat+1,0.0); escf0.assign(11,0.0); theta_.assign(norbs+1,0.0); }
+        eold=100.0; ready=false; diff=0.0;
         delete_iter_arrays(); l_param=true; enrgy_=23.060529; glow=false; irrr=5; shift=0.0; icalcn=numcal; shfmax=20.0;  // F90 iter.F90:94 enrgy=fpc_9 (kcal/mol)
         debug = keywrd.find(" DEBUG")!=std::string::npos;
         minprt = (keywrd.find(" SADDLE")+0)==0;
@@ -230,7 +269,7 @@ void iter(double& ee, bool fulscf, bool rand){
         else { iopc_calcp=5; if(lgpu) iopc_calcp=4; }
         if(gs) gs = !halfe && !ci;
         scfcrt=1e-4;
-        if((keywrd.find(" NLLSQ")!=std::string::npos || keywrd.find(" SIGMA")!=std::string::npos || keywrd.find(" TS")!=std::string::npos) || force) scfcrt*=0.001;
+        if((keywrd.find(" NLLSQ")!=std::string::npos || keywrd.find(" SIGMA")!=std::string::npos || keywrd.find(" TS")!=std::string::npos) || force || keywrd.find(" THERMO_PREC")!=std::string::npos) scfcrt*=0.001;
         else if(keywrd.find(" PRECISE")!=std::string::npos || nopen!=nclose) scfcrt*=0.01;
         if(keywrd.find(" POLAR")!=std::string::npos) scfcrt=std::min(1e-6,scfcrt);
         scfcrt=std::max(scfcrt,1e-12);
@@ -262,11 +301,18 @@ void iter(double& ee, bool fulscf, bool rand){
     if(nalpha!=nbeta && uhf) pltest=0.001;
     if(prt1el) vecprt(h,norbs);
     iredy=1;
+
+    // L180: 外层 SCF 起点。SCF 失败/参数变化后从这里重新开始迭代。
+
 L180:
     niter=0; frst=true;
     if (diis_on) { diis_F.clear(); diis_E.clear(); diis_prev_norm = 1e30; diis_bad = 0; }
     modea = camkin?1:0; modeb = camkin?1:0;
     bfrst=true;
+
+    // L250: 每轮迭代起点——累加迭代计数、更新时间戳、按当前 eigs/pl 调整
+    // level shift（shift/shiftb，UHF 时 alpha/beta 各一套）。
+
 L250:
     incitr = (modea!=3 && modeb!=3);
     if(incitr) ++niter;
@@ -305,6 +351,9 @@ L250:
         if(glow) random=0;
         for(int ii=1;ii<=mpack;++ii){ random=-random; f[ii]=h[ii]+random; }
     } else { for(int ii=1;ii<=mpack;++ii) f[ii]=h.data()[ii];; }
+
+    // L320: 用当前密度 P 构建 Fock 矩阵（fock2 加双电子项）。
+
 L320:
     {
         auto _b0 = std::chrono::steady_clock::now();
@@ -314,6 +363,10 @@ L320:
                     std::chrono::steady_clock::now() - _b0).count();
     }
     if (diis_on && !getout) {
+
+        // 中文：DIIS 用“上一轮”密度 P_{n-1} 构造残差 F_n*P_{n-1}-P_{n-1}*F_n；
+        // 整个过程只在 MOPAC_FAST 时启用，默认走官方 level-shift 路径。
+
         // DIIS residual uses the OLD density (the one F_n was built from):
         //   e_n = F_n*P_{n-1} - P_{n-1}*F_n   (P_n would make e ~ 0 by construction)
         std::vector<double> e(mpack + 1, 0.0);
@@ -327,11 +380,15 @@ L320:
         if (diis_F.size() >= 6) { diis_F.erase(diis_F.begin()); diis_E.erase(diis_E.begin()); }
         diis_F.push_back(f);
         diis_E.push_back(e);
-        // residual-based convergence: F*P-P*F small => self-consistent
-        if (norm < 1e-3 && niter > 5) { incitr = true; goto L470; }
+        // NOTE: Fortran has no DIIS-residual SCF exit; the only convergence
+        // test is L410 (pl < pltest && |diff| < sellim && ready).  The former
+        // "norm < 1e-3" exit stopped at a different density in FORCE/THERMO
+        // displaced geometries (~3% force-matrix error).
         // extrapolate F* = sum c_i F_i, damped: f = 0.7*F* + 0.3*F_n (stable).
         // Delayed start (niter>=5) and |c_i|<=2 guard against wild early extrapolation.
-        if (diis_F.size() >= 2 && niter >= 5) {
+        // Fortran only extrapolates when the Pulay/Camp-King converger is on
+        // (PULAY/forced ALLCON); by default no DIIS extrapolation is applied.
+        if ((okpuly || allcon || camkin) && diis_F.size() >= 2 && niter >= 5) {
             double c[8];
             int m = (int)diis_F.size();
             bool ok = diis_solve(c, diis_E, m, mpack);
@@ -391,7 +448,12 @@ L320:
         }
     } else if(bshift!=0.0) scorr=shift*(nopen-nclose)*enrgy_*0.25*fract*(2.0-fract);
     escf=(ee+enuclr)*enrgy_+atheat+scorr;
+	std::fprintf(stderr, "CXXIT %d %.16f %.16f %.16f\n", niter, escf, pl, shift);
     getout=false;
+
+    // L410: 收敛判断：escf 与 eold 的差 diff、level-shift 步长 ten 的更新，
+    // 以及是否满足 pl < pltest 且 ready 的收敛条件。
+
 L410:
     if(incitr){
         if(getout) goto L470;
@@ -401,11 +463,19 @@ L410:
         bool conv_nw = (niter>4 && (pl==0.0 || (pl<pltest && std::abs(diff)<sellim)) && ready);
         if(conv_nw){ goto L470; }
         goto L490;
+
+    // L470: 收敛后若仍带 level shift，则清零 shift 并回到 L320 重算一次 F，
+    // 用无平移的 F 做最终能量/密度。
+
 L470:
         if(std::abs(shift)<1e-10) goto L600;
         shift=0; shiftb=0;
         for(int ii=1;ii<=mpack;++ii) f[ii]=h[ii];
         makea=true; makeb=true; goto L320;
+
+    // L490: 能量下界监控（limscf）：记录最近几次 escf，若单调下降超过阈值
+    // 则允许提前结束（不影响 SCF 收敛判据，只是加速）。
+
 L490:
         if(limscf && emin!=0.0 && !(ci||halfe)){
             if(escf<emin){
@@ -428,6 +498,9 @@ L490:
                 }
             }
         }
+
+    // L540: 更新收敛状态标志 ready/iredy，决定下一步是否切换对角化路径。
+
 L540:
         ready = iredy>0 && (std::abs(diff)<sellim*10.0 || pl==0.0);
         ++iredy;
@@ -447,7 +520,7 @@ L540:
         if(newdg){
             if(okpuly && makea && iredy>1)
                 pulay(f,pa,norbs,pold,pold2,pold3,jalp,ialp,6*mpack,frst,pl);
-            if(halfe||camkin||getenv("MOPAC_FULL_DIAG")!=nullptr||keywrd.find(" FULLDIAG")!=std::string::npos) eigenvectors_LAPACK(cflat,f,eigs,norbs);
+            if((halfe||camkin||getenv("MOPAC_FULL_DIAG")!=nullptr||keywrd.find(" FULLDIAG")!=std::string::npos) && keywrd.find(" HYBRID")==std::string::npos) eigenvectors_LAPACK(cflat,f,eigs,norbs);
             else { auto _b2 = std::chrono::steady_clock::now();
             diag_for_GPU(f,cflat,na1el,eigs,norbs,mpack);
             _tdiag += std::chrono::duration_cast<std::chrono::microseconds>(
@@ -508,6 +581,10 @@ L540:
     newdg = (pl<trans && oknewd) || newdg;
     if(pl<trans*0.3333) oknewd=true;
     goto L250;
+
+    // L600: SCF 收尾：再做一次精确对角化，按需调用 meci()（CI）及 HYBRID
+    // 精修，最后累加能量并更新 emin。
+
 L600:
     ee=helect(norbs,pa,h,f);
     if(uhf) ee+=helect(norbs,pb,h,fb); else ee*=2.0;
@@ -536,6 +613,28 @@ L600:
             sum=meci();
             if(moperr) return;
             ee+=sum;
+        }
+        // HYBRID option: exact-refine the converged state (closed shell).
+        // The SCF main loop stays on the serial pseudo-diagonalization path;
+        // a single exact diagonalization of the converged Fock rebuilds the
+        // density and energy at the cost of one dsyevd call.
+        if(keywrd.find(" HYBRID")!=std::string::npos){
+            if(uhf){
+                fprintf(stdout, " HYBRID: skipped for UHF (closed-shell refinement only)\n");
+            } else {
+                auto _bh = std::chrono::steady_clock::now();
+                std::vector<double> c_hyb(norbs*norbs+1,0.0), e_hyb(norbs+1,0.0);
+                eigenvectors_LAPACK(c_hyb, f, e_hyb, norbs);
+                density_for_GPU(c_hyb,fract,na2el,na1el,2.0,mpack,norbs,1,p,iopc_calcp);
+                for(int ii=1;ii<=mpack;++ii){ pa.data()[ii]=0.5*p.data()[ii]; pb.data()[ii]=pa.data()[ii]; }
+                ee=helect(norbs,p,h,f);
+                if(capps) ee+=capcor(nat,nfirst,nlast,p,h);
+                double _th = std::chrono::duration<double,std::milli>(
+                             std::chrono::steady_clock::now()-_bh).count();
+                fprintf(stdout, "\n HYBRID: full-refined E(elec)=%.6f au  HOF=%.6f kcal/mol  (exact-refine %.2f ms)\n",
+                        ee, (ee+enuclr)*enrgy_+atheat, _th);
+                fflush(stdout);
+            }
         }
     }
     ++nscf;

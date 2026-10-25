@@ -2,6 +2,18 @@
 // NDDO 2-electron 2-center repulsion derivative of the Fock matrix.
 // ifact/i1fact/ptot2 live in common_arrays_C (shared with setup_mopac_arrays),
 // matching F90.  All packed arrays 1-based.
+
+//
+// ============================================================================
+// 【中文导读】dfock2() —— Fock 矩阵对几何的导数（双电子双中心部分）
+// ----------------------------------------------------------------------------
+// 对应 dfock2.F90。与 fock2() 结构一一对应，但计算的是 ∂F/∂x 所需的
+// 双电子排斥导数项（jab/kab 的解析导数）；打包数组全部 1-based。
+// 分支：MNDO（无 d 轨道）快速路径、hh/hl/lh/ll 原子对、周期性体系，以及
+// fockdorbs()（d 轨道/大块导数）。
+// 用途：deriv/dcart 的解析导数路径（比纯有限差分便宜）。
+// ============================================================================
+
 #include "dfock2.h"
 #include <algorithm>
 #include <cmath>
@@ -95,6 +107,8 @@ int icalcn = 0;
 
 } // namespace
 
+// dfock2(): 主入口。f 为输出导数矩阵，ptot/p 为密度，w 为积分；kr 游标与 fock2 一致。
+
 void dfock2(double* f, const double* ptot, const double* p, const double* w,
             int numat, const int* nfirst, const int* nlast, int nati) {
     if (icalcn != molkst_C::numcal) {
@@ -138,6 +152,9 @@ restart:
         break;
     case 2:
         // MNDO (d-orbital-free) fast path: one elrep integral per atom pair
+
+        // 中文：MNDO 快速路径——每个原子对只需一个 elrep 积分，避免走 d 轨道的 100 项块。
+
         {
             int kr = 0;
             int ii = nati;

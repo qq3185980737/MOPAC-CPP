@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】geout.cpp —— 输入/几何解析
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 geout.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // geout.cpp — C++ translation of MOPAC 2016 "geout.F90".
 // Prints the current geometry (MOPAC .out style or restart-readable style),
 // including symmetry data and user-supplied pi bonds.
@@ -91,7 +100,7 @@ void geout(int mode1) {
         for (int i = 1; i <= ncomments; ++i) {
             std::string c = all_comments[i];
             while (!c.empty() && (c.back() == ' ' || c.back() == '\t')) c.pop_back();
-            std::fprintf(stdout, "%s\n", c.c_str());
+            std::fprintf(chanel_C::out_unit(), "%s\n", c.c_str());
         }
     }
     std::string fmt1 = "%13.8f", fmt23 = "%13.7f";
@@ -106,12 +115,15 @@ void geout(int mode1) {
             int i = (maxtxt == 0) ? 6 : maxtxt / 2 + 1;
             std::string s1 = "   ATOM " + blank.substr(0, maxtxt / 2 + 1) + " CHEMICAL  " + blank.substr(0, i) + "  X               Y               Z";
             std::string s2 = "  NUMBER " + blank.substr(0, maxtxt / 2 + 1) + " SYMBOL" + blank.substr(0, i) + "(ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)";
-            std::fprintf(stdout, "%s\n%s\n\n", s1.c_str(), s2.c_str());
-        } else if (mode > 0) wrttxt(iprt);
+            std::fprintf(chanel_C::out_unit(), "%s\n%s\n\n", s1.c_str(), s2.c_str());
+        } else if (mode > 0) {
+            wrttxt(iprt);
+            if (mode > 1) std::fprintf(chanel_C::out_unit(), "\n");
+        }
     } else if (mode == 1) {
         int j = std::max(9, maxtxt + 2);
         if (maxtxt == 0) j = 8;
-        std::fprintf(stdout, "%s\n%s\n%s\n",
+        std::fprintf(chanel_C::out_unit(), "%s\n%s\n%s\n",
             ("  ATOM" + blank.substr(0, j / 2) + "CHEMICAL " + blank.substr(0, (j + 1) / 2) + " BOND LENGTH      BOND ANGLE     TWIST ANGLE ").c_str(),
             (" NUMBER" + blank.substr(0, j / 2) + "SYMBOL   " + blank.substr(0, (j + 1) / 2) + "(ANGSTROMS)      (DEGREES)       (DEGREES) ").c_str(),
             ("   (I)       " + blank.substr(0, j) + "      NA:I           NB:NA:I    " + "   NC:NB:NA:I " + "      NA    NB    NC ").c_str());
@@ -154,6 +166,20 @@ void geout(int mode1) {
         if (!gui && maps_C::latom1 == i) q[maps_C::lpara1] = flagn;
         if (maps_C::latom2 == i) q[maps_C::lpara2] = flagn;
         std::string blank_s = elemnt(labels[i]);
+        // Fortran elemnt is right-justified (' O'); C++ stores 'O '.
+        std::string sym_r = blank_s;
+        while (!sym_r.empty() && sym_r.back() == ' ') sym_r.pop_back();
+        if (sym_r.size() < 2) sym_r = " " + sym_r;
+        if (sym_r.size() > 2) sym_r = sym_r.substr(sym_r.size() - 2);
+        // A-field width for arc mode: j = max(4,maxtxt+2) (+8 for isotopes).
+        auto arc_field = [&](int jf) {
+            std::string f = sym_r;
+            if ((int)f.size() < jf) f += std::string(jf - (int)f.size(), ' ');
+            return f;
+        };
+        const int jarc = (mode != 1)
+                             ? (isotopes ? std::max(4, maxtxt + 2) + 8 : std::max(4, maxtxt + 2))
+                             : std::max(9, maxtxt + 3);
         if (labels[i] != 99 && labels[i] != 107) ii++;
         if (labels[i] == 1 && ii > 0) {
             if (std::fabs(atmass[ii] - 2.014) < 1.e-3) blank_s = " D";
@@ -212,48 +238,79 @@ void geout(int mode1) {
         char ch[128];
         if (na[i] == igui || cart) {
             if (mode != 1) {
+                // F90 geout.F90:244-257 (dataset/arc style).
+                std::string field = arc_field(jarc);
+                std::string extra;
                 if (labels[i] != 99 && labels[i] != 107) {
-                    if (charge) std::snprintf(ch, sizeof(ch), "%8.4f", q2[ii]);
-                    else std::snprintf(ch, sizeof(ch), "%8.4f", 0.0);
-                    line_extra = ch;
-                    std::snprintf(ch, sizeof(ch), "%s %s %s %s %s %s %s %s\n",
-                        blank_s.c_str(), fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
-                        fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
-                        fixed(x, fmt23.c_str()).c_str(), q[3].c_str(), line_extra.c_str());
-                    std::fprintf(stdout, "%s", ch);
+                    if (charge) {
+                        char qb[32];
+                        std::snprintf(qb, sizeof(qb), "%8.4f", q2[ii]);
+                        extra = std::string(19, ' ') + qb;
+                    }
+                    std::fprintf(chanel_C::out_unit(),
+                                 " %s%s %s%s %s%s %s%s\n",
+                                 field.c_str(),
+                                 fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
+                                 fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
+                                 fixed(x, fmt23.c_str()).c_str(), q[3].c_str(),
+                                 extra.c_str());
                 } else {
-                    std::snprintf(ch, sizeof(ch), "%s %s %s %s %s %s %s %s\n",
-                        blank_s.c_str(), fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
-                        fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
-                        fixed(x, fmt23.c_str()).c_str(), q[3].c_str(), " ");
-                    std::fprintf(stdout, "%s", ch);
+                    std::fprintf(chanel_C::out_unit(),
+                                 " %s%s %s%s %s%s %s \n",
+                                 field.c_str(),
+                                 fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
+                                 fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
+                                 fixed(x, fmt23.c_str()).c_str(), q[3].c_str());
                 }
             } else {
-                std::snprintf(ch, sizeof(ch), "%6d      %s %s %s %s %s %s %s\n", i,
-                    blank_s.c_str(), fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
+                // F90 geout.F90:259-261 output style:
+                //   (I6,6X,A,F13.8,1X,A2,F13.8,1X,A2,F13.8,1X,A2)
+                // A field = blank(:j), j=9 when maxtxt==0, with the element
+                // symbol right-justified in its 2-char slot (Fortran elemnt is
+                // ' O'); C++ elemnt is left-justified ('O '), so rebuild it.
+                std::string field;
+                if (maxtxt == 0) {
+                    std::string sym = elemnt(labels[i]);
+                    while (!sym.empty() && sym.back() == ' ') sym.pop_back();
+                    field = (sym.size() >= 2) ? sym.substr(0, 2) : (" " + sym);
+                    field += std::string(9 - (int)field.size(), ' ');
+                } else {
+                    field = blank_s;
+                    int jf = std::max(9, maxtxt + 3);
+                    if ((int)field.size() < jf) field += std::string(jf - (int)field.size(), ' ');
+                }
+                std::snprintf(ch, sizeof(ch), "%6d      %s%s %s%s %s%s %s\n", i,
+                    field.c_str(), fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
                     fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
                     fixed(x, fmt23.c_str()).c_str(), q[3].c_str());
-                std::fprintf(stdout, "%s", ch);
+                std::fprintf(chanel_C::out_unit(), "%s", ch);
             }
         } else {
             if (mode != 1) {
+                std::string field = arc_field(jarc);
                 if (labels[i] != 99 && labels[i] != 107) {
-                    if (charge) std::snprintf(ch, sizeof(ch), "%8.4f", q2[ii]);
-                    else std::snprintf(ch, sizeof(ch), "%8.4f", 0.0);
-                    line_extra = ch;
-                    std::snprintf(ch, sizeof(ch), "%s %s %s %s %s %s %s %3d %3d %3d %s\n",
-                        blank_s.c_str(), fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
-                        fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
-                        fixed(x, fmt23.c_str()).c_str(), q[3].c_str(),
-                        na[i], nb[i], nc[i], line_extra.c_str());
-                    std::fprintf(stdout, "%s", ch);
+                    std::string extra;
+                    if (charge) {
+                        char qb[32];
+                        std::snprintf(qb, sizeof(qb), "%8.4f", q2[ii]);
+                        extra = std::string(19, ' ') + qb;
+                    }
+                    std::fprintf(chanel_C::out_unit(),
+                                 " %s%s %s%s %s%s %s%3d%3d%3d%s\n",
+                                 field.c_str(),
+                                 fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
+                                 fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
+                                 fixed(x, fmt23.c_str()).c_str(), q[3].c_str(),
+                                 na[i], nb[i], nc[i], extra.c_str());
                 } else {
-                    std::snprintf(ch, sizeof(ch), "%s %s %s %s %s %s %s %3d %3d %3d\n",
-                        blank_s.c_str(), fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
-                        fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
-                        fixed(x, fmt23.c_str()).c_str(), q[3].c_str(),
+                    std::fprintf(chanel_C::out_unit(),
+                                 " %s%s %s%s %s%s %s%3d%3d%3d\n",
+                                 field.c_str(),
+                                 fixed(geo[1][i], fmt1.c_str()).c_str(), q[1].c_str(),
+                                 fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
+                                 fixed(x, fmt23.c_str()).c_str(), q[3].c_str(),
                         na[i], nb[i], nc[i]);
-                    std::fprintf(stdout, "%s", ch);
+                    std::fprintf(chanel_C::out_unit(), "%s", ch);
                 }
             } else {
                 std::snprintf(ch, sizeof(ch), "%6d      %s %s %s %s %s %s %s %3d %3d %3d\n", i,
@@ -261,13 +318,15 @@ void geout(int mode1) {
                     fixed(w, fmt23.c_str()).c_str(), q[2].c_str(),
                     fixed(x, fmt23.c_str()).c_str(), q[3].c_str(),
                     na[i], nb[i], nc[i]);
-                std::fprintf(stdout, "%s", ch);
+                std::fprintf(chanel_C::out_unit(), "%s", ch);
             }
         }
     }
     maxtxt = store_maxtxt;
     if (mode == 1) return;
-    std::fprintf(stdout, "\n");
+    // F90 geout.F90:290 write(iprt,*) -> one list-directed blank record (a
+    // single space), printed before the symmetry-dependency section.
+    std::fprintf(chanel_C::out_unit(), " \n");
     if (ndep != 0) {
         int nn = 1;
         int i = 1;
@@ -283,14 +342,14 @@ void geout(int mode1) {
                 j++;
             }
             if (idepfn[i] == 18 || idepfn[i] == 19) {
-                std::fprintf(stdout, "%4d%3d%13.9f", locpar[i], idepfn[i], depmul[nn]);
-                for (int k = i; k <= j; ++k) std::fprintf(stdout, "%5d", locdep[k]);
-                std::fprintf(stdout, "\n");
+                std::fprintf(chanel_C::out_unit(), "%4d%3d%13.9f", locpar[i], idepfn[i], depmul[nn]);
+                for (int k = i; k <= j; ++k) std::fprintf(chanel_C::out_unit(), "%5d", locdep[k]);
+                std::fprintf(chanel_C::out_unit(), "\n");
                 nn++;
             } else {
-                std::fprintf(stdout, "%4d%3d", locpar[i], idepfn[i]);
-                for (int k = i; k <= j; ++k) std::fprintf(stdout, "%5d", locdep[k]);
-                std::fprintf(stdout, "\n");
+                std::fprintf(chanel_C::out_unit(), "%4d%3d", locpar[i], idepfn[i]);
+                for (int k = i; k <= j; ++k) std::fprintf(chanel_C::out_unit(), "%5d", locdep[k]);
+                std::fprintf(chanel_C::out_unit(), "\n");
             }
             i = j + 1;
             if (j == ndep) break;
@@ -298,16 +357,16 @@ void geout(int mode1) {
         }
         if (i <= ndep) {
             if (idepfn[i] == 18 || idepfn[i] == 19) {
-                std::fprintf(stdout, "%4d%3d%13.9f", locpar[i], idepfn[i], depmul[nn]);
-                for (int k = i; k <= ndep; ++k) std::fprintf(stdout, "%5d", locdep[k]);
-                std::fprintf(stdout, "\n");
+                std::fprintf(chanel_C::out_unit(), "%4d%3d%13.9f", locpar[i], idepfn[i], depmul[nn]);
+                for (int k = i; k <= ndep; ++k) std::fprintf(chanel_C::out_unit(), "%5d", locdep[k]);
+                std::fprintf(chanel_C::out_unit(), "\n");
             } else {
-                std::fprintf(stdout, "%4d%3d", locpar[i], idepfn[i]);
-                for (int k = i; k <= ndep; ++k) std::fprintf(stdout, "%5d", locdep[k]);
-                std::fprintf(stdout, "\n");
+                std::fprintf(chanel_C::out_unit(), "%4d%3d", locpar[i], idepfn[i]);
+                for (int k = i; k <= ndep; ++k) std::fprintf(chanel_C::out_unit(), "%5d", locdep[k]);
+                std::fprintf(chanel_C::out_unit(), "\n");
             }
         }
-        std::fprintf(stdout, "\n");
+        std::fprintf(chanel_C::out_unit(), "\n");
     }
     if (keywrd.find(" SETPI") != std::string::npos && !pibonds_txt.empty()) {
         for (int n = 1; n <= 10; ++n) {
@@ -315,11 +374,11 @@ void geout(int mode1) {
             if (n == 1) {
                 std::string s = pibonds_txt[n];
                 while (!s.empty() && (s.back() == ' ' || s.back() == '\t')) s.pop_back();
-                std::fprintf(stdout, "%s  User-supplied pi bonds\n", s.c_str());
+                std::fprintf(chanel_C::out_unit(), "%s  User-supplied pi bonds\n", s.c_str());
             } else {
                 std::string s = pibonds_txt[n];
                 while (!s.empty() && (s.back() == ' ' || s.back() == '\t')) s.pop_back();
-                std::fprintf(stdout, "%s\n", s.c_str());
+                std::fprintf(chanel_C::out_unit(), "%s\n", s.c_str());
             }
         }
     }

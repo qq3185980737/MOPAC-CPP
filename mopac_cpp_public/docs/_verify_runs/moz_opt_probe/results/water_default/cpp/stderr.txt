@@ -1,0 +1,37 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+water_default.mop
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+ Job: water_default
+Final heat of formation =        -57.79108 kcal/mol
+GRADIENT NORM           =        722.55752
+
+
+MOPAC Job: "water_default.mop" ended normally on Mon Oct 26 01:21:12 2026

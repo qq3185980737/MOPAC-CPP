@@ -1,0 +1,54 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+water_BFGS.mop
+ Geometry optimization using BFGS
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+ Job: water_BFGS
+Final heat of formation =        -57.78992 kcal/mol
+GRADIENT NORM           =        716.28115
+
+
+MOPAC Job: "water_BFGS.mop" ended normally on Mon Oct 26 01:21:13 2026

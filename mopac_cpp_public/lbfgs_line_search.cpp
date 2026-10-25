@@ -1,9 +1,31 @@
 // lbfgs_line_search.cpp — C++ translation of L-BFGS-B line-search:
 // dcsrch (Moré-Thuente), dcstep (step update), dpmeps (machine epsilon).
-#include <cmath>`n#include <limits>
+
+//
+// ============================================================================
+// 【中文导读】L-BFGS-B 线搜索与小型线性代数
+// ----------------------------------------------------------------------------
+// 本文件是 lbfgs.F90 中“线搜索 + 小型矩阵分解”部分的独立实现：
+//   - dpmeps(): 机器 epsilon；
+//   - dcstep()/dcsrch(): Moré-Thuente 线搜索（三次/二次插值 + 区间保护）；
+//   - dpofa()/dtrsl(): Cholesky 分解与三角回代（子空间求解用）；
+//   - projgr/errclb/active/freev/formt/matupd/bmv/cmprlb/formk/cauchy 等：
+//     边界约束与 L-BFGS-B 子空间工具（从 lbfgs.cpp 拆出的外部版本）。
+// 注意：lbfgs.cpp 里也有同名函数（static，内部链接）；这里的全局版本供
+// nllsq 等其他模块调用。两处实现应保持一致，修改时需同步。
+// 本批修复：原第 3 行把换行写成了字面量反引号+n，导致 C4067 警告且
+// <limits> 未显式包含；已拆成两行正常 include。
+// ============================================================================
+
+#include <cmath>
+#include <limits>
 #include <string>
 
+// dpmeps(): 机器 epsilon（L-BFGS-B 用它设定数值容差；与 F90 版本等价）。
+
 double dpmeps() { return std::numeric_limits<double>::epsilon(); }
+
+// dcstep(): Moré-Thuente 线搜索的单步更新——试步、三次/二次插值、边界保护。
 
 void dcstep(double& stx, double& fx, double& dx, double& sty, double& fy,
             double& dy, double& stp, double fp, double dp, bool& brackt,
@@ -83,6 +105,8 @@ void dcstep(double& stx, double& fx, double& dx, double& sty, double& fy,
     }
     stp = stpf;
 }
+
+// dcsrch(): 线搜索主控——反复调用 dcstep，直到满足 Wolfe 条件或判定失败。
 
 void dcsrch(double f, double g, double& stp, double ftol, double gtol,
              double xtol, double stpmin, double stpmax, std::string& task,
@@ -181,6 +205,8 @@ void dcsrch(double f, double g, double& stp, double ftol, double gtol,
 double ddot(int n, const double* dx, int incx, const double* dy, int incy);
 void daxpy(int n, double sa, const double* sx, int incx, double* sy, int incy);
 
+// dpofa(): 对称正定矩阵的 Cholesky 分解（用于子空间牛顿步）。
+
 void dpofa(double* a, int lda, int n, int& info) {
     auto A = [&](int r, int c) -> double& { return a[(r) * lda + (c)]; };
     for (int j = 1; j <= n; ++j) {
@@ -201,6 +227,9 @@ void dpofa(double* a, int lda, int n, int& info) {
 }
 
 // dtrsl: solve triangular system T*x = b (or transpose), job selects form.
+
+// dtrsl(): 用 Cholesky 因子解三角方程；job 选择是否转置、前代/回代。
+
 void dtrsl(double* t, int ldt, int n, double* b, int job, int& info) {
     auto T = [&](int r, int c) -> double& { return t[(r) * ldt + (c)]; };
     for (info = 1; info <= n; ++info)

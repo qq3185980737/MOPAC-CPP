@@ -1,4 +1,15 @@
 // deri1.cpp — C++ translation of MOPAC 2016 "deri1.F90" (complete).
+
+// ============================================================================
+// 【中文导读】deri1.cpp —— 能量对笛卡尔坐标的非松弛导数
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 deri1.F90（已完整移植）。作用：对“非变分优化”波函数
+// （CI/开壳等）计算能量对某一笛卡尔坐标的一阶导数，并在 MO 基下组装
+// 非松弛 Fock 导数（F/FD），供 deri2 的松弛项（CPHF/Z-vector）使用。
+// 约定：1-based 索引；矩阵按 Fortran 列主序平铺；导数积分由 dcart 路径给出。
+// 阅读顺序：deri1() 主循环 → 逐坐标的密度/积分累加 → 返回 F、FD 块。
+// ============================================================================
+
 // Computes the non-relaxed derivative of the non-variationally optimized
 // wavefunction energy with respect to one Cartesian coordinate, and the
 // non-relaxed Fock matrix derivative in MO basis (F/FD) as required by the
@@ -10,6 +21,13 @@
 // semantic; physical element 0 padding). work comes in as
 // vector<vector<double>> sized (norbs+1) x (norbs+1); the internal flat
 // buffer wf is 1-based semantic (physical offset i == Fortran element i).
+
+//
+// 【中文导读】deri1() —— 非弛豫部分的解析导数
+// ---------------------------------------------------------------------------
+// 计算波函数对单个笛卡尔坐标的（未弛豫）导数：构造 Fock 导数 F/FD 的 MO
+// 基表示，写入 f/fd，并给出非弛豫能量导数；随后由 deri2 做弛豫修正。
+// 打包数组 1-based（0 号 padding）；xy 是四维 MO 导数索引。
 
 #include "deri1.h"
 

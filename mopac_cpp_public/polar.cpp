@@ -1,7 +1,30 @@
 // polar.cpp - TDHF polarizability driver (MOPAC2016 polar.F90 -> C++)
 // Fortran 1-based indexing retained (vectors padded by one element).
+
+//
+// ============================================================================
+// 【中文导读】polar() —— TDHF/耦合微扰极化率计算
+// ----------------------------------------------------------------------------
+// 对应 polar.F90。在 SCF 基础上解耦合微扰方程，得到动态/静态极化率张量
+// 及其分量；POLAR 关键字触发。文件内除 polar() 驱动外，还有大量线性代数
+// 现状（2026-10-25）：polar() 驱动已完整接线——alphaf/betaf/ngamtg、
+// 各频率的表头/表格、AVERAGE 行均已实现；与官方 .out 的差异只剩数值末位
+// （加和顺序/舍入）与极少数空行，见 docs/TRANSLATION_GAPS.md §48。
+// 辅助：bdenin/bdenup/bmakuf（密度与轨道旋转）、epsab/fhpatn（矩阵组装）、
+// nonor/nonope/nonbet（非对角微扰）、ngoke/ngidri/ngefis/ngamtg（各项积分）、
+// beopor/betaf（β 超极化率）等。
+// 约定：向量/矩阵 1-based padding；列主序平铺（C++ 用 vector<vector>）。
+// ============================================================================
+
 #include "polar.h"
 #include "polar_helpers.h"
+#include "gmetry.h"
+#include "axis.h"
+#include "compfg.h"
+#include "second.h"
+#include "memory_error.h"
+#include <cstdlib>
+#include <string>
 #include "parameters_C.h"
 #include "chanel_C.h"
 #include <vector>
@@ -10,14 +33,15 @@
 #include <cmath>
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 
 // ---- module globals (extern) ----
 namespace common_arrays_C {
 extern std::vector<int> nat, na, labels;
 extern std::vector<std::vector<double>> geo, coord, c;
+extern std::vector<double> w;
 extern std::vector<std::vector<double>> tvec;
 }
-extern int norbs;   // global (molkst_C.cpp:9)
 namespace parameters_C {
 extern double dd[N_PARAM + 1], gss[N_PARAM + 1], gsp[N_PARAM + 1], gpp[N_PARAM + 1];
 extern double gp2[N_PARAM + 1], hsp[N_PARAM + 1], polvol[N_PARAM + 1];
@@ -41,7 +65,7 @@ using common_arrays_C::eigs; using common_arrays_C::nfirst; using common_arrays_
 using common_arrays_C::nat; using common_arrays_C::na; using common_arrays_C::labels;
 using common_arrays_C::geo; using common_arrays_C::coord; using common_arrays_C::c;
 using common_arrays_C::tvec;
-using molkst_C::nclose; using molkst_C::numat; using molkst_C::keywrd; using polar_C::alpavg;
+using molkst_C::nclose; using molkst_C::numat; using molkst_C::norbs; using molkst_C::keywrd; using polar_C::alpavg;
 using funcon_C::ev; using funcon_C::a0;
 using polar_C::omega;
 extern double second(int);
@@ -609,7 +633,8 @@ void ngamtg(std::vector<std::vector<double>>& x, std::vector<std::vector<double>
     const char* alab[4]={"","X","Y","Z"};
     double one=1.0;
     int msq=norbs*norbs;
-    std::printf("\n\n GAMMA (THIRD HARMONIC GENERATION) AT %10.5f EV.\n\n", omega);
+    // F90 polar.F90:2907: format(/,/,' GAMMA ... AT ',f10.5,' EV.'/,/)
+    std::printf("\n\n GAMMA (THIRD HARMONIC GENERATION) AT %10.5f EV.\n\n\n", omega);
     int jgarc=22, juarc=19, jurec=7, jgrec=10;
     int jg2rec=55, ju2rec=49, ju2mrc=67, jeprec=61;
     double gav=0.0;
@@ -633,25 +658,43 @@ void ngamtg(std::vector<std::vector<double>>& x, std::vector<std::vector<double>
             daread(us, msq, ju2rec+j34);
             daread(usmd, msq, ju2mrc+j34);
             daread(eps, msq, jeprec+j34);
-            yy+=trsub(ud3,g1,us,nclose,norbs,norbs);
-            yy-=trsub(usmd,g1,ud3,nclose,norbs,norbs);
-            yy-=trsub(ud3,g1,us,norbs,nclose,norbs);
-            yy+=trsub(usmd,g1,ud3,norbs,nclose,norbs);
-            yy+=trsub(ud3,gs,u1,nclose,norbs,norbs);
-            yy+=trsub(u1,gs,ud3,nclose,norbs,norbs);
-            yy-=trsub(ud3,eps,u1,norbs,nclose,norbs);
-            yy-=trsub(u1,eps,ud3,norbs,nclose,norbs);
-            yy+=trsub(u1,gd3,us,nclose,norbs,norbs);
-            yy-=trsub(usmd,gd3,u1,nclose,norbs,norbs);
-            yy-=trsub(u1,gd3,us,norbs,nclose,norbs);
-            yy+=trsub(usmd,gd3,u1,norbs,nclose,norbs);
+            double t1=trsub(ud3,g1,us,nclose,norbs,norbs);
+            yy+=t1;
+            double t2=trsub(usmd,g1,ud3,nclose,norbs,norbs);
+            yy-=t2;
+            double t3=trsub(ud3,g1,us,norbs,nclose,norbs);
+            yy-=t3;
+            double t4=trsub(usmd,g1,ud3,norbs,nclose,norbs);
+            yy+=t4;
+            double t5=trsub(ud3,gs,u1,nclose,norbs,norbs);
+            yy+=t5;
+            double t6=trsub(u1,gs,ud3,nclose,norbs,norbs);
+            yy+=t6;
+            double t7=trsub(ud3,eps,u1,norbs,nclose,norbs);
+            yy-=t7;
+            double t8=trsub(u1,eps,ud3,norbs,nclose,norbs);
+            yy-=t8;
+            double t9=trsub(u1,gd3,us,nclose,norbs,norbs);
+            yy+=t9;
+            double t10=trsub(usmd,gd3,u1,nclose,norbs,norbs);
+            yy-=t10;
+            double t11=trsub(u1,gd3,us,norbs,nclose,norbs);
+            yy-=t11;
+            double t12=trsub(usmd,gd3,u1,norbs,nclose,norbs);
+            yy+=t12;
+            if (ie == 1 && std::getenv("NGAMTG_DEBUG"))
+                std::fprintf(stderr, "NGAMTG imove=%d terms: %g %g %g %g %g %g %g %g %g %g %g %g\n",
+                             imove, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
         }
         gamma[ie]=yy;
         gav+=yy;
         std::printf(" GAMMA(%c,%c,%c,%c) = %19.5f\n", alab[ia][0], alab[ib][0], alab[ic][0], alab[id][0], gamma[ie]);
     }
     double gave=gav/5.0;
-    std::printf("\n\n AVERAGE GAMMA VALUE AT %10.5f = %19.5f a.u. = %19.5f ESU (X10-39)\n\n", omega, gave, gave/1.985425939776565);
+    // F90 polar.F90:3014: (/,/,' AVERAGE GAMMA VALUE AT ',f10.5,' = ',f19.5,
+    //                       a,f19.5,a,/,/)
+    std::printf("\n\n AVERAGE GAMMA VALUE AT %10.5f = %19.5f a.u. =%19.5f ESU (X10-39)\n\n\n",
+                omega, gave, gave / 1.985425939776565);
 }
 
 void beopor(int iwflb, int maxitu, double btol, std::vector<std::vector<double>>& ua,
@@ -783,6 +826,9 @@ void beopor(int iwflb, int maxitu, double btol, std::vector<std::vector<double>>
     std::printf("\n");
 }
 
+// Forward declaration: Fortran G14.6 formatter (defined before alphaf below).
+static std::string fmt_g14_6(double v);
+
 void betaf(int iwflb, int maxitu, double btol, std::vector<std::vector<double>>& ua,
            std::vector<std::vector<double>>& ub, std::vector<std::vector<double>>& f,
            std::vector<std::vector<double>>& ga, std::vector<std::vector<double>>& gb,
@@ -800,8 +846,8 @@ void betaf(int iwflb, int maxitu, double btol, std::vector<std::vector<double>>&
     int maxsq=norbs*norbs;
     int iposu=25+24*iwflb;
     int iposg=iposu+6, ipose=iposg+6, iposum=ipose+6;
-    if(iwflb==0) std::printf("\n +++++ BETA (STATIC) AT %15.5f EV.\n", omega);
-    else std::printf("\n +++++ BETA (SECOND HARMONIC GENERATION) AT %13.5f EV.\n", omega);
+    if(iwflb==0) std::printf("\n +++++ BETA (STATIC) AT %15.5f EV.\n\n", omega);
+    else std::printf("\n +++++ BETA (SECOND HARMONIC GENERATION) AT %13.5f EV.\n\n", omega);
     double bavx=0.0, bavy=0.0, bavz=0.0;
     std::vector<std::vector<std::vector<double>>> allbet(4, std::vector<std::vector<double>>(4, std::vector<double>(4,0.0)));
     for(int id=1;id<=6;++id){
@@ -893,40 +939,541 @@ void betaf(int iwflb, int maxitu, double btol, std::vector<std::vector<double>>&
         dawrit(h1, maxsq, ipose+id);
         dawrit(da, maxsq, iposum+id);
     }
-    std::printf("                           COMPONENTS OF BETA\n");
+    std::printf("%30sCOMPONENTS OF BETA\n", "");
     bavx/=5.0; bavy/=5.0; bavz/=5.0;
     double bvec=std::sqrt(bavx*bavx+bavy*bavy+bavz*bavz);
-    std::printf("           *XX         *XY         *YY         *XZ         *YZ         *ZZ\n");
+    // F90: (12X,'*XX',9X,'*XY',9X,'*YY',9X,'*XZ',9X,'*YZ',9X,'*ZZ')
+    std::printf("            *XX         *XY         *YY         *XZ         *YZ         *ZZ\n");
     if(bvec<0.999e5){
-        std::printf("   *=X %12.5f%12.5f%12.5f%12.5f%12.5f%12.5f\n", allbet[1][1][1], allbet[1][1][2], allbet[1][2][2], allbet[1][1][3], allbet[1][2][3], allbet[1][3][3]);
-        std::printf("   *=Y %12.5f%12.5f%12.5f%12.5f%12.5f%12.5f\n", allbet[2][1][1], allbet[2][1][2], allbet[2][2][2], allbet[2][1][3], allbet[2][2][3], allbet[2][3][3]);
-        std::printf("   *=Z %12.5f%12.5f%12.5f%12.5f%12.5f%12.5f\n", allbet[3][1][1], allbet[3][1][2], allbet[3][2][2], allbet[3][1][3], allbet[3][2][3], allbet[3][3][3]);
+        std::printf("   *=X%12.5f%12.5f%12.5f%12.5f%12.5f%12.5f\n", allbet[1][1][1], allbet[1][1][2], allbet[1][2][2], allbet[1][1][3], allbet[1][2][3], allbet[1][3][3]);
+        std::printf("   *=Y%12.5f%12.5f%12.5f%12.5f%12.5f%12.5f\n", allbet[2][1][1], allbet[2][1][2], allbet[2][2][2], allbet[2][1][3], allbet[2][2][3], allbet[2][3][3]);
+        std::printf("   *=Z%12.5f%12.5f%12.5f%12.5f%12.5f%12.5f\n", allbet[3][1][1], allbet[3][1][2], allbet[3][2][2], allbet[3][1][3], allbet[3][2][3], allbet[3][3][3]);
     } else {
-        std::printf("   *=X %12.4e%12.4e%12.4e%12.4e%12.4e%12.4e\n", allbet[1][1][1], allbet[1][1][2], allbet[1][2][2], allbet[1][1][3], allbet[1][2][3], allbet[1][3][3]);
-        std::printf("   *=Y %12.4e%12.4e%12.4e%12.4e%12.4e%12.4e\n", allbet[2][1][1], allbet[2][1][2], allbet[2][2][2], allbet[2][1][3], allbet[2][2][3], allbet[2][3][3]);
-        std::printf("   *=Z %12.4e%12.4e%12.4e%12.4e%12.4e%12.4e\n", allbet[3][1][1], allbet[3][1][2], allbet[3][2][2], allbet[3][1][3], allbet[3][2][3], allbet[3][3][3]);
+        std::printf("   *=X%12.4e%12.4e%12.4e%12.4e%12.4e%12.4e\n", allbet[1][1][1], allbet[1][1][2], allbet[1][2][2], allbet[1][1][3], allbet[1][2][3], allbet[1][3][3]);
+        std::printf("   *=Y%12.4e%12.4e%12.4e%12.4e%12.4e%12.4e\n", allbet[2][1][1], allbet[2][1][2], allbet[2][2][2], allbet[2][1][3], allbet[2][2][3], allbet[2][3][3]);
+        std::printf("   *=Z%12.4e%12.4e%12.4e%12.4e%12.4e%12.4e\n", allbet[3][1][1], allbet[3][1][2], allbet[3][2][2], allbet[3][1][3], allbet[3][2][3], allbet[3][3][3]);
     }
     std::printf("\n");
-    if(bvec<1e10){
-        std::printf(" AVERAGE BETA X (SHG) VALUE AT%10.5f EV = %15.4f a.u. = %14.6e ESU\n", omega, bavx, bavx*au_to_esu);
-        std::printf(" AVERAGE BETA Y (SHG) VALUE AT%10.5f EV = %15.4f a.u. = %14.6e ESU\n", omega, bavy, bavy*au_to_esu);
-        std::printf(" AVERAGE BETA Z (SHG) VALUE AT%10.5f EV = %15.4f a.u. = %14.6e ESU\n\n", omega, bavz, bavz*au_to_esu);
-        std::printf(" AVERAGE BETA   (SHG) VALUE AT%10.5f EV = %15.4f a.u. = %14.6e ESU\n", omega, bvec, bvec*au_to_esu);
-    } else {
-        std::printf(" AVERAGE BETA X (SHG) VALUE AT%10.5f EV = %13.6e a.u. = %14.6e ESU\n", omega, bavx, bavx*au_to_esu);
-        std::printf(" AVERAGE BETA Y (SHG) VALUE AT%10.5f EV = %13.6e a.u. = %14.6e ESU\n", omega, bavy, bavy*au_to_esu);
-        std::printf(" AVERAGE BETA Z (SHG) VALUE AT%10.5f EV = %13.6e a.u. = %14.6e ESU\n\n", omega, bavz, bavz*au_to_esu);
-        std::printf(" AVERAGE BETA   (SHG) VALUE AT%10.5f EV = %13.6e a.u. = %14.6e ESU\n", omega, bvec, bvec*au_to_esu);
+    {
+        auto avgline = [&](const char* a, double val) {
+            std::printf(" AVERAGE BETA%s(SHG) VALUE AT%10.5f EV = %15.4f a.u. =%s ESU\n",
+                        a, omega, val, fmt_g14_6(val * au_to_esu).c_str());
+        };
+        avgline("X", bavx);
+        avgline("Y", bavy);
+        avgline("Z", bavz);
+        std::printf("\n");
+        avgline(" ", bvec);
     }
     std::printf("   (1 a.u. = 8.639418X10-33 esu)\n\n");
 }
 
-// polar(): TDHF polarizability driver (polar.F90, 4372 lines) -- retained stub.
-// TODO: full translation; subroutines bdenin/bdenup/bmakuf/epsab/fhpatn/nonor/
-// nonope/nonbet/ngoke/ngidri/ngefis/ngamtg/beopor/betaf are already ported below.
+
+// forward declarations for the helper set defined later in this file
+void nonor(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&);
+void nonope(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&);
+void nonbet(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&);
+void ngoke(int, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&);
+void ngidri(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&);
+void ngefis(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&);
+void ngamtg(std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&);
+void beopor(int, int, double, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+            std::vector<double>&);
+void betaf(int, int, double, std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<std::vector<double>>&, std::vector<std::vector<double>>&,
+           std::vector<double>&);
+
+// Fortran G14.6: mantissa in [0.1,1), 6 fractional digits, E±nn.
+static std::string fmt_g14_6(double v) {
+    if (v == 0.0) return "  0.000000E+00";
+    int e = (int)std::floor(std::log10(std::fabs(v))) + 1;
+    double m = v / std::pow(10.0, (double)e);
+    char b[64];
+    std::snprintf(b, sizeof(b), "%.6fE%+03d", m, e);
+    std::string s(b);
+    if (s.size() < 14) s = std::string(14 - s.size(), ' ') + s;
+    return s;
+}
+
+// Fortran D12.5 (polar.F90 ATOL/BTOL): 0.xxxxxD±nn.
+static std::string fmt_d12_5(double v) {
+    if (v == 0.0) return " 0.00000D+00";
+    int e = (int)std::floor(std::log10(std::fabs(v))) + 1;
+    double m = v / std::pow(10.0, (double)e);
+    char b[64];
+    std::snprintf(b, sizeof(b), "%.5fD%+03d", m, e);
+    std::string s(b);
+    if (s.size() < 12) s = std::string(12 - s.size(), ' ') + s;
+    return s;
+}
+
+// ============================================================================
+// alphaf(): TDHF 含频一阶响应（polar.F90:742-963）的 C++ 移植。
+// 逐个方向 id=1..3 求解 (H - omega)^-1 响应矩阵，迭代得到 U/D，计算 alpha。
+// ============================================================================
+void alphaf(int iwfla, double atol, int maxita,
+            std::vector<std::vector<double>>& u, std::vector<std::vector<double>>& f,
+            std::vector<std::vector<double>>& g, std::vector<std::vector<double>>& uold,
+            std::vector<std::vector<double>>& h1, std::vector<std::vector<double>>& d,
+            std::vector<std::vector<double>>& da, std::vector<double>& w2,
+            std::vector<std::vector<double>>& c, std::vector<double>& w) {
+    const int nsqr = norbs * norbs;
+    double allalp[4][4] = {};
+    double alpold = 0.0, diff = 0.0, alphaw = 0.0, dela = 0.0;
+    bool last = false;
+    const bool debug = keywrd.find(" DEBUG") != std::string::npos;
+    const char* alab[4] = {"", "X", "Y", "Z"};
+    alpavg = 0.0;
+    std::string alphaf_dump;
+    static bool alphaf_dumped = false;
+    if (const char* dp = std::getenv("ALPHAF_DUMP"); dp && !alphaf_dumped && iwfla == 1) {
+        alphaf_dumped = true;
+        alphaf_dump = dp;
+        std::ofstream f(alphaf_dump + ".in");
+        f << std::setprecision(17);
+        auto W = [&](double v) { f << v << '\n'; };
+        W(norbs); W(nclose); W(numat); W(ev); W(a0); W(omega);
+        W((double)iwfla); W(atol); W((double)maxita);
+        W((double)w.size() - 1.0);
+        W((double)norbs);
+        W((double)norbs);
+        for (int i = 1; i <= numat; ++i)
+            for (int j = 0; j < 3; ++j) W(coord[j][i]);
+        for (int i = 1; i <= numat; ++i) W((double)nfirst[i]);
+        for (int i = 1; i <= numat; ++i) W((double)nlast[i]);
+        for (int i = 1; i <= numat; ++i) W((double)nat[i]);
+        for (int i = 1; i <= norbs; ++i) W(eigs[i]);
+        for (int i = 1; i <= norbs; ++i)
+            for (int j = 1; j <= norbs; ++j) W(c[i][j]);
+        for (int el = 1; el <= 107; ++el) {
+            W(parameters_C::dd[el]);
+            W(parameters_C::gss[el]);
+            W(parameters_C::gsp[el]);
+            W(parameters_C::gpp[el]);
+            W(parameters_C::gp2[el]);
+            W(parameters_C::hsp[el]);
+        }
+        for (size_t k = 1; k < w.size(); ++k) W(w[k]);
+    }
+    int iposu = 1 + 6 * iwfla;
+    int iposg = 4 + 6 * iwfla;
+    if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "ALPHAF enter iwfla=%d omega=%g norbs=%d nclose=%d\n", iwfla, omega, norbs, nclose);
+    std::printf("\n +++++ ALPHA AT %13.5f EV.\n", omega);
+
+    for (int id = 1; id <= 3; ++id) {
+        const double cmptim0 = second(1);
+        last = false;
+        if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "ALPHAF id=%d hmuf\n", id);
+        hmuf(h1, id, coord, nfirst, nlast, nat, norbs, numat);
+        copym(h1, f, norbs);
+        zerom(uold, norbs);
+        int icount = 0;
+        alpold = 0.0;
+        ++icount;
+        if (icount > maxita) last = true;
+        if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "ALPHAF id=%d transf/makeuf\n", id);
+        transf(f, g, c, norbs);
+        makeuf(u, uold, g, eigs, last, norbs, nclose, diff, atol);
+        if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "ALPHAF id=%d densf/aval\n", id);
+        densf(u, c, d, da, norbs, nclose, w2);
+        alphaw = aval(h1, d, norbs);
+        dela = std::fabs(alpold - alphaw);
+        alpold = alphaw;
+        zerom(f, norbs);
+        ffreq2(f, d, w);
+        ffreq1(f, d, da, da, norbs);
+        for (int i = 1; i <= norbs; ++i)
+            for (int j = 1; j <= norbs; ++j)
+                f[i][j] = h1[i][j] + f[i][j] / ev;
+        while (!last) {
+            ++icount;
+            if (icount > maxita) last = true;
+            transf(f, g, c, norbs);
+            makeuf(u, uold, g, eigs, last, norbs, nclose, diff, atol);
+            densf(u, c, d, da, norbs, nclose, w2);
+            alphaw = aval(h1, d, norbs);
+            dela = std::fabs(alpold - alphaw);
+            alpold = alphaw;
+            zerom(f, norbs);
+            ffreq2(f, d, w);
+            ffreq1(f, d, da, da, norbs);
+            if (std::fabs(f[1][1]) > 1.0e6) {
+                std::printf(" Calculation of polarizability failed (This part of MOPAC is fragile)\n");
+                mopend("Calculation of polarizability failed (This part of MOPAC is fragile)");
+                return;
+            }
+            hplusf(f, h1, norbs);
+        }
+        if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "ALPHAF id=%d icount=%d diff=%g last=%d alphaw=%g\n", id, icount, diff, (int)last, alphaw);
+        const double cmptim = second(1) - cmptim0;
+        if (debug) {
+            std::printf("\n CONVERGED IN%4d ITERATIONS IN%10.2f SECONDS\n", icount, cmptim);
+            std::printf("           DENSITY CONVERG. TO %12.5e\n", diff);
+            std::printf("             ALPHA CONVERG. TO %12.5e\n", dela);
+        }
+        alphaw = aval(h1, d, norbs);
+        allalp[id][id] = alphaw;
+        if (debug) std::printf("      ALPHA(%s,%s) = %14.7e\n", alab[id], alab[id], alphaw);
+        alpavg += alphaw;
+        dawrit(u, nsqr, iposu + id);
+        dawrit(g, nsqr, iposg + id);
+        for (int ic = 1; ic <= 3; ++ic) {
+            if (ic == id) continue;
+            hmuf(h1, ic, coord, nfirst, nlast, nat, norbs, numat);
+            alphaw = aval(h1, d, norbs);
+            allalp[ic][id] = alphaw;
+            if (debug) std::printf("      ALPHA(%s,%s) = %14.7e\n", alab[ic], alab[id], alphaw);
+        }
+    }
+    double allalp_raw[4][4] = {};
+    for (int i1 = 1; i1 <= 3; ++i1)
+        for (int j1 = 1; j1 <= 3; ++j1) allalp_raw[i1][j1] = allalp[i1][j1];
+    allalp[1][1] = pol_vol(allalp[1][1]);
+    allalp[2][2] = pol_vol(allalp[2][2]);
+    allalp[3][3] = pol_vol(allalp[3][3]);
+    alpavg = (allalp[1][1] + allalp[2][2] + allalp[3][3]) / 3.0;
+    double cnst = 1.0;
+    int iexp = 0;
+    if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr,
+        "ALPHAF result omega=%.17g raw=%.17g %.17g %.17g final=%.17g %.17g %.17g\n",
+        omega, allalp_raw[1][1], allalp_raw[2][2], allalp_raw[3][3],
+        allalp[1][1], allalp[2][2], allalp[3][3]);
+    if (alpavg > 1.0e6) {
+        iexp = (int)std::lround(std::log10(alpavg)) - 5;
+        cnst = std::pow(10.0, (double)(-iexp));
+        std::printf("\n%27sCOMPONENTS OF ALPHA*10**(%3d)\n\n", "", -iexp);
+    } else {
+        std::printf("\n%27sCOMPONENTS OF ALPHA\n\n", "");
+    }
+    // F90: (21X,'*X',11X,'*Y',11X,'*Z')
+    std::printf("                     *X           *Y           *Z\n");
+    for (int j1 = 1; j1 <= 3; ++j1) {
+        std::printf("%10s *=%s:", "", alab[j1]);
+        for (int j2 = 1; j2 <= 3; ++j2) std::printf("%13.4f", allalp[j1][j2] * cnst);
+        std::printf("\n");
+    }
+    if (cnst < 0.9) {
+        std::printf("\n  ISOTROPIC AVERAGE ALPHA*10**(%3d) =%13.5f A.U. =%13.5f ANG.**3\n",
+                    -iexp, alpavg * cnst, alpavg * cnst * std::pow(a0, 3.0));
+    } else {
+        std::printf("\n  ISOTROPIC AVERAGE ALPHA = %13.5f A.U. =%13.5f ANG.**3\n",
+                    alpavg, alpavg * std::pow(a0, 3.0));
+    }
+    if (!alphaf_dump.empty()) {
+        std::ofstream f(alphaf_dump + ".cpp");
+        auto H = [&](double v) {
+            std::uint64_t b;
+            std::memcpy(&b, &v, 8);
+            f << std::hex << std::uppercase << std::setfill('0') << std::setw(16)
+              << b << std::dec << '\n';
+        };
+        for (int i = 1; i <= 3; ++i)
+            for (int j = 1; j <= 3; ++j) H(allalp_raw[i][j]);
+        std::fprintf(stderr, "DUMP omega=%.17g rawdiag=%.17g %.17g %.17g finaldiag=%.17g %.17g %.17g polv99=%.17g polv100=%.17g\n",
+                     omega, allalp_raw[1][1], allalp_raw[2][2], allalp_raw[3][3],
+                     allalp[1][1], allalp[2][2], allalp[3][3],
+                     parameters_C::polvol[99], parameters_C::polvol[100]);
+        for (int i = 1; i <= numat; ++i)
+            std::fprintf(stderr, "DUMP atom %d label %d polvol %.17g\n", i, labels[i],
+                         parameters_C::polvol[labels[i]]);
+    }
+    to_screen("To_file: POLAR");
+    std::fflush(stdout);
+}
+
+// ============================================================================
+// polar(): TDHF 极化率驱动（polar.F90:1-399）
+// ============================================================================
 void polar() {
-    std::fprintf(stderr, "[polar] retained stub: TDHF polarizability driver not yet ported; "
-                         "subroutine set (bdenin..betaf) is available.\n");
+    using molkst_C::limscf; using molkst_C::id; using molkst_C::last;
+    using molkst_C::ndep; using molkst_C::natoms; using molkst_C::nvar;
+    using molkst_C::moperr;
+    using common_arrays_C::w; using elemts_C::elemnt; using parameters_C::polvol;
+    const int nn = norbs;
+    auto mk = [](int n) {
+        return std::vector<std::vector<double>>(n + 1, std::vector<double>(n + 1, 0.0));
+    };
+    std::vector<std::vector<double>> x1 = mk(nn), x2 = mk(nn), x3 = mk(nn), x4 = mk(nn),
+        x5 = mk(nn), x6 = mk(nn), x7 = mk(nn), x8 = mk(nn), x19 = mk(nn),
+        x10 = mk(nn), x11 = mk(nn), x12 = mk(nn), x13 = mk(nn);
+    std::vector<double> w2((size_t)nn * nn + 2, 0.0);
+    limscf = false;
+    const bool let = keywrd.find("LET") != std::string::npos;
+    std::printf(" %s TDHF POLARIZABILITIES %s\n\n",
+                std::string(20, '*').c_str(), std::string(20, '*').c_str());
+    auto refgeo = geo;
+    auto ref_na = na;
+    gmetry(geo, coord);
+    if (!let) {
+        double a = 0.0, b = 0.0, cc = 0.0;
+        double rotvec[4][4] = {};
+        axis(a, b, cc, rotvec);
+        if ((int)(a + b + cc) == -1000) return;
+        std::printf("\n ROTATION MATRIX FOR ORIENTATION OF MOLECULE:\n\n");
+        for (int i = 1; i <= 3; ++i) {
+            std::printf("     ");
+            for (int j = 1; j <= 3; ++j) std::printf("%12.6f", rotvec[i][j]);
+            std::printf("\n");
+        }
+        for (int i = 1; i <= numat; ++i) {
+            for (int j = 1; j <= 3; ++j) {
+                double sum = 0.0;
+                for (int k = 1; k <= 3; ++k) sum += coord[k - 1][i] * rotvec[k][j];
+                geo[j][i] = sum;
+            }
+        }
+        for (int i = 1; i <= numat; ++i)
+            for (int j = 1; j <= 3; ++j) coord[j - 1][i] = geo[j][i];
+        std::printf("\n\n          CARTESIAN COORDINATES \n\n");
+        std::printf("    NO.       ATOM         X         Y         Z\n\n");
+        int l = 0;
+        for (int i = 1; i <= numat; ++i) {
+            if (nat[i] == 99 || nat[i] == 107) continue;
+            ++l;
+            std::string sym = elemnt[nat[i]];
+            while (!sym.empty() && sym.back() == ' ') sym.pop_back();
+            std::printf("%6d        %2s    %10.4f%10.4f%10.4f\n", l,
+                        sym.c_str(), coord[0][l], coord[1][l], coord[2][l]);
+        }
+        if (id > 0) {
+            double tempv[4][4] = {};
+            for (int i = 1; i <= id; ++i) {
+                for (int j = 1; j <= 3; ++j) {
+                    double sum = 0.0;
+                    for (int k = 1; k <= 3; ++k) {
+                        const double tv = (k < (int)tvec.size() && i < (int)tvec[k].size())
+                                              ? tvec[k][i] : 0.0;
+                        sum += tv * rotvec[k][j];
+                    }
+                    tempv[j][i] = sum;
+                }
+            }
+            for (int i = 1; i <= id; ++i)
+                for (int j = 1; j <= 3; ++j) tvec[j][i] = tempv[j][i];
+            std::printf("\n NEW TRANSLATION VECTOR:\n ");
+            for (int i = 1; i <= id; ++i)
+                std::printf(" %15.5f%15.5f%15.5f", tvec[1][i], tvec[2][i], tvec[3][i]);
+            std::printf("\n");
+        }
+    }
+    last = 1;
+    for (auto& v : na) v = 0;
+    ndep = 0;
+    numat = 0;
+    double sumx = 0.0, sumy = 0.0, sumz = 0.0;
+    for (int i = 1; i <= natoms; ++i) {
+        if (labels[i] == 99 || labels[i] == 107) continue;
+        ++numat;
+        labels[numat] = labels[i];
+        sumx += coord[0][numat];
+        sumy += coord[1][numat];
+        sumz += coord[2][numat];
+        geo[1][numat] = coord[0][numat];
+        geo[2][numat] = coord[1][numat];
+        geo[3][numat] = coord[2][numat];
+    }
+    sumx /= numat;
+    sumy /= numat;
+    sumz /= numat;
+    double summax = 0.0, atpol = 0.0;
+    for (int i = 1; i <= numat; ++i) {
+        if (labels[i] != 107) atpol += polvol[labels[i]];
+        geo[1][i] -= sumx;
+        summax = std::max(summax, std::fabs(geo[1][i]));
+        geo[2][i] -= sumy;
+        summax = std::max(summax, std::fabs(geo[2][i]));
+        geo[3][i] -= sumz;
+        summax = std::max(summax, std::fabs(geo[3][i]));
+    }
+    nvar = 0;
+    natoms = numat;
+    std::vector<double> xparam((size_t)3 * numat + 1, 0.0);
+    for (int i = 1; i <= numat; ++i)
+        for (int j = 1; j <= 3; ++j) xparam[(size_t)3 * (i - 1) + j] = geo[j][i];
+    std::vector<double> grad((size_t)nvar + 1, 0.0);
+    double heat0 = 0.0;
+    if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR before compfg norbs=%d numat=%d nvar=%d natoms=%d\n", norbs, numat, nvar, natoms);
+    compfg(xparam, true, heat0, true, grad, false);
+    if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR after compfg norbs=%d numat=%d nvar=%d natoms=%d heat=%g\n", norbs, numat, nvar, natoms, heat0);
+    for (int i = 1; i <= numat; ++i)
+        for (int j = 1; j <= 3; ++j) geo[j][i] = xparam[(size_t)3 * (i - 1) + j];
+    std::printf("\n\n ENERGY OF \"REORIENTED\" SYSTEM WITHOUT FIELD:%20.10f\n", heat0);
+
+    int iwflb = (int)std::lround(wrdkey(keywrd, "POLAR(", 6, "IWFLB", 5, 0.0));
+    int ibet = (int)std::lround(wrdkey(keywrd, "POLAR(", 6, "BETA", 4, 1.0));
+    int igam = (int)std::lround(wrdkey(keywrd, "POLAR(", 6, "GAMMA", 5, 1.0));
+    double atol = wrdkey(keywrd, "POLAR(", 6, "TOL", 3, 0.001);
+    int maxitu = (int)std::lround(wrdkey(keywrd, "POLAR(", 6, "MAXITU", 6, 500.0));
+    int maxita = (int)std::lround(wrdkey(keywrd, "POLAR(", 6, "MAXITA", 6, 150.0));
+    double btol = wrdkey(keywrd, "POLAR(", 6, "BTOL", 4, 0.001);
+
+    double dataev[11] = {0.0};
+    int nfreq = 0;
+    {
+        std::string polkey;
+        size_t p = keywrd.find("POLAR(");
+        if (p != std::string::npos) {
+            polkey = keywrd.substr(p);
+            size_t e = polkey.find(") ");
+            if (e != std::string::npos) polkey = polkey.substr(0, e + 1);
+        }
+        size_t e = polkey.find("E=(");
+        if (e != std::string::npos) {
+            size_t close = polkey.find(")", e);
+            std::string seg = polkey.substr(e + 3,
+                (close == std::string::npos ? polkey.size() : close) - (e + 3));
+            for (char& ch : seg) if (ch == ',') ch = ' ';
+            const char* s = seg.c_str();
+            char* endp = nullptr;
+            while (nfreq < 10) {
+                double v = std::strtod(s, &endp);
+                if (endp == s) break;
+                dataev[++nfreq] = v;
+                s = endp;
+            }
+        } else {
+            for (int i = 1; i <= 3; ++i) dataev[i] = (i - 1) * 0.25;
+            nfreq = 3;
+        }
+    }
+    if (igam != 0) ibet = 1;
+    std::printf("\n\n  NFREQ=%3d  IWFLB=%3d  IBET=%3d  IGAM=%3d\n", nfreq, iwflb, ibet, igam);
+    std::printf("  ATOL=%s  BTOL=%s    MAXITU=%5d    MAXITA=%5d\n",
+                fmt_d12_5(atol).c_str(), fmt_d12_5(btol).c_str(), maxitu, maxita);
+    if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR openda\n");
+    openda(0);
+    if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR openda done iwflb=%d igam=%d ibet=%d\n", iwflb, igam, ibet);
+    if (iwflb == 2 || igam == 2 || igam == 4 || ibet <= -2) {
+        int iwfla = 0;
+        omega = 0.0;
+        alphaf(iwfla, atol, maxita, x1, x2, x3, x4, x5, x6, x7, w2, c, w);
+        if (moperr) return;
+    }
+    if (igam == 4) {
+        iwflb = 0;
+        betaf(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+              x10, x11, x12, x13, c, w);
+    }
+    const double hartr = ev;
+    for (int i = 1; i <= nfreq; ++i) {
+        omega = dataev[i];
+        const double omegau = omega / hartr;
+        if (omega < 1.0e-8) {
+            std::printf("\n\n %s\n CALCULATION OF STATIC FIELD QUANTITIES\n %s\n",
+                        std::string(65, '*').c_str(), std::string(65, '*').c_str());
+        } else {
+            std::printf("\n\n %s\n CALCULATION FOR A FREQUENCY OF %10.5f EV  =%14.5f A.U.\n",
+                        std::string(70, '*').c_str(), omega, omegau);
+            std::printf("%18sWAVELENGTH OF %10.2f NM  =%14.5f CM(-1)\n %s\n",
+                        "", 1239.8424 / omega, 8065.541 * omega,
+                        std::string(70, '*').c_str());
+        }
+        int iwfla = 1;
+        if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR loop i=%d alphaf(w)\n", i);
+        alphaf(iwfla, atol, maxita, x1, x2, x3, x4, x5, x6, x7, w2, c, w);
+        std::fflush(stdout);
+        if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR loop i=%d alphaf done\n", i);
+        if (moperr) return;
+        if (ibet == -3) nonor(x1, x2, x3, x4, x5, x6, x7, x8, x19, x10, x11, x12);
+        if (ibet == -2) nonope(x1, x2, x3, x4, x5, x6, x7, x8, x19, x10, x11, x12);
+        if (ibet == -1) {
+            iwfla = 2;
+            omega *= 2.0;
+            alphaf(iwfla, atol, maxita, x1, x2, x3, x4, x5, x6, x7, w2, c, w);
+            if (moperr) return;
+            omega /= 2.0;
+            nonbet(x1, x2, x3, x4, x5, x6, x7, x8, x19, x10, x11, x12);
+        }
+        if (ibet == 1 && iwflb <= 1 && igam == 0) {
+            if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR loop i=%d betaf\n", i);
+            betaf(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+                  x10, x11, x12, x13, c, w);
+        } else if (ibet == 1 && iwflb > 1 && igam == 0) {
+            beopor(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+                   x10, x11, x12, x13, c, w);
+        }
+        if (ibet > 0 && igam <= 3 && igam != 0) {
+            iwflb = 1;
+            if (std::getenv("POLAR_DEBUG")) std::fprintf(stderr, "POLAR loop i=%d betaf(igam)\n", i);
+            std::fflush(stdout);
+            betaf(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+                  x10, x11, x12, x13, c, w);
+        }
+        if (igam == 1) {
+            iwfla = 3;
+            omega *= 3.0;
+            alphaf(iwfla, atol, maxita, x1, x2, x3, x4, x5, x6, x7, w2, c, w);
+            if (moperr) return;
+            omega /= 3.0;
+            ngamtg(x1, x2, x3, x4, x5, x6, x7, x8, x19);
+        }
+        if (igam == 2) {
+            iwfla = 2;
+            omega *= 2.0;
+            alphaf(iwfla, atol, maxita, x1, x2, x3, x4, x5, x6, x7, w2, c, w);
+            if (moperr) return;
+            omega /= 2.0;
+            iwflb = 2;
+            beopor(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+                   x10, x11, x12, x13, c, w);
+            ngefis(x1, x2, x3, x4, x5, x6, x7, x8, x19);
+        }
+        if (igam == 3) {
+            iwflb = 3;
+            beopor(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+                   x10, x11, x12, x13, c, w);
+            ngidri(x1, x2, x3, x4, x5, x6, x7, x8, x19);
+        }
+        if (igam != 4) continue;
+        iwflb = 2;
+        beopor(iwflb, maxitu, btol, x1, x2, x3, x4, x5, x6, x7, x8, x19,
+               x10, x11, x12, x13, c, w);
+        ngoke(igam, x1, x2, x3, x4, x5, x6, x7, x8, x19);
+    }
+    geo = refgeo;
+    na = ref_na;
 }
 
 // ---- ffreq1 / ffreq2 (polar.F90:2471-2644) ----
@@ -939,7 +1486,8 @@ void ffreq1(std::vector<std::vector<double>>& f, std::vector<std::vector<double>
         int ni = nat[ii];
         double ptpop = 0.0, papop = 0.0;
         int idx = ib - ia + 2;
-        if (idx == 2) continue;            // s-only atom: handled elsewhere
+        // F90: go to (1002,20,10,...) ib-ia+2  -- for idx==2 (s-only) the
+        // F(S,S) term is still added; ptpop/papop are only for idx>=4.
         if (idx >= 4) {                    // sp + : accumulate s population
             ptpop = ptot[ib][ib] + ptot[ib-1][ib-1] + ptot[ib-2][ib-2];
             papop = pa[ib][ib] + pa[ib-1][ib-1] + pa[ib-2][ib-2];

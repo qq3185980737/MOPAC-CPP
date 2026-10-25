@@ -1,4 +1,17 @@
 // eigenvectors_LAPACK.cpp — C++ translation of MOPAC 2016
+
+// ============================================================================
+// 【中文导读】eigenvectors_LAPACK.cpp —— 对称矩阵特征分解（LAPACK 等价）
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 eigenvectors_LAPACK.F90：等价于 LAPACK dsyevd 的对称
+// 特征分解，用于需要与官方逐位一致的场合（EF/flepo 的 Hessian 分解）。
+// 约定：
+//   - xmat：打包上三角、1-based（k = j*(j+1)/2 + i, i<=j）；
+//   - 对角线加 i*1e-10（1-based i）微扰，用来解除简并；
+//   - 特征值升序；特征向量按列主序存放，第 s 列 = 第 s 个特征向量。
+// 调用方：ef.cpp / flepo.cpp / rsp 等。
+// ============================================================================
+
 // "eigenvectors_LAPACK.F90": symmetric eigensolver matching LAPACK dsyevd.
 //  - xmat: packed upper triangle, 1-based (k = j*(j+1)/2 + i, i<=j).
 //  - diagonal perturbation i*1e-10 (Fortran 1-based i) splits degeneracies.
@@ -12,6 +25,23 @@
 // unavailable (e.g. building without Intel oneAPI), the code falls back to a
 // flat column-major Jacobi solver that reproduces the official single-point
 // heats to ~2e-5 kcal/mol (perf_c12h26 1SCF: 1320.38593 vs 1320.38595).
+
+//
+// ============================================================================
+// 【中文导读】eigenvectors_LAPACK() —— 对称矩阵本征分解
+// ----------------------------------------------------------------------------
+// 输入 xmat 是 1-based 打包上三角（k = j*(j+1)/2 + i, i<=j），对角线上加
+// i*1e-10 的微扰以分裂简并；输出 eigvals 升序，eigenvecs 为列主序矩阵
+// （第 s 列 = 第 s 个本征向量）。
+// 实现有两条路径：
+//   - 主路径：Intel oneMKL LAPACKE_dsyevd（与官方 Fortran 调用同一个库，
+//     保证逐位一致；n<128 时可能改用 Jacobi 以避免调用开销）；
+//   - 回退：纯 C++ Jacobi（无 MKL 时使用），数值上可复现单点生成热到
+//     ~2e-5 kcal/mol。
+// 注意：官方用 dsyevd 且 uplo='U'，若改用其他 uplo/算法，ULP 差异会经
+// 密度→梯度放大，导致 EF 优化轨迹偏移（注释中有记录）。
+// ============================================================================
+
 #include "eigenvectors_LAPACK.h"
 
 #include <algorithm>
@@ -28,6 +58,9 @@ namespace {
 std::vector<double> wA, wV, wcp, wcq, wvp, wvq;
 std::vector<int> widx;
 }  // namespace
+
+// jacobi_eigh(): 无 MKL 时的回退实现——对称 Jacobi 旋转，列主序存储，
+// 结果与 dsyevd 同约定（本征值升序、本征向量按列）。
 
 static void jacobi_eigh(double* eigenvecs, double* xmat, double* eigvals,
                         int ndim) {
@@ -137,6 +170,10 @@ void eigenvectors_LAPACK(std::vector<double>& ev, std::vector<double>& xm,
                         std::vector<double>& eg, int n) {
     eigenvectors_LAPACK(ev.data(), xm.data(), eg.data(), n);
 }
+
+// 主入口：默认走 MKL dsyevd；环境变量 MOPAC_USE_JACOBI=1 时强制用 Jacobi，
+// 供对比/调试。
+
 void eigenvectors_LAPACK(double* eigenvecs, double* xmat, double* eigvals,
                          int ndim) {
     if (ndim <= 0) return;

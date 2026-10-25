@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】write_trajectory.cpp —— 输出/文件写出
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 write_trajectory.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // write_trajectory.cpp — C++ translation of "write_trajectory.F90".
 // Append a geometry frame to the XYZ trajectory file (mode=1), or read back
 // the XYZ file and rewrite the path in reverse (mode=2). Optional PDBOUT.
@@ -69,7 +78,13 @@ void write_trajectory(double* xyz, int mode, double* charge, double escf,
                << " " << line.substr(kpos) << "\n";
         for (int i = 1; i <= numat; ++i) {
             if (l_atom[i]) {
-                xyzout << "  " << elemnt[nat[i]].c_str() << std::setw(15)
+                // F90 format: (3X,A2,3F15.5)，且 Fortran 的 elemnt 是右对齐
+                // 的 " H"（单字母元素），C++ 表是 "H "，这里按右对齐 2 字符输出。
+                std::string sym = elemnt[nat[i]];
+                size_t lastnz = sym.find_last_not_of(' ');
+                if (lastnz != std::string::npos) sym.erase(lastnz + 1);
+                else sym.clear();
+                xyzout << "   " << std::setw(2) << sym << std::setw(15)
                        << std::fixed << std::setprecision(5)
                        << xyz[(i - 1) * 3 + 1] << std::setw(15)
                        << xyz[(i - 1) * 3 + 2] << std::setw(15)

@@ -4,6 +4,15 @@
 // hesinv (linear), and the ef_C/maps extension blocks when latom != 0.
 // Fortran 1-based indexing preserved. Dump via ofstream, restore via
 // ifstream (Fortran open(UNFORMATTED)+rewind semantics).
+
+//
+// 【中文导读】dfpsav() —— DFP/BFGS 重启文件的保存与恢复
+// ----------------------------------------------------------------------------
+// 把几何优化状态（norbs/numat、xparam、梯度、Hessian、DFP 变量、时间等）
+// 以二进制写入 .res；重启时按 mode 读/写。注意：C++ 用 ofstream/ifstream
+// 代替 Fortran 的 UNFORMATTED 顺序文件，字段顺序必须与 F90 完全一致才能
+// 与官方重启文件互读。
+
 #include "dfpsav.h"
 
 #include <cstdio>

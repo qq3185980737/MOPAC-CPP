@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】hcore_for_MOZYME.cpp —— SCF 迭代/收敛/Fock 构建
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 hcore_for_MOZYME.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // hcore_for_MOZYME.cpp — C++ translation of MOPAC 2016 "hcore_for_MOZYME.F90"
 // (415 lines).  Builds the one-electron matrix h (diagonal IPs + external
 // field + one-electron integrals from h1elec) and the packed two-electron W

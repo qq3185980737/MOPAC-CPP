@@ -1,9 +1,17 @@
+// ============================================================================
+// 【中文导读】dimens.cpp —— 分子尺寸表（dimens.F90）
+// ----------------------------------------------------------------------------
+// 计算三个分子尺寸（最长轴、次长轴、厚度）并打印 MOLECULAR DIMENSIONS 表；
+// 与 Fortran 一样会临时旋转坐标、结束后恢复。1-based coord 约定。
+// ============================================================================
+
 // dimens.cpp — C++ translation of MOPAC 2016 "dimens.F90".
 // Computes the three molecular dimensions (longest axis, second-longest,
 // thickness) and prints the MOLECULAR DIMENSIONS table.  Like the Fortran
 // original it temporarily rotates the coordinates and restores them on exit.
 
 #include "dimens.h"
+#include "chanel_C.h"
 
 #include <algorithm>
 #include <cmath>
@@ -209,13 +217,20 @@ void dimens(std::vector<std::vector<double>>& coord, int iw) {
     if (k3 == l3) l3 = (l3 == 1) ? 2 : 1;
     ij[2][1] = l3;
 
-    std::printf("\n%9sMOLECULAR DIMENSIONS (Angstroms)\n\n", "");
-    std::printf("%9s   Atom       Atom       Distance\n", "");
-    for (int j = 0; j < 3; ++j)
-        std::printf("%11s%-2s%6d%3s%-2s%6d%12.5f\n", "",
-                    elemts_C::elemnt[nat[ij[j][0]]].c_str(), ij[j][0],
-                    "", elemts_C::elemnt[nat[ij[j][1]]].c_str(), ij[j][1],
-                    dim[j]);
+    // F90 dimens.F90:292-294:
+    //   (/,9X,A,/)  " MOLECULAR DIMENSIONS (Angstroms)"
+    //   (9X,A)      "   Atom       Atom       Distance"
+    //   (11X,A2,I6,3X,A2,I6,F12.5)
+    std::fprintf(chanel_C::out_unit(), "\n%10sMOLECULAR DIMENSIONS (Angstroms)\n\n", "");
+    std::fprintf(chanel_C::out_unit(), "%9s   Atom       Atom       Distance\n", "");
+    for (int j = 0; j < 3; ++j) {
+        std::string s1 = elemts_C::elemnt[nat[ij[j][0]]];
+        std::string s2 = elemts_C::elemnt[nat[ij[j][1]]];
+        while (!s1.empty() && s1.back() == ' ') s1.pop_back();
+        while (!s2.empty() && s2.back() == ' ') s2.pop_back();
+        std::fprintf(chanel_C::out_unit(), "%11s%2s%6d   %2s%6d%12.5f\n", "", s1.c_str(),
+                    ij[j][0], s2.c_str(), ij[j][1], dim[j]);
+    }
 
     // Restore coordinates.
     for (int j = 0; j < 3; ++j)

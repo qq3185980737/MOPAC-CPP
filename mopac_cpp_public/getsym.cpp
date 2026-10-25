@@ -1,7 +1,17 @@
+// ============================================================================
+// 【中文导读】getsym.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 getsym.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // getsym.cpp — C++ translation of MOPAC 2016 "getsym.F90".
 // Reads parameter-dependence (symmetry) data and fills locpar/idepfn/locdep/
-// depmul. Input lines are read from standard input (maps to Fortran unit ir).
+// depmul. 输入行来自 getdat_lines 队列（对应 Fortran 的 unit ir）。
 #include "getsym.h"
+#include "getdat_lines_C.h"
 #include "molkst_C.h"
 #include "chanel_C.h"
 #include "common_arrays_C.h"
@@ -73,9 +83,11 @@ void getsym(std::vector<int>& locpar, std::vector<int>& idepfn,
     int nerror = 0;
     int n = 0;
 
-    std::fprintf(stdout, "\n\n\n%33s\n\n%12s%19s%16s\n",
-                 "PARAMETER DEPENDENCE DATA", "REFERENCE ATOM", "FUNCTION NO.",
-                 "DEPENDENT ATOM(S)");
+    // F90: format(/,/,/,5x,'PARAMETER DEPENDENCE DATA'/,/,&
+    //   '        REFERENCE ATOM      FUNCTION NO.    DEPENDENT ATOM(S)')
+    std::fprintf(stdout,
+                 "\n\n\n     PARAMETER DEPENDENCE DATA\n\n"
+                 "        REFERENCE ATOM      FUNCTION NO.    DEPENDENT ATOM(S)\n");
 
     if (ndep > 0) {
         int j = 2;
@@ -85,12 +97,13 @@ void getsym(std::vector<int>& locpar, std::vector<int>& idepfn,
             bool ok = (i == ndep);
             if (!ok) ok = (locpar[i] != locpar[i + 1] || idepfn[i] != idepfn[i + 1]);
             if (ok) {
-                std::fprintf(stdout, "%13d%19d%16d%6d%6d%6d%6d%6d%6d", locpar[i], idepfn[i],
-                             ivalue[3], ivalue[4], ivalue[5], ivalue[6], ivalue[7], ivalue[8]);
-                for (int l = 9; l <= j; l += 7) {
-                    std::fprintf(stdout, "\n%43s%7d%7d%7d%7d%7d%7d%7d", "",
-                                 ivalue[l], ivalue[l + 1], ivalue[l + 2], ivalue[l + 3],
-                                 ivalue[l + 4], ivalue[l + 5], ivalue[l + 6]);
+                // F90: (i13, i19, i16, 6 i5, 10(/, 43 x, 7 i5))
+                // F90: (i13, i19, i16, 6 i5, 10(/, 43 x, 7 i5))
+                std::fprintf(stdout, "%13d%19d%16d", locpar[i], idepfn[i], ivalue[3]);
+                for (int l = 4; l <= j; ++l) {
+                    if (l >= 10 && (l - 10) % 7 == 0)
+                        std::fprintf(stdout, "\n%43s", "");
+                    std::fprintf(stdout, "%5d", ivalue[l]);
                 }
                 std::fprintf(stdout, "\n");
                 j = 2;
@@ -101,7 +114,8 @@ void getsym(std::vector<int>& locpar, std::vector<int>& idepfn,
     depmul[1] = 0.0;
     for (;;) {
         std::string buf;
-        if (!std::getline(std::cin, buf)) goto done;
+        if (getdat_line_idx >= getdat_lines.size()) goto done;
+        buf = getdat_lines[getdat_line_idx++];
         line = buf;
         // Trim trailing blanks.
         size_t e = line.find_last_not_of(' ');
@@ -195,6 +209,5 @@ done:
     }
 }
 
-// No-arg stub: readmo.cpp calls getsym() without symmetry variables.
-// TODO: real translation of symmetry.F90 constraint handling (M05 batch).
-void getsym() {}
+// 2026-10 修复：4 参真实版本已改为从 getdat_lines 队列读取；readmo 在
+// SYMM/SYM 或 ndep>0 时调用它，0 参 stub 已移除。

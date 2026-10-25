@@ -1,6 +1,25 @@
 // fock2.cpp — C++ translation of MOPAC 2016 "fock2.F90".
 // Forms the two-electron two-center repulsion part of the Fock matrix.
 // 1-based packing convention: f/ptot/p/w/wj/wk all 1-based (index 0 padding).
+
+//
+// ============================================================================
+// 【中文导读】fock2() —— 用密度矩阵 P 构建 Fock 矩阵的双电子部分
+// ----------------------------------------------------------------------------
+// 对应 fock2.F90。iter() 每轮 SCF 都会调用：F = H + 双电子贡献(P)。
+// 文件内结构：
+//   - fockdorbs(): d 轨道（或大轨道块）的双中心积分贡献 (ij|kl)；
+//   - fock1dorbs(): 一中心 d 轨道块；
+//   - addfck(): COSMO 修正（已接线 cosmo.cpp 真实实现）；
+//   - fock2(): 主入口——按原子对 (i,j) 遍历，用 W 的当前游标 kk 取积分，
+//     把库仑/交换项累加进 F。分支按轻/重原子: hh（jab+kab，100 项块）、
+//     hl、ll，以及周期性体系（id!=0）的四重循环。
+// 数组约定：F/P/W 均为 1-based 打包下三角，索引 j*(j-1)/2+i；w 游标 kk 的
+// 推进顺序必须与 Fortran 完全一致，否则 W 会错位。
+// 线程模型：默认串行以保逐位一致；只有导数路径（dcart）和 OpenMP/确定性
+// 并行（MOPAC_DSPAR）才使用线程私有 Fock 累加器，见文件后半说明。
+// ============================================================================
+
 #include "fock2.h"
 #include <algorithm>
 #include <chrono>
@@ -8,6 +27,7 @@
 #include <cstdio>
 #include <vector>
 #include "molkst_C.h"
+#include "cosmo.h"
 #include "cosmo_C.h"
 #include "jab.h"
 #include "kab.h"
@@ -30,6 +50,9 @@ thread_local std::vector<double> ptot2buf;
 thread_local int ptot2_rows = 0;
 
 // fockdorbs: general d-orbital (or large) two-center block.
+// 中文：d 轨道（或大块）双中心贡献。ia>ja 与 ia<=ja 两种存储/遍历顺序对应
+// F90 的两个分支，aa/bb 是对角块 1、非对角块 2 的权重。
+
 void fockdorbs(int ia, int ib, int ja, int jb, std::vector<double>& f,
                const std::vector<double>& p, const std::vector<double>& ptot,
                const std::vector<double>& w, int& kr, const std::vector<int>& fact) {
@@ -105,8 +128,8 @@ void fockdorbs(int ia, int ib, int ja, int jb, std::vector<double>& f,
     }
 }
 
-// cosmo addfck: not present in this translation (useps defaults false; no-op stub).
-void addfck(std::vector<double>&, const std::vector<double>&) {}
+// 2026-10 修复：删除遮蔽 cosmo.cpp 真实实现的空 addfck；调用点改为
+// addfck(density, fock)（C++ 实现的参数顺序为 (pin=density, fin=Fock)）。
 
 } // namespace
 
@@ -145,6 +168,9 @@ void fock1dorbs(std::vector<double>& f, const std::vector<double>& ptot,
     }
     kr += ilim * ilim;
 }
+
+// fock2 主入口：f 是累加器，ptot 是总密度（UHF 时为 alpha+beta）；mpack 为
+// 打包长度。函数先把 ptot 复制成按原子分块的 ptot2 缓存，然后遍历原子对。
 
 void fock2(std::vector<double>& f, const std::vector<double>& ptot,
            std::vector<double>& p, const std::vector<double>& w,
@@ -207,6 +233,10 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
     }
     int kk = 0;
     // ---- atom-pair body shared by the serial and OpenMP paths ----
+
+    // 以下原子对循环体在串行、OpenMP、确定性并行（MOPAC_DSPAR 分桶）三条
+    // 路径间共享；kk（W 游标）随每个原子对按固定顺序推进。
+
     // kk (w cursor) is advanced inside; f_out is the Fock accumulator (f in
     // serial, a per-thread private copy under OpenMP).
     auto work_pair = [&](int ii, int jj, int& kk, std::vector<double>& f_out) {
@@ -224,6 +254,9 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
             } else if (ib - ia >= 3 && jb - ja >= 3) {
                 auto b0 = std::chrono::steady_clock::now();
                 // heavy-atom - heavy-atom: jab + kab, w block 100
+
+                // 中文：重原子-重原子对，库仑项用 jab、交换项用 kab，W 每对推进 100。
+
                 double pja[17] = {}, pjb[17] = {}, pk[17] = {};
                 for (int mm = 1; mm <= 16; ++mm) {
                     pja[mm] = ptot2buf[(size_t)ii * 82 + mm];
@@ -372,6 +405,11 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
         }
     };
 #ifdef _OPENMP
+
+    // 并行策略：普通分子/非导数路径可选 OpenMP；论文用的确定性路径
+    // （MOPAC_DSPAR）把原子对按固定顺序分到 NB 个桶、各桶私有 Fock，
+    // 最后按桶序归约，保证与线程数无关。默认（无环境变量）走串行。
+
     // OpenMP parallel atom-pair loop (molecular, non-derivative, non-periodic,
     // mode != 2 and large enough). Each thread accumulates into a private Fock
 #endif
@@ -449,7 +487,7 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
             for (int b = 0; b < NB; ++b) s += fbk[b][i];
             f[i] = s;
         }
-        if (cosmo_C::useps) addfck(f, ptot);
+        if (cosmo_C::useps) addfck(const_cast<double*>(ptot.data()), f.data());
         return;
     }
 #endif
@@ -471,5 +509,5 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
             fock1dorbs(f, ptot, p, molkst_C::mpack, wsub, kk, ia, ib, ilim);
         }
     }
-    if (cosmo_C::useps) addfck(f, ptot);
+    if (cosmo_C::useps) addfck(const_cast<double*>(ptot.data()), f.data());
 }

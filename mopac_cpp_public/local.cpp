@@ -1,4 +1,15 @@
 // local.cpp
+//
+// ============================================================================
+// 【中文导读】local() —— LOCAL 关键字下的局域轨道分析与输出
+// ----------------------------------------------------------------------------
+// 对应 local.F90。对占据轨道做局域化/相位/密度重建并打印，由 drcout 的
+// DRC 输出路径在 LOCAL 关键字下调用。
+// 现状（2026-10 修复）：本文件原来用空 extern "C" 包装（resolv_/molval_/
+// matout_）遮蔽真实实现，现改为转发到 resolv/molval/matout；phase_lock_
+// 仍为 no-op（真实 phase_lock 需要 1-based 打包 vector，待接线）。
+// ============================================================================
+
 #include "local.h"
 #include <cmath>
 #include <vector>
@@ -9,10 +20,24 @@
 using namespace molkst_C;
 using namespace common_arrays_C;
 
-extern "C" void resolv_(double*, double*, int, double*, int) {}
+// 2026-10 修复：以下 Fortran-ABI 名原来是空实现，遮蔽了真实函数；现转发到
+// resolv/molval/matout。phase_lock_ 仍为 no-op（真实 phase_lock 需要 1-based
+// 打包 vector，待接线）。
+#include "resolv.h"
+#include "molval.h"
+#include "matout.h"
+
+extern "C" void resolv_(double* c, double* cold, int mdim, double* eig, int nocc) {
+    resolv(c, cold, mdim, eig, nocc);
+}
 extern "C" void phase_lock_(double*, int) {}
-extern "C" void molval_(double*, double*, double) {}
-extern "C" void matout_(double*, double*, int, int, int) {}
+extern "C" void molval_(double* c, double* p, double rhfuhf) {
+    molval(c, p, rhfuhf);
+}
+extern "C" void matout_(double* a, double* b, int nc, int nr, int ndim) {
+    int nr_ref = nr;
+    matout(a, b, nc, nr_ref, ndim);
+}
 extern "C" void to_screen_(const char*) {}
 
 void local(double* c, int nocc, double* eig, int iprint, const char* txt) {

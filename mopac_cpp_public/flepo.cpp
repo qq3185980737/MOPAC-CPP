@@ -3,6 +3,21 @@
 // formation along search directions produced by the inverse-Hessian update;
 // line searches by linmin; convergence by Herbert/gradient/xparam/function/
 // Peters tests; periodic dumps via dfpsav. Fortran 1-based indexing kept.
+
+//
+// ============================================================================
+// 【中文导读】flepo() —— BFGS/DFP 变尺度几何优化
+// ----------------------------------------------------------------------------
+// 对应 flepo.F90（820 行）。用逆 Hessian 的 BFGS（或 DFP）更新产生搜索
+// 方向，每步调用 linmin 做一维线搜索、compfg 算能量与梯度；收敛判据包括
+// Herbert 检验、梯度范数、变量/函数变化、Peters 检验等；dfpsav 负责周期性
+// 保存 Hessian/几何，便于重启。
+// 阅读顺序：flepo() 主循环 → 初始化（读 Hessian/关键字）→ 逐变量/逐方向
+// 线搜索 → 更新逆 Hessian → 建立新方向 → 收敛判断。
+// 注意：F90 的语句标号（如 L430）被改写为 goto 标签，变量在函数开头集中
+// 声明；这是为了保持原控制流而不是重构。
+// ============================================================================
+
 #include "flepo.h"
 
 #include <cmath>
@@ -61,6 +76,8 @@ void flepo_update_H(int nvar, const std::vector<double>& xvar,
     }
 }
 
+// flepo(): 主入口。xparam 为 1-based 优化变量，funct1 返回生成热。
+
 void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
     static int icalcn = 0;
     static double rst, sfact, dell, einc, del, const_s;
@@ -80,6 +97,9 @@ void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
     std::vector<double> xvar, gvar, xd, gg0, pvect0;  // scratch (nvar+1)
     if (icalcn != numcal) {
         hesinv.resize((nvar * (nvar + 1)) / 2 + 1, 0.0);
+    // Fortran FLEPO starts from an identity inverse Hessian; otherwise the
+    // search direction -Hinv*g is zero and no step is taken.
+    for (int ii = 1; ii <= nvar; ++ii) hesinv[ii * (ii + 1) / 2] = 1.0;
         rst = -1.0;
         nrst = 30;
         sfact = 1.5;
@@ -169,6 +189,8 @@ void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
     }
 
     // FIRST, INITIALIZE THE VARIABLES.
+    // 中文：初始化——读入/构造 Hessian，设置收敛阈值与关键字（DFP/BFGS/PRECISE 等）。
+
     int ireset = 0;
     double therb = 5.0 * tolerg * rootv;
     absmin = 1e6;
@@ -186,8 +208,7 @@ void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
     ncount = 1;
     resfil = false;
     if (const_s > 1e-5 && saddle) {
-        if (nvar > 0) gnorm = std::sqrt(ddot(nvar, grad.data(), 1,
-                                             grad.data(), 1)) - 3.0;
+        if (nvar > 0) gnorm = std::sqrt(ddot(nvar, grad.data()+1, 1, grad.data()+1, 1)) - 3.0;
         gnorm = std::min(10.0, gnorm);
         if (gnorm > 1.0) tolerg = tolrg * gnorm;
         std::printf(" GRADIENT CRITERION IN FLEPO =%10.3f\n", tolerg);
@@ -198,7 +219,7 @@ void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
         pvect0.assign(2, 0.0);
         pvect0[1] = 0.01;
         alpha = 1.0;
-        linmin(xparam.data(), alpha, pvect0.data(), nvar, funct1, okf, ic,
+        linmin(xparam.data() + 1, alpha, pvect0.data() + 1, nvar, funct1, okf, ic,
                dropn);
         if (moperr) return;
         std::printf(" ONLY ONE VARIABLE, THEREFORE ENERGY A MINIMUM\n");
@@ -235,7 +256,7 @@ void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
     glast.assign(nvar + 1, 0.0);
     dcopy(nvar, grad.data(), 1, gd.data(), 1);
     if (nvar != 0) {
-        gnorm = std::sqrt(ddot(nvar, grad.data(), 1, grad.data(), 1));
+        gnorm = std::sqrt(ddot(nvar, grad.data()+1, 1, grad.data()+1, 1));
         gnormr = gnorm;
         if (lnstop != 1 && cos > rst &&
             (jnrst < nrst || !dfp) && restrt) {
@@ -264,7 +285,7 @@ void flepo(std::vector<double>& xparam, int nvar, double& funct1) {
     glast.assign(nvar + 1, 0.0);
     xlast.assign(nvar + 1, 0.0);
 
-    gnorm = std::sqrt(ddot(nvar, grad.data(), 1, grad.data(), 1));
+    gnorm = std::sqrt(ddot(nvar, grad.data()+1, 1, grad.data()+1, 1));
     if (gnormr < 1e-10) gnormr = gnorm;
     int icyc = jcyc;
     goto L30;
@@ -290,7 +311,7 @@ L50:
         compfg(xd, true, funct2, true, gd, true);
         if (moperr) return;
         if (!geook &&
-            std::sqrt(ddot(nvar, gd.data(), 1, gd.data(), 1)) / gnorm > 10.0 &&
+            std::sqrt(ddot(nvar, gd.data()+1, 1, gd.data()+1, 1)) / gnorm > 10.0 &&
             gnorm > 20 && jcyc > 2) {
             del = del / 10.0;
             if (del >= 0.00005) {
@@ -299,7 +320,7 @@ L50:
                 std::printf(" GRADIENTS OF OLD GEOMETRY, GNORM=%13.6f\n", gnorm);
                 for (int i = 1; i <= nvar; ++i) std::printf("%12.6f", grad[i]);
                 std::printf("\n");
-                double gdnorm = std::sqrt(ddot(nvar, gd.data(), 1, gd.data(), 1));
+                double gdnorm = std::sqrt(ddot(nvar, gd.data()+1, 1, gd.data()+1, 1));
                 std::printf(" GRADIENTS OF NEW GEOMETRY, GNORM=%13.6f\n", gdnorm);
                 for (int i = 1; i <= nvar; ++i) std::printf("%12.6f", gd[i]);
                 std::printf(
@@ -317,6 +338,7 @@ L50:
         }
         ncount = ncount + 1;
         for (int i = 1; i <= ihdim; ++i) hesinv[i] = 0.0;
+        for (int ii = 1; ii <= nvar; ++ii) hesinv[ii * (ii + 1) / 2] = 1.0;
         double sum = 0.0;
         int ii = 0, j = 0;
         if (funct2 < funct1) {
@@ -372,18 +394,21 @@ L50:
                 xparam[i] = xd[i];
                 grad[i] = gd[i];
             }
-            gnorm = std::sqrt(ddot(nvar, grad.data(), 1, grad.data(), 1));
+            gnorm = std::sqrt(ddot(nvar, grad.data()+1, 1, grad.data()+1, 1));
             if (gnormr < 1e-10) gnormr = gnorm;
         }
     } else {
         // UPDATE VARIABLE-METRIC MATRIX
+
+        // 中文：BFGS/DFP 逆 Hessian 更新（用位移与梯度差做秩二修正）。
+
         for (int i = 1; i <= nvar; ++i) {
             xvar[i] = xparam[i] - xlast[i];
             gvar[i] = grad[i] - glast[i];
         }
-        supdot(gg0.data(), hesinv.data(), gvar.data(), nvar);
-        double yhy = ddot(nvar, gg0.data(), 1, gvar.data(), 1);
-        double sy = ddot(nvar, xvar.data(), 1, gvar.data(), 1);
+        supdot(gg0.data(), hesinv.data(), gvar.data(), nvar, 1);
+        double yhy = ddot(nvar, gg0.data()+1, 1, gvar.data()+1, 1);
+        double sy = ddot(nvar, xvar.data()+1, 1, gvar.data()+1, 1);
         int k = 0;
         if (dfp) {
             for (int i = 1; i <= nvar; ++i) {
@@ -406,14 +431,17 @@ L50:
         }
     }
     // ESTABLISH NEW SEARCH DIRECTION
+
+    // 中文：由 -H*g 得到新搜索方向；单变量体系跳过 Hessian 直接做线搜索。
+
     double pnlast = pnorm;
-    supdot(pvect0.data(), hesinv.data(), grad.data(), nvar);
-    pnorm = std::sqrt(ddot(nvar, pvect0.data(), 1, pvect0.data(), 1));
+    supdot(pvect0.data(), hesinv.data(), grad.data(), nvar, 1);
+    pnorm = std::sqrt(ddot(nvar, pvect0.data()+1, 1, pvect0.data()+1, 1));
     if (pnorm > 1.5 * pnlast) {
         for (int i = 1; i <= nvar; ++i) pvect0[i] = pvect0[i] * 1.5 * pnlast / pnorm;
         pnorm = 1.5 * pnlast;
     }
-    double dott = -ddot(nvar, pvect0.data(), 1, grad.data(), 1);
+    double dott = -ddot(nvar, pvect0.data()+1, 1, grad.data()+1, 1);
     for (int i = 1; i <= nvar; ++i) pvect0[i] = -pvect0[i];
     cos = -dott / (pnorm * gnorm);
     if (print) {
@@ -449,6 +477,7 @@ L50:
     }
     if (jnrst == 0) alpha = 1.0;
     drop = std::abs(alpha * dott);
+
     if (print) std::printf(" -ALPHA.P.G =%18.6f\n", drop);
     if (gnorm <= therb && jnrst != 0 && drop < delhof) {
         if (minprt)
@@ -468,7 +497,7 @@ L50:
     okf = false;
     ic = 2;
 L270:
-    linmin(xparam.data(), alpha, pvect0.data(), nvar, funct1, okf, ic, dropn);
+    linmin(xparam.data() + 1, alpha, pvect0.data() + 1, nvar, funct1, okf, ic, dropn);
     if (moperr) return;
     if (nvar == 1) {
         std::printf(" ONLY ONE VARIABLE, THEREFORE ENERGY A MINIMUM\n");
@@ -509,7 +538,7 @@ L270:
         compfg(xparam, true, funct1, true, grad, true);
         if (moperr) return;
     }
-    gnorm = std::sqrt(ddot(nvar, grad.data(), 1, grad.data(), 1));
+    gnorm = std::sqrt(ddot(nvar, grad.data()+1, 1, grad.data()+1, 1));
     if (gnormr < 1e-10) gnormr = gnorm;
     ncount = ncount + 1;
     if (!okf) {
@@ -546,7 +575,7 @@ L270:
         }
         goto L430;
     }
-    double xn = std::sqrt(ddot(nvar, xparam.data(), 1, xparam.data(), 1));
+    double xn = std::sqrt(ddot(nvar, xparam.data()+1, 1, xparam.data()+1, 1));
     double tx = std::abs(alpha * pnorm);
     if (xn != 0.0) tx = tx / xn;
     double tf = std::abs(smval - funct1);

@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】ciosci.cpp —— CI/激发态与极化
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 ciosci.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // ciosci.cpp — C++ translation of MOPAC 2016 "ciosci.F90".
 // matout is an external stub.
 
@@ -13,6 +22,7 @@
 #include "funcon_C.h"
 #include "meci_C.h"
 #include "molkst_C.h"
+#include "matout.h"
 #include "parameters_C.h"
 
 using namespace funcon_C;
@@ -22,9 +32,6 @@ using namespace molkst_C;
 using namespace parameters_C;
 
 namespace {
-void matout(const std::vector<std::vector<double>>&,
-            const std::vector<std::vector<double>>&, int, int, int) {}
-
 const int nspqn[108] = {
     0,
     1,1, 2,2,2,2,2,2,2,2,        // 2*1, 8*2
@@ -159,6 +166,27 @@ void ciosci(const std::vector<std::vector<double>>& vects, int lroot,
             }
         }
 
+        // F90 ciosci.F90:295-306 — debug dump of dipole operator on microstates.
+        if (debug) {
+            std::printf("\n\n          EFFECT OF DIPOLE OPERATOR ON MICROSTATES\n");
+            if (lab < 6) {
+                std::printf("%12s", "");
+                for (int i = 1; i <= lab; ++i) std::printf("%17d", i);
+                std::printf("\n");
+                for (int i = 1; i <= lab; ++i) {
+                    std::printf("%6d", i);
+                    for (int j = 1; j <= lab; ++j) std::printf("%17.12f  ", t4[j][i]);
+                    std::printf("\n");
+                }
+            } else {
+                std::vector<double> flat((size_t)lab * lab, 0.0);
+                for (int i = 1; i <= lab; ++i)
+                    for (int j = 1; j <= lab; ++j) flat[(i - 1) + (j - 1) * lab] = t4[i][j];
+                int nr = -lab;
+                matout(flat.data(), flat.data(), lab, nr, lab);
+            }
+        }
+
         for (int ns = 1; ns <= nstate; ++ns) {
             int ii = (lroot + ns - 2) * lab;
             for (int istate = 1; istate <= lab; ++istate) {
@@ -172,5 +200,12 @@ void ciosci(const std::vector<std::vector<double>>& vects, int lroot,
                 oscil[loop][istate] += sum * sum;
             }
         }
+    }
+    // F90 ciosci.F90:328-334 — print oscillator-strength matrix for CI states.
+    if (keywrd.find(" LARGE") != std::string::npos || debug) {
+        std::printf("\n           EFFECT OF DIPOLE OPERATOR ON STATES\n");
+        std::printf(" STATE         X                Y                Z\n");
+        for (int i = 1; i <= lab; ++i)
+            std::printf("%4d%17.12f%17.12f%17.12f\n", i, oscil[1][i], oscil[2][i], oscil[3][i]);
     }
 }

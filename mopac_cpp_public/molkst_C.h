@@ -1,7 +1,26 @@
-﻿// molkst_C.h — C++ translation of the Fortran module "molkst_C" (MOPAC 2016).
+// molkst_C.h — C++ translation of the Fortran module "molkst_C" (MOPAC 2016).
 //
 // Only the members referenced by already-translated sources are declared so
 // far; the header will be extended as further .F90 files are ported.
+
+//
+// ============================================================================
+// 【中文导读】molkst_C —— 分子与运行状态的全局量（对应 F90 module molkst_C）
+// ----------------------------------------------------------------------------
+// 原版 molkst_C.F90 是一份“数据字典”：每个变量都标注了含义、单位、最小/
+// 最大值。本头文件只声明“已被移植代码引用”的成员，注释也压缩成一句。变量名
+// 保留原版约 6 字符的缩写（numat/norbs/keywrd...）；查完整含义请对照
+// molkst_C.F90 中同名变量。
+//
+// 单位约定：
+//   - 坐标：Angstrom；能量：内部多为 eV，输出常转 kcal/mol（funcon_C::fpc_9）；
+//   - 矩阵/向量按 1-based 使用（0 号是 padding）；打包矩阵索引 j*(j-1)/2+i；
+//   - keywrd 是整行关键字（大写、空格分隔），各模块用 find(" XXX") 判断。
+//
+// 说明：此前 lgpu/tleft/ijulian/verson 曾各被重复 extern 声明（移植期合并
+// 遗留），现已合并为单一声明，说明性注释放在首次出现处。
+// ============================================================================
+
 #pragma once
 
 #include <string>
@@ -57,12 +76,14 @@ extern int l11, l21, l31;     // supercell search bounds
 
 // Globals introduced by add_more_interactions.F90.
 extern int mpack;              // packed-size of interaction arrays
-extern bool lgpu;
+extern bool lgpu;                // run_mopac: GPU flag（本构建恒 false）
 extern int numcal;             // MOPAC run / job index
 extern double clower, cupper, cutofp;
 extern int l1u, l2u, l3u, l123;
 extern int nvar; extern double pressure; extern double cosine; extern double escf;
-extern double tleft, time0; extern int nscf, tdump, iflepo, last;
+// press(1:3)：周期体系各晶面方向上的压力（moldat.F90 write_pressure 写入）
+extern std::vector<double> press;
+extern double tleft, time0; extern int nscf, tdump, iflepo, last;   // tleft: time remaining (grid)
 extern double rjkab1; extern int msdel;
 extern int ndep;
 extern double efield[4];
@@ -87,8 +108,8 @@ extern std::string errtxt;
 // writmo results-summary globals.
 extern bool use_ref_geo;
 extern double stress, density, elect, atheat;
-extern std::string verson;
-extern int ijulian, iscf;
+extern std::string verson;          // version string, e.g. "2016    " (password.F90 writes [6])
+extern int ijulian, iscf;          // ijulian: days since 1-Jan-2009 (negative until password() runs)
 extern double hpress, nsp2_corr, Si_O_H_corr, sum_dihed;
 extern double emin;              // lowest energy found (compfg.F90)
 extern int nalpha_open, nbeta_open;
@@ -105,17 +126,13 @@ extern int num_threads;             // MKL thread count (diag_for_GPU)
 extern double param_constant;   // run_mopac: overall scaling of parameters
 extern double trunc_1, trunc_2; // run_mopac: point-charge truncation limits
 extern bool lxfac;              // run_mopac: XFAC keyword
-extern bool lgpu;               // run_mopac: GPU flag
 extern bool in_house_only;      // run_mopac: in-house-only run flag
 extern bool MM_corrections;     // run_mopac: MM corrections flag
 extern int no_pKa;              // run_mopac: number of pKa values
 extern int run;                     // command-line argument index (getdat)
 extern double arc_hof_1, arc_hof_2; // archive heats of formation (getdat)
-extern double tleft;                // time remaining (grid)
-extern int ijulian;                 // days since 1-Jan-2009 (negative until password() runs)
 extern int site_no;                 // license site number (password.F90)
 extern bool academic;               // academic vs commercial license
-extern std::string verson;          // version string, e.g. "2016    " (password.F90 writes [6])
 extern int num_bits;                // 32 or 64 (setup_mopac_arrays hint)
 
 }  // namespace molkst_C

@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】run_mopac_deps_stubs.h —— 主驱动/运行控制接口（C++ 头文件）
+// ----------------------------------------------------------------------------
+// 声明对应的模块全局量/函数/常量，与同名 .cpp 配对使用；保持 MOPAC
+// 的 1-based 索引与打包下三角/列主序约定。实现细节与移植缺口见
+// docs/TRANSLATION_GAPS.md 及对应 .cpp 的中文导读。
+// ============================================================================
+
 // run_mopac_deps_stubs.h — declarations for routines called by run_mopac.
 // All are implemented in their real translation files (see .cpp); this header
 // exists so old-style callers can include one header for the whole set.

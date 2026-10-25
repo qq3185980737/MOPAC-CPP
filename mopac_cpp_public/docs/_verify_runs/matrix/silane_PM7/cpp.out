@@ -1,0 +1,171 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:51 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 1SCF
+ silane PM7
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1      SI          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.87800000  *   0.87800000  *   0.87800000  *
+     3       H          0.87800000  *  -0.87800000  *  -0.87800000  *
+     4       H         -0.87800000  *   0.87800000  *  -0.87800000  *
+     5       H         -0.87800000  *  -0.87800000  *   0.87800000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1        SI        0.0000    0.0000    0.0000
+     2         H        0.8780    0.8780    0.8780
+     3         H        0.8780   -0.8780   -0.8780
+     4         H       -0.8780    0.8780   -0.8780
+     5         H       -0.8780   -0.8780    0.8780
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H4 Si  =     5 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Td  
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+PM7 1SCF
+ silane PM7
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:51 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         16.77920 KCAL/MOL =      70.20418 KJ/MOL
+
+
+          TOTAL ENERGY            =       -154.27798 EV
+          ELECTRONIC ENERGY       =       -314.30884 EV  POINT GROUP:     Td  
+          CORE-CORE REPULSION     =        160.03086 EV
+          COSMO AREA              =         80.37 SQUARE ANGSTROMS
+          COSMO VOLUME            =         65.95 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         12.299988 EV
+          HOMO LUMO ENERGIES (EV) =        -12.300  2.353
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         32.1171
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     2.48336
+            H     4    H     5     2.48336
+            H     4    H     2     1.75600
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.001 SECONDS
+          COMPUTATION TIME        =          0.001 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1      SI          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.87800000  *   0.87800000  *   0.87800000  *
+     3       H          0.87800000  *  -0.87800000  *  -0.87800000  *
+     4       H         -0.87800000  *   0.87800000  *  -0.87800000  *
+     5       H         -0.87800000  *  -0.87800000  *   0.87800000  *
+
+                             CARTESIAN COORDINATES
+
+   1   SI        0.000000000     0.000000000     0.000000000
+   2    H        0.878000000     0.878000000     0.878000000
+   3    H        0.878000000    -0.878000000    -0.878000000
+   4    H       -0.878000000     0.878000000    -0.878000000
+   5    H       -0.878000000    -0.878000000     0.878000000
+
+
+           Empirical Formula: H4 Si  =     5 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Td  
+
+
+                  EIGENVALUES
+ -18.17320 -12.30001 -12.29999 -12.29999   2.35308   2.35309   2.35310   7.81874
+  20.49582  20.49583  21.31119  21.31119  21.31120
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       d-Pop
+    1         SI          -0.018545        4.0185     0.94761     2.97747     0.09346
+    2          H           0.004635        0.9954     0.99537
+    3          H           0.004635        0.9954     0.99537
+    4          H           0.004643        0.9954     0.99536
+    5          H           0.004633        0.9954     0.99537
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000     0.000    -0.000     0.000
+ HYBRID         0.000    -0.000     0.000     0.000
+ SUM           -0.000     0.000    -0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz      x^2-y^2     xz        z^2       yz        xy
+    1 SI   0.94761   0.99249   0.99249   0.99250   0.00000   0.03115   0.00000   0.03115   0.03115
+    2  H   0.99537
+    3  H   0.99537
+    4  H   0.99536
+    5  H   0.99537
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

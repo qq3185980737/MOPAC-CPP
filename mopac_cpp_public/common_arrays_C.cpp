@@ -1,3 +1,19 @@
+// ============================================================================
+// 【中文导读】common_arrays_C.cpp —— 公共数组存储（对应 common_arrays_C.F90）
+// ----------------------------------------------------------------------------
+// 存放 MOPAC 的全局数组：nat/nbonds/na/nb/nc/nfirst/nlast/labels（连接性），
+// h/f/p/pold/w/eigs/eigb（Fock、密度、本征值），uspd/coord 等。
+// 全部 1-based（下标 0 为填充）；维度约定见 common_arrays_C.h。
+// ============================================================================
+
+// ============================================================================
+// 【中文导读】common_arrays_C.cpp —— 公共数组存储（对应 common_arrays_C.F90）
+// ----------------------------------------------------------------------------
+// 存放 MOPAC 的全局数组：nat/nbonds/na/nb/nc/nfirst/nlast/labels（连接性），
+// h/f/p/pold/w/eigs/eigb（Fock、密度、本征值），uspd/coord 等。
+// 全部 1-based（下标 0 为填充）；维度约定见 common_arrays_C.h。
+// ============================================================================
+
 // common_arrays_C.cpp — storage for the module-level data of Common_arrays_C.
 #include "common_arrays_C.h"
 

@@ -1,0 +1,5 @@
+readmo.F90
+compfg.F90
+fock2z.F90
+hcore_for_MOZYME.F90
+iter_for_MOZYME.F90

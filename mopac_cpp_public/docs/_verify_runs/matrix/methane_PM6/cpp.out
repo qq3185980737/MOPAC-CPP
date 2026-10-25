@@ -1,0 +1,170 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM6 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:35 2026  *
+ *  PM6        - The PM6 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM6 1SCF
+ methane PM6
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.62900000  *   0.62900000  *   0.62900000  *
+     3       H          0.62900000  *  -0.62900000  *  -0.62900000  *
+     4       H         -0.62900000  *   0.62900000  *  -0.62900000  *
+     5       H         -0.62900000  *  -0.62900000  *   0.62900000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         C        0.0000    0.0000    0.0000
+     2         H        0.6290    0.6290    0.6290
+     3         H        0.6290   -0.6290   -0.6290
+     4         H       -0.6290    0.6290   -0.6290
+     5         H       -0.6290   -0.6290    0.6290
+
+ General Reference for PM6:
+ "Optimization of Parameters for Semiempirical Methods V: Modification of NDDO Approximations",
+ and Application to 70 Elements", J. J. P. Stewart, J. Mol. Mod., 13, 1173-1213 (2007)
+ URL: http://www.springerlink.com/content/ar33482301010477/fulltext.pdf
+
+           Empirical Formula: C H4  =     5 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Td  
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+PM6 1SCF
+ methane PM6
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM6 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:35 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -12.25465 KCAL/MOL =     -51.27345 KJ/MOL
+
+
+          TOTAL ENERGY            =       -177.16876 EV
+          ELECTRONIC ENERGY       =       -393.38869 EV  POINT GROUP:     Td  
+          CORE-CORE REPULSION     =        216.21993 EV
+          COSMO AREA              =         54.86 SQUARE ANGSTROMS
+          COSMO VOLUME            =         37.11 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         13.643006 EV
+          HOMO LUMO ENERGIES (EV) =        -13.643  5.995
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         16.0426
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.77908
+            H     4    H     5     1.77908
+            H     4    H     2     1.25800
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.000 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.62900000  *   0.62900000  *   0.62900000  *
+     3       H          0.62900000  *  -0.62900000  *  -0.62900000  *
+     4       H         -0.62900000  *   0.62900000  *  -0.62900000  *
+     5       H         -0.62900000  *  -0.62900000  *   0.62900000  *
+
+                             CARTESIAN COORDINATES
+
+   1    C        0.000000000     0.000000000     0.000000000
+   2    H        0.629000000     0.629000000     0.629000000
+   3    H        0.629000000    -0.629000000    -0.629000000
+   4    H       -0.629000000     0.629000000    -0.629000000
+   5    H       -0.629000000    -0.629000000     0.629000000
+
+
+           Empirical Formula: C H4  =     5 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Td  
+
+
+                  EIGENVALUES
+ -25.09206 -13.64301 -13.64301 -13.64301   5.99471   5.99471   5.99471   7.21111
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          C          -0.654001        4.6540     1.07948     3.57452
+    2          H           0.163500        0.8365     0.83650
+    3          H           0.163500        0.8365     0.83650
+    4          H           0.163501        0.8365     0.83650
+    5          H           0.163500        0.8365     0.83650
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000     0.000    -0.000     0.000
+ HYBRID         0.000     0.000    -0.000     0.000
+ SUM           -0.000     0.000    -0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  C   1.07948   1.19151   1.19151   1.19151
+    2  H   0.83650
+    3  H   0.83650
+    4  H   0.83650
+    5  H   0.83650
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.04 SECONDS
+
+ == MOPAC DONE ==

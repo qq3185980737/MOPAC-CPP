@@ -1,0 +1,2170 @@
+=== 1/669 MOPAC_source_code\aababc.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aababc.F90(6): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MECI_C]
+      USE meci_C, only : occa 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aababc.F90(44): error #6406: Conflicting attributes or multiple declaration of name.   [OCCA]
+        sum = sum + (xy(i,j,k,k)-xy(i,k,j,k))*(iocca1(k)-occa(k)) + &
+---------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aababc.F90(45): error #6406: Conflicting attributes or multiple declaration of name.   [OCCA]
+        xy(i,j,k,k)*(ioccb1(k)-occa(k)) 
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aababc.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [OCCA]
+      USE meci_C, only : occa 
+-------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aababc.F90 (code 1)
+
+=== 2/669 MOPAC_source_code\aababc_I.F90 rc=0
+=== 3/669 MOPAC_source_code\aabacd.F90 rc=0
+=== 4/669 MOPAC_source_code\aabacd_I.F90 rc=0
+=== 5/669 MOPAC_source_code\aabbcd.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(7): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MECI_C]
+      USE meci_C, only : ispqr, is, iiloop, jloop
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(60): error #6406: Conflicting attributes or multiple declaration of name.   [ISPQR]
+        ispqr(iiloop,is) = jloop 
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(60): error #6406: Conflicting attributes or multiple declaration of name.   [JLOOP]
+        ispqr(iiloop,is) = jloop 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(61): error #6406: Conflicting attributes or multiple declaration of name.   [IS]
+        is = is + 1 
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(61): error #6406: Conflicting attributes or multiple declaration of name.   [IS]
+        is = is + 1 
+-------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [IS]
+      USE meci_C, only : ispqr, is, iiloop, jloop
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [ISPQR]
+      USE meci_C, only : ispqr, is, iiloop, jloop
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [IILOOP]
+      USE meci_C, only : ispqr, is, iiloop, jloop
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [JLOOP]
+      USE meci_C, only : ispqr, is, iiloop, jloop
+--------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\aabbcd.F90 (code 1)
+
+=== 6/669 MOPAC_source_code\aabbcd_I.F90 rc=0
+=== 7/669 MOPAC_source_code\add_hydrogen_atoms.F90 rc=1
+ror #6580: Name in only-list does not exist or is not accessible.   [AMS]
+  use parameters_C, only : ams
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(11): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOZYME_C]
+  use MOZYME_C, only : atomname, afn, n_add
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(12): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOD_ATOMRADII]
+  use mod_atomradii, only: atom_radius_covalent
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [PI]
+  use funcon_C,  only : pi
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(14): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [ELEMTS_C]
+  use elemts_C, only: elemnt
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(73): error #6404: This name does not have a type, and must have an explicit type.   [ATMASS]
+        store_atmass(j)  = atmass(i)
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(74): error #6911: The syntax of this substring is invalid.   [LOPT]
+        store_lopt(:,j)  = lopt(:,i)
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(358): error #6580: Name in only-list does not exist or is not accessible.   [PI]
+  use funcon_C,  only : pi
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(359): error #6580: Name in only-list does not exist or is not accessible.   [NBONDS]
+  use common_arrays_C,  only : nat,  coord,  nbonds,  ibonds, txtatm, labels
+---------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(359): error #6580: Name in only-list does not exist or is not accessible.   [IBONDS]
+  use common_arrays_C,  only : nat,  coord,  nbonds,  ibonds, txtatm, labels
+------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(359): error #6580: Name in only-list does not exist or is not accessible.   [TXTATM]
+  use common_arrays_C,  only : nat,  coord,  nbonds,  ibonds, txtatm, labels
+--------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90(387): error #6404: This name does not have a type, and must have an explicit type.   [NBONDS]
+    if (nbonds(icc) == 0) then
+--------^
+C:\Users\15632\AppData\Local\Temp\10379246.i90(1809): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_hydrogen_atoms.F90 (code 1)
+
+=== 8/669 MOPAC_source_code\add_more_interactions.F90 rc=1
+ions.F90(59): error #6514: Substring or array slice notation requires CHARACTER type or array.   [POLD]
+    pold(1:i) = temp_store(1:i)
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(59): error #6054: A CHARACTER data type is required in this context.   [TEMP_STORE]
+    pold(1:i) = temp_store(1:i)
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(59): error #6366: The shapes of the array expressions do not conform.   [POLD]
+    pold(1:i) = temp_store(1:i)
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(60): error #6406: Conflicting attributes or multiple declaration of name.   [POLD]
+    pold(i+1:) = 0.d0
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(60): error #6514: Substring or array slice notation requires CHARACTER type or array.   [POLD]
+    pold(i+1:) = 0.d0
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(60): error #6054: A CHARACTER data type is required in this context.   [0.D0]
+    pold(i+1:) = 0.d0
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(62): error #6404: This name does not have a type, and must have an explicit type.   [P]
+    temp_store = p
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(69): error #6514: Substring or array slice notation requires CHARACTER type or array.   [P]
+    p(1:i) = temp_store(1:i)
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(69): error #6054: A CHARACTER data type is required in this context.   [TEMP_STORE]
+    p(1:i) = temp_store(1:i)
+-------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(69): error #6366: The shapes of the array expressions do not conform.   [P]
+    p(1:i) = temp_store(1:i)
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(70): error #6514: Substring or array slice notation requires CHARACTER type or array.   [P]
+    p(i+1:) = 0.d0
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(70): error #6054: A CHARACTER data type is required in this context.   [0.D0]
+    p(i+1:) = 0.d0
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(72): error #6404: This name does not have a type, and must have an explicit type.   [H]
+    temp_store = h
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90(79): error #6514: Substring or array slice notation requires CHARACTER type or array.   [H]
+    h(1:i) = temp_store(1:i)
+----^
+C:\Users\15632\AppData\Local\Temp\10316046.i90(129): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\add_more_interactions.F90 (code 1)
+
+=== 9/669 MOPAC_source_code\addfck_I.F90 rc=0
+=== 10/669 MOPAC_source_code\addhb.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\addhb.F90(15): error #6580: Name in only-list does not exist or is not accessible.   [F]
+    use common_arrays_C, only: eigs, f
+-------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\addhb.F90(32): error #6404: This name does not have a type, and must have an explicit type.   [F]
+    call hbonds (f, nocc1, nvir1, iused, nij, hblims(nhb))
+-----------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\addhb.F90 (code 1)
+
+=== 11/669 MOPAC_source_code\addhcr_I.F90 rc=0
+=== 12/669 MOPAC_source_code\addnuc_I.F90 rc=0
+=== 13/669 MOPAC_source_code\adjvec.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\adjvec.F90(5): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOZYME_C]
+    use MOZYME_C, only : thresh
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\adjvec.F90(22): error #6406: Conflicting attributes or multiple declaration of name.   [THRESH]
+    cutoff = thresh * 1.d1
+-------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\adjvec.F90(5): error #6580: Name in only-list does not exist or is not accessible.   [THRESH]
+    use MOZYME_C, only : thresh
+-------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\adjvec.F90 (code 1)
+
+=== 14/669 MOPAC_source_code\afmm_mod.F90 rc=0
+=== 15/669 MOPAC_source_code\aijm_I.F90 rc=0
+=== 16/669 MOPAC_source_code\aintgs_I.F90 rc=0
+=== 17/669 MOPAC_source_code\alpb_and_xfac_am1.F90 rc=1
+ Nitrogen -    Beryllium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(25): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb( 8, 3) =   1.873415d0 !      Oxygen -      Lithium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(26): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac( 8, 3) =   1.294666d0 !      Oxygen -      Lithium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(27): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb( 8, 4) =   2.816061d0 !      Oxygen -    Beryllium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(28): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac( 8, 4) =   1.104010d0 !      Oxygen -    Beryllium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(30): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb( 9, 3) =   1.890271d0 !    Fluorine -      Lithium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(31): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac( 9, 3) =   1.542043d0 !    Fluorine -      Lithium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(32): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb( 9, 4) =   1.866431d0 !    Fluorine -    Beryllium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(33): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac( 9, 4) =   0.411014d0 !    Fluorine -    Beryllium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(35): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(11, 1) =   2.430601d0 !      Sodium -     Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(36): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(11, 1) =   9.994724d0 !      Sodium -     Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(37): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(11, 6) =   1.711276d0 !      Sodium -       Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90(38): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(11, 6) =   2.226935d0 !      Sodium -       Carbon
+----^
+C:\Users\15632\AppData\Local\Temp\10846446.i90(254): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_am1.F90 (code 1)
+
+=== 18/669 MOPAC_source_code\alpb_and_xfac_mndo.F90 rc=1
+      Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(26): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(11, 7) =   2.137374d0 !      Sodium -     Nitrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(27): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(11, 7) =   7.127566d0 !      Sodium -     Nitrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(28): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(11, 8) =   1.645246d0 !      Sodium -       Oxygen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(29): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(11, 8) =   1.815137d0 !      Sodium -       Oxygen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(30): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(11, 9) =   1.454308d0 !      Sodium -     Fluorine
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(31): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(11, 9) =   1.176276d0 !      Sodium -     Fluorine
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(32): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(11,11) =   1.237658d0 !      Sodium -       Sodium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(33): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(11,11) =   4.403848d0 !      Sodium -       Sodium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(35): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(12, 1) =   2.225309d0 !   Magnesium -     Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(36): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(12, 1) =   3.720059d0 !   Magnesium -     Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(37): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(12, 6) =   2.261280d0 !   Magnesium -       Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90(38): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(12, 6) =   4.077811d0 !   Magnesium -       Carbon
+----^
+C:\Users\15632\AppData\Local\Temp\1318446.i90(510): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndo.F90 (code 1)
+
+=== 19/669 MOPAC_source_code\alpb_and_xfac_mndod.F90 rc=1
+as not been declared as an array or a function.   [XFAC]
+    xfac(11, 6) =  1.00000000d0  !     Sodium - Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(9): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(12, 1) =  1.35052992D0  !     Magnesium - Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(10): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(12, 1) =  1.00000000d0  !     Magnesium - Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(11): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(12, 6) =  1.48172071D0  !     Magnesium - Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(12): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(12, 6) =  1.00000000d0  !     Magnesium - Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(13): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(16,12) =  1.48172071D0  !     Sulfur - Magnesium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(14): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(16,12) =  1.00000000d0  !     Sulfur - Magnesium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(15): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(13, 1) =  1.38788000D0  !     Aluminum - Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(16): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(13, 1) =  1.00000000d0  !     Aluminum - Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(17): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(13, 6) =  1.38788000D0  !     Aluminum - Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(18): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(13, 6) =  1.00000000d0  !     Aluminum - Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(19): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(13,13) =  1.38788000D0  !     Aluminum - Aluminum
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90(20): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(13,13) =  1.00000000d0  !     Aluminum - Aluminum
+----^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_mndod.F90 (code 1)
+
+=== 20/669 MOPAC_source_code\alpb_and_xfac_pm3.F90 rc=1
+ Chlorine -       Sodium
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(25): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(19, 1) =   1.027701d0 !   Potassium -     Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(26): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(19, 1) =   0.893642d0 !   Potassium -     Hydrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(27): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(19, 6) =   1.453975d0 !   Potassium -       Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(28): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(19, 6) =   2.009100d0 !   Potassium -       Carbon
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(29): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(19, 7) =   0.999984d0 !   Potassium -     Nitrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(30): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(19, 7) =   0.425244d0 !   Potassium -     Nitrogen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(31): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(19, 8) =   1.470651d0 !   Potassium -       Oxygen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(32): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(19, 8) =   0.999945d0 !   Potassium -       Oxygen
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(33): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(19, 9) =   0.999898d0 !   Potassium -     Fluorine
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(34): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(19, 9) =   0.342063d0 !   Potassium -     Fluorine
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(35): error #6410: This name has not been declared as an array or a function.   [ALPB]
+    alpb(19,16) =   1.000576d0 !   Potassium -       Sulfur
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90(36): error #6410: This name has not been declared as an array or a function.   [XFAC]
+    xfac(19,16) =   0.584513d0 !   Potassium -       Sulfur
+----^
+C:\Users\15632\AppData\Local\Temp\10661246.i90(156): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\alpb_and_xfac_pm3.F90 (code 1)
+
+=== 21/669 MOPAC_source_code\alphaf_I.F90 rc=0
+=== 22/669 MOPAC_source_code\analyt.F90 rc=1
+ (ix==1) read (irot) (g(i22),i22=1,22) 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(143): error #6404: This name does not have a type, and must have an explicit type.   [G]
+        if (ix==1) read (irot) (g(i22),i22=1,22) 
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(143): error #6358: Constants and expressions are invalid in read-only I/O lists.   [G]
+        if (ix==1) read (irot) (g(i22),i22=1,22) 
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(144): error #6404: This name does not have a type, and must have an explicit type.   [DG]
+        call delri (dg, ni, nj, r0, del1) 
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(154): error #6404: This name does not have a type, and must have an explicit type.   [NATORB]
+          if (rij<1.D0 .and. natorb(ni)*natorb(nj)==0) then 
+-----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(158): error #6404: This name does not have a type, and must have an explicit type.   [TORE]
+          c1 = tore(ni)*tore(nj) 
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(160): error #6404: This name does not have a type, and must have an explicit type.   [ALP]
+            f3 = 1.0D0 + exp((-alp(1)*rij)) + rij*exp((-alp(nj)*rij)) 
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(191): error #6404: This name does not have a type, and must have an explicit type.   [GUESS1]
+            if (abs(guess1(ni,ig)) > 0.D0) anam1 = anam1 + guess1(ni,ig)*(1.D0/(rij*&
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(191): error #6362: The data types of the argument(s) are invalid.   [ABS]
+            if (abs(guess1(ni,ig)) > 0.D0) anam1 = anam1 + guess1(ni,ig)*(1.D0/(rij*&
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(192): error #6404: This name does not have a type, and must have an explicit type.   [GUESS2]
+              rij) + 2.D0*guess2(ni,ig)*(rij-guess3(ni,ig))/rij)*exp(max(-30.D0,(-guess2&
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(192): error #6404: This name does not have a type, and must have an explicit type.   [GUESS3]
+              rij) + 2.D0*guess2(ni,ig)*(rij-guess3(ni,ig))/rij)*exp(max(-30.D0,(-guess2&
+---------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90(194): error #6362: The data types of the argument(s) are invalid.   [ABS]
+            if (abs(guess1(nj,ig)) <= 0.D0) cycle  
+--------------------^
+C:\Users\15632\AppData\Local\Temp\10688046.i90(305): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\analyt.F90 (code 1)
+
+=== 23/669 MOPAC_source_code\analyt_C.F90 rc=0
+=== 24/669 MOPAC_source_code\anavib.F90 rc=1
+C]
+      use to_screen_C, only : travel, redmas
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(162): error #6404: This name does not have a type, and must have an explicit type.   [FPC_10]
+              ans = min(999.d0, max(-99.9d0, 100.D0*sqrt(fij(ij)*1.D5*fpc_10)/(fpc_8*pi*2.D0)/eigs(k)))
+----------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(162): error #6404: This name does not have a type, and must have an explicit type.   [FPC_8]
+              ans = min(999.d0, max(-99.9d0, 100.D0*sqrt(fij(ij)*1.D5*fpc_10)/(fpc_8*pi*2.D0)/eigs(k)))
+-------------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(162): error #6404: This name does not have a type, and must have an explicit type.   [PI]
+              ans = min(999.d0, max(-99.9d0, 100.D0*sqrt(fij(ij)*1.D5*fpc_10)/(fpc_8*pi*2.D0)/eigs(k)))
+-------------------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(169): error #6404: This name does not have a type, and must have an explicit type.   [ELEMNT]
+               eigs(k), elemnt(nat(i)), i, elemnt(nat(j)), j, e, ans, radial 
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(180): error #6404: This name does not have a type, and must have an explicit type.   [TRAVEL]
+               travel(k), elemnt(nat(i)), i, elemnt(nat(j)), j, e, ans, radial 
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(185): error #6404: This name does not have a type, and must have an explicit type.   [REDMAS]
+               redmas(k, 1), elemnt(nat(i)), i, elemnt(nat(j)), j, e, ans, radial 
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(206): error #6363: The intrinsic data types of the arguments must be the same.   [MAX]
+        if (vib5) write (iw, '(  '' EFF. MASS'',F9.4)') min(9999.9999d0,max(-999.9999d0,redmas(k, 2))) 
+----------------------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [ELEMNT]
+      USE elemts_C, only : elemnt 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [TRAVEL]
+      use to_screen_C, only : travel, redmas
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [REDMAS]
+      use to_screen_C, only : travel, redmas
+--------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\anavib.F90 (code 1)
+
+=== 25/669 MOPAC_source_code\asum_I.F90 rc=0
+=== 26/669 MOPAC_source_code\atomrs.F90 rc=1
+hive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(77): error #6404: This name does not have a type, and must have an explicit type.   [IATOM]
+                call dihed (coord, ibonds(i,iatom), iatom, j2, ibonds(j,j2), sum)
+----------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(82): error #6404: This name does not have a type, and must have an explicit type.   [PI]
+        if (sum < pi*0.5d0 .and. sum > -pi*0.5d0) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(82): error #6404: This name does not have a type, and must have an explicit type.   [PI]
+        if (sum < pi*0.5d0 .and. sum > -pi*0.5d0) then
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(107): error #6404: This name does not have a type, and must have an explicit type.   [ELEMNT]
+          write (iw, "(10(1X,A2,I5))") (elemnt(nat(inres(l))), &
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(146): error #6404: This name does not have a type, and must have an explicit type.   [TXTATM]
+      if (index(txtatm(i), "UNK") > 0) exit
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(146): error #6362: The data types of the argument(s) are invalid.   [INDEX]
+      if (index(txtatm(i), "UNK") > 0) exit
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(149): error #6362: The data types of the argument(s) are invalid.   [TRIM]
+      write(iw,'(/10x,a)')"The fault is probably after atom:  """//trim(txtatm(i - 1))//""""   
+------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(150): error #6404: This name does not have a type, and must have an explicit type.   [TXTATM1]
+    if (txtatm1(jatom) /= " ") then
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(151): error #6362: The data types of the argument(s) are invalid.   [TRIM]
+      write(iw,'(/10x,a,a)')"The fault is probably before atom: """//trim(txtatm1(jatom))//"""" 
+--------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(153): error #6054: A CHARACTER data type is required in this context.   [ELEMNT]
+      write(iw,'(/10x,a, i5)')"The fault is probably before atom: "//elemnt(nat(jatom)), jatom  
+---------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90(169): error #6404: This name does not have a type, and must have an explicit type.   [K]
+      do k = j + 1, ninres
+---------^
+C:\Users\15632\AppData\Local\Temp\10021246.i90(734): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\atomrs.F90 (code 1)
+
+=== 27/669 MOPAC_source_code\aval_I.F90 rc=0
+=== 28/669 MOPAC_source_code\axis.F90 rc=1
+ER type or array.   [ATMASS]
+        t(2) = t(2) - ddot(numat,atmass(:numat)*x(:numat),1,y(:numat),1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(98): error #6355: This binary operation is invalid for this data type.   [ATMASS]
+        t(2) = t(2) - ddot(numat,atmass(:numat)*x(:numat),1,y(:numat),1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(98): error #6549: An arithmetic or LOGICAL type is required in this context.
+        t(2) = t(2) - ddot(numat,atmass(:numat)*x(:numat),1,y(:numat),1) 
+-----------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(99): error #6514: Substring or array slice notation requires CHARACTER type or array.   [ATMASS]
+        t(3) = t(3) + ddot(numat,atmass(:numat),1,z(:numat)**2+x(:numat)**2,1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(100): error #6514: Substring or array slice notation requires CHARACTER type or array.   [ATMASS]
+        t(4) = t(4) - ddot(numat,atmass(:numat)*z(:numat),1,x(:numat),1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(100): error #6355: This binary operation is invalid for this data type.   [ATMASS]
+        t(4) = t(4) - ddot(numat,atmass(:numat)*z(:numat),1,x(:numat),1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(100): error #6549: An arithmetic or LOGICAL type is required in this context.
+        t(4) = t(4) - ddot(numat,atmass(:numat)*z(:numat),1,x(:numat),1) 
+-----------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(101): error #6514: Substring or array slice notation requires CHARACTER type or array.   [ATMASS]
+        t(5) = t(5) - ddot(numat,atmass(:numat)*y(:numat),1,z(:numat),1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(101): error #6355: This binary operation is invalid for this data type.   [ATMASS]
+        t(5) = t(5) - ddot(numat,atmass(:numat)*y(:numat),1,z(:numat),1) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(101): error #6549: An arithmetic or LOGICAL type is required in this context.
+        t(5) = t(5) - ddot(numat,atmass(:numat)*y(:numat),1,z(:numat),1) 
+-----------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90(102): error #6514: Substring or array slice notation requires CHARACTER type or array.   [ATMASS]
+        t(6) = t(6) + ddot(numat,atmass(:numat),1,x(:numat)**2+y(:numat)**2,1) 
+---------------------------------^
+C:\Users\15632\AppData\Local\Temp\10347246.i90(166): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\axis.F90 (code 1)
+
+=== 29/669 MOPAC_source_code\axis_I.F90 rc=0
+=== 30/669 MOPAC_source_code\babbbc.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\babbbc.F90(6): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MECI_C]
+      use meci_C, only : occa
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\babbbc.F90(50): error #6406: Conflicting attributes or multiple declaration of name.   [OCCA]
+        sum = sum + (xy(i,j,k,k)-xy(i,k,j,k))*(ioccb1(k)-occa(k)) + xy(i,j,k,k)&
+---------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\babbbc.F90(51): error #6406: Conflicting attributes or multiple declaration of name.   [OCCA]
+          *(iocca1(k)-occa(k)) 
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\babbbc.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [OCCA]
+      use meci_C, only : occa
+-------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\babbbc.F90 (code 1)
+
+=== 31/669 MOPAC_source_code\babbbc_I.F90 rc=0
+=== 32/669 MOPAC_source_code\babbcd.F90 rc=0
+=== 33/669 MOPAC_source_code\babbcd_I.F90 rc=0
+=== 34/669 MOPAC_source_code\bangle.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [TVEC]
+      use common_arrays_C, only: tvec
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [ID]
+      use molkst_C, only : numat, id, l11, l21, l31
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [L11]
+      use molkst_C, only : numat, id, l11, l21, l31
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [L21]
+      use molkst_C, only : numat, id, l11, l21, l31
+-------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [L31]
+      use molkst_C, only : numat, id, l11, l21, l31
+------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(31): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+      if (id == 0) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(39): error #6404: This name does not have a type, and must have an explicit type.   [L11]
+        do ii = -l11, l11 
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(40): error #6404: This name does not have a type, and must have an explicit type.   [L21]
+          do jj = -l21, l21 
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(41): error #6404: This name does not have a type, and must have an explicit type.   [L31]
+            do kk = -l31, l31 
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90(42): error #6911: The syntax of this substring is invalid.   [TVEC]
+              Vab = xyz(:,i) - xyz(:,j) + tvec(:,1)*ii + tvec(:,2)*jj + tvec(:,3)*kk 
+------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bangle.F90 (code 1)
+
+=== 35/669 MOPAC_source_code\bangle_I.F90 rc=0
+=== 36/669 MOPAC_source_code\bdenin_I.F90 rc=0
+=== 37/669 MOPAC_source_code\bdenup_I.F90 rc=0
+=== 38/669 MOPAC_source_code\beopor_I.F90 rc=0
+=== 39/669 MOPAC_source_code\betaf_I.F90 rc=0
+=== 40/669 MOPAC_source_code\betal1_I.F90 rc=0
+=== 41/669 MOPAC_source_code\betall_I.F90 rc=0
+=== 42/669 MOPAC_source_code\betcom_I.F90 rc=0
+=== 43/669 MOPAC_source_code\bfn.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bfn.F90(6): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [OVERLAPS_C]
+      use overlaps_C, only : fact
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bfn.F90(58): error #6406: Conflicting attributes or multiple declaration of name.   [FACT]
+          if (m /= 0) xf = fact(m) 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bfn.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [FACT]
+      use overlaps_C, only : fact
+-----------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bfn.F90 (code 1)
+
+=== 44/669 MOPAC_source_code\bfn_I.F90 rc=0
+=== 45/669 MOPAC_source_code\big_swap.F90 rc=1
+source_code\big_swap.F90(17): error #6580: Name in only-list does not exist or is not accessible.   [INPUT_FN]
+    use chanel_C, only : iw, iarc, input_fn, iden
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(17): error #6580: Name in only-list does not exist or is not accessible.   [IDEN]
+    use chanel_C, only : iw, iarc, input_fn, iden
+---------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(29): error #6404: This name does not have a type, and must have an explicit type.   [GEOA]
+    if (.not. allocated(geoa)) allocate(geoa(3,numat))
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(29): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [GEOA]
+    if (.not. allocated(geoa)) allocate(geoa(3,numat))
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(30): error #6404: This name does not have a type, and must have an explicit type.   [GEO_1]
+    if (allocated(geo_1)) geoa(:,:numat) = geo_1(:,:numat)      
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(30): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [GEO_1]
+    if (allocated(geo_1)) geoa(:,:numat) = geo_1(:,:numat)      
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(30): error #6911: The syntax of this substring is invalid.   [GEOA]
+    if (allocated(geo_1)) geoa(:,:numat) = geo_1(:,:numat)      
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(227): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [READA_I]
+  use reada_I
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(228): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [SECOND_I]
+  use second_I
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(229): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [TO_SCREEN_I]
+  use to_screen_I
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(218): error #6580: Name in only-list does not exist or is not accessible.   [TLEFT]
+  use molkst_C, only: tleft, time0, iflepo, tdump, gnorm, keywrd, density, &
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90(218): error #6580: Name in only-list does not exist or is not accessible.   [TIME0]
+  use molkst_C, only: tleft, time0, iflepo, tdump, gnorm, keywrd, density, &
+-----------------------------^
+C:\Users\15632\AppData\Local\Temp\10418046.i90(610): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\big_swap.F90 (code 1)
+
+=== 46/669 MOPAC_source_code\bintgs_I.F90 rc=0
+=== 47/669 MOPAC_source_code\blas_I.F90 rc=0
+=== 48/669 MOPAC_source_code\bldsym.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bldsym.F90(14): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MULT33_I]
+      use mult33_I 
+----------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bldsym.F90 (code 1)
+
+=== 49/669 MOPAC_source_code\bldsym_I.F90 rc=0
+=== 50/669 MOPAC_source_code\bmakuf_I.F90 rc=0
+=== 51/669 MOPAC_source_code\bonds.F90 rc=1
+cit type.   [BONDAB]
+      if (allocated(bondab)) deallocate(bondab)
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(61): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [BONDAB]
+      if (allocated(bondab)) deallocate(bondab)
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(67): error #6404: This name does not have a type, and must have an explicit type.   [NOPEN]
+      nopn = nopen - nclose 
+-------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(68): error #6404: This name does not have a type, and must have an explicit type.   [NELECS]
+      nelecs = nclose + nclose + nopn + nalpha + nbeta
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(68): error #6404: This name does not have a type, and must have an explicit type.   [NALPHA]
+      nelecs = nclose + nclose + nopn + nalpha + nbeta
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(68): error #6404: This name does not have a type, and must have an explicit type.   [NBETA]
+      nelecs = nclose + nclose + nopn + nalpha + nbeta
+-------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(75): error #6404: This name does not have a type, and must have an explicit type.   [P]
+          b(i,j) = p(k) 
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(89): error #6404: This name does not have a type, and must have an explicit type.   [C]
+              sum = sum + c(mu,n)*cb(mu,m)
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(89): error #6404: This name does not have a type, and must have an explicit type.   [CB]
+              sum = sum + c(mu,n)*cb(mu,m)
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(100): error #6362: The data types of the argument(s) are invalid.   [DBLE]
+          zkappa = 1.D0/(1.D0 - (dble(nopn)/dble(nelecs))/2.D0) 
+-------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(118): error #6410: This name has not been declared as an array or a function.   [BONDAB]
+          bondab(ij) = x 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(138): error #6410: This name has not been declared as an array or a function.   [BONDAB]
+          bondab(k) = bondab(k)*zkappa 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90(142): error #6410: This name has not been declared as an array or a function.   [BONDAB]
+        bondab(k) = v(i) 
+--------^
+C:\Users\15632\AppData\Local\Temp\10308046.i90(269): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds.F90 (code 1)
+
+=== 52/669 MOPAC_source_code\bonds_for_MOZYME.F90 rc=1
+ 
+------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(117): error #6406: Conflicting attributes or multiple declaration of name.   [ELEMNT]
+                write(iw,'('//nc//'x, a, f6.3)') elemnt(nat(ibab(j)))//"("//txtatm(ibab(j))//")", bab(j)
+-------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(117): error #6054: A CHARACTER data type is required in this context.   [ELEMNT]
+                write(iw,'('//nc//'x, a, f6.3)') elemnt(nat(ibab(j)))//"("//txtatm(ibab(j))//")", bab(j)
+-------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(117): error #6054: A CHARACTER data type is required in this context.   [TXTATM]
+                write(iw,'('//nc//'x, a, f6.3)') elemnt(nat(ibab(j)))//"("//txtatm(ibab(j))//")", bab(j)
+----------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(120): error #6406: Conflicting attributes or multiple declaration of name.   [ELEMNT]
+              write (iw, "(I6,1X,A,A,F6.3,')',6(I6,1x,A2,F6.3))") i, elemnt(nat(i)), &
+---------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(121): error #6406: Conflicting attributes or multiple declaration of name.   [ELEMNT]
+              "     (", valenc, (ibab(j), elemnt(nat(ibab(j))), &
+------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(126): error #6406: Conflicting attributes or multiple declaration of name.   [ELEMNT]
+               & elemnt(nat(ibab(j))), bab(j), j=m, ju)
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(138): error #6514: Substring or array slice notation requires CHARACTER type or array.   [L_ATOM]
+      l_atom_store = l_atom(:nl_atoms)
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(138): error #6303: The assignment operation or the binary expression operation is invalid for the data types of the two operands.   [L_ATOM]
+      l_atom_store = l_atom(:nl_atoms)
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(139): error #6514: Substring or array slice notation requires CHARACTER type or array.   [L_ATOM]
+      l_atom(:nl_atoms) = .true.
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90(139): error #6054: A CHARACTER data type is required in this context.
+      l_atom(:nl_atoms) = .true.
+--------------------------^
+C:\Users\15632\AppData\Local\Temp\9596046.i90(147): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\bonds_for_MOZYME.F90 (code 1)
+
+=== 53/669 MOPAC_source_code\bonds_I.F90 rc=0
+=== 54/669 MOPAC_source_code\break_I.F90 rc=0
+=== 55/669 MOPAC_source_code\btoc_I.F90 rc=0
+=== 56/669 MOPAC_source_code\buildf.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(2): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+    use molkst_C, only: numat, mpack, id
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(2): error #6580: Name in only-list does not exist or is not accessible.   [ID]
+    use molkst_C, only: numat, mpack, id
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(3): error #6580: Name in only-list does not exist or is not accessible.   [W]
+    use common_arrays_C, only : w, h, wk
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(3): error #6580: Name in only-list does not exist or is not accessible.   [H]
+    use common_arrays_C, only : w, h, wk
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(3): error #6580: Name in only-list does not exist or is not accessible.   [WK]
+    use common_arrays_C, only : w, h, wk
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(21): error #6404: This name does not have a type, and must have an explicit type.   [H]
+    if (mode ==-1) f = partf - h
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(24): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+    if (id == 0) then
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(28): error #6404: This name does not have a type, and must have an explicit type.   [W]
+      call fock2z (f, q, qe, w, w, ptot2, mode, 1)
+-----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(33): error #6404: This name does not have a type, and must have an explicit type.   [WK]
+      call fock2z (f, q, qe, w, wk, ptot2, mode, 0)
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(6): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: partf
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90(6): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: partf
+---------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\buildf.F90 (code 1)
+
+=== 57/669 MOPAC_source_code\calpar.F90 rc=1
+e\2016_MOPAC2016\MOPAC_source_code\calpar.F90(11): error #6580: Name in only-list does not exist or is not accessible.   [IN_HOUSE_ONLY]
+      USE molkst_C, only : keywrd, method_pm7, in_house_only
+-----------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(36): error #6404: This name does not have a type, and must have an explicit type.   [AM]
+      am = 0.d0
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(41): error #6404: This name does not have a type, and must have an explicit type.   [IOS]
+        gssc(i) = max(ios(i)-1,0) 
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(42): error #6404: This name does not have a type, and must have an explicit type.   [IOP]
+        k = iop(i) 
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(66): error #6404: This name does not have a type, and must have an explicit type.   [ZP]
+        if (zp(i)<1.D-4 .and. zs(i)<1.D-4) cycle  
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(66): error #6404: This name does not have a type, and must have an explicit type.   [ZS]
+        if (zp(i)<1.D-4 .and. zs(i)<1.D-4) cycle  
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(72): error #6410: This name has not been declared as an array or a function.   [ZP]
+        zp(i) = dmax1(0.3D0,zp(i)) 
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(72): error #6363: The intrinsic data types of the arguments must be the same.   [DMAX1]
+        zp(i) = dmax1(0.3D0,zp(i)) 
+----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(78): error #6410: This name has not been declared as an array or a function.   [EISOL]
+        eisol(i) = uss(i)*ios(i) + upp(i)*iop(i) + udd(i)*iod(i) + gss(i)*gssc(i) + &
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(78): error #6404: This name does not have a type, and must have an explicit type.   [USS]
+        eisol(i) = uss(i)*ios(i) + upp(i)*iop(i) + udd(i)*iod(i) + gss(i)*gssc(i) + &
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(78): error #6404: This name does not have a type, and must have an explicit type.   [UPP]
+        eisol(i) = uss(i)*ios(i) + upp(i)*iop(i) + udd(i)*iod(i) + gss(i)*gssc(i) + &
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90(78): error #6404: This name does not have a type, and must have an explicit type.   [UDD]
+        eisol(i) = uss(i)*ios(i) + upp(i)*iop(i) + udd(i)*iod(i) + gss(i)*gssc(i) + &
+---------------------------------------------------^
+C:\Users\15632\AppData\Local\Temp\10516446.i90(161): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\calpar.F90 (code 1)
+
+=== 58/669 MOPAC_source_code\calpar_I.F90 rc=0
+=== 59/669 MOPAC_source_code\capcor.F90 rc=0
+=== 60/669 MOPAC_source_code\capcor_I.F90 rc=0
+=== 61/669 MOPAC_source_code\cartab_I.F90 rc=0
+=== 62/669 MOPAC_source_code\ccprod_I.F90 rc=0
+=== 63/669 MOPAC_source_code\ccrep.F90 rc=1
+16\MOPAC_source_code\ccrep.F90(46): error #6341: A logical data type is required in this context.   [METHOD_PM7]
+      if (method_PM7) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(52): error #6410: This name has not been declared as an array or a function.   [XFAC]
+            xfac(ni,nj) = 0.5d0*(xfac(ni,ni) + xfac(nj,nj))
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(53): error #6410: This name has not been declared as an array or a function.   [ALPB]
+            alpb(ni,nj) = 0.5d0*(alpb(ni,ni) + alpb(nj,nj))
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(66): error #6404: This name does not have a type, and must have an explicit type.   [METHOD_MNDOD]
+        if (.not. method_mndod) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(67): error #6404: This name does not have a type, and must have an explicit type.   [METHOD_PM6]
+          if (method_pm6 .or. method_pm7) then
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(86): error #6404: This name does not have a type, and must have an explicit type.   [PAR3]
+                scale = 1.0d0 + 2.d0 * fff * Exp (-abond*r**2) - par3*exp(-par4*r*2) ! par3*exp(-par4*r*2) used by PM7
+-----------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(86): error #6404: This name does not have a type, and must have an explicit type.   [PAR4]
+                scale = 1.0d0 + 2.d0 * fff * Exp (-abond*r**2) - par3*exp(-par4*r*2) ! par3*exp(-par4*r*2) used by PM7
+---------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(91): error #6404: This name does not have a type, and must have an explicit type.   [PAR1]
+                scale = scale + par1*exp(-par2*r) ! To correct C-C triple bond HoF
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(91): error #6404: This name does not have a type, and must have an explicit type.   [PAR2]
+                scale = scale + par1*exp(-par2*r) ! To correct C-C triple bond HoF
+------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(110): error #6404: This name does not have a type, and must have an explicit type.   [METHOD_AM1]
+            if (method_am1 .and. (ni == 42 .and. nj == 1 .or. ni == 1 .and. nj == 42)) then
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90(169): error #6404: This name does not have a type, and must have an explicit type.   [GUESS2]
+        ax = guess2(ni,1)*(r - guess3(ni,1))**2 
+-------------^
+C:\Users\15632\AppData\Local\Temp\9732446.i90(218): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ccrep.F90 (code 1)
+
+=== 64/669 MOPAC_source_code\cdiag_I.F90 rc=0
+=== 65/669 MOPAC_source_code\chanel_C.F90 rc=0
+=== 66/669 MOPAC_source_code\charg_I.F90 rc=0
+=== 67/669 MOPAC_source_code\charmo.F90 rc=0
+=== 68/669 MOPAC_source_code\charmo_I.F90 rc=0
+=== 69/669 MOPAC_source_code\charst.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(10): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MINV_I]
+      use minv_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(11): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MATOUT_I]
+      use matout_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(6): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MECI_C]
+      USE meci_C, only : nalmat, microa, microb, lab, conf, nmos
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(67): error #6404: This name does not have a type, and must have an explicit type.   [NALMAT]
+          nalmat(:nstate) = nmos - nalmat(:nstate) 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(67): error #6514: Substring or array slice notation requires CHARACTER type or array.   [NALMAT]
+          nalmat(:nstate) = nmos - nalmat(:nstate) 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(67): error #6514: Substring or array slice notation requires CHARACTER type or array.   [NALMAT]
+          nalmat(:nstate) = nmos - nalmat(:nstate) 
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(67): error #6355: This binary operation is invalid for this data type.   [NALMAT]
+          nalmat(:nstate) = nmos - nalmat(:nstate) 
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(67): error #6054: A CHARACTER data type is required in this context.
+          nalmat(:nstate) = nmos - nalmat(:nstate) 
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90(68): error #6911: The syntax of this substring is invalid.   [MICROA]
+          microa(:nmos,:nstate) = 1 - microa(:nmos,:nstate) 
+----------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst.F90 (code 1)
+
+=== 70/669 MOPAC_source_code\charst_I.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst_I.F90(6): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MECI_C]
+      use meci_C, only : nmos, lab 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst_I.F90(8): error #6406: Conflicting attributes or multiple declaration of name.   [NMOS]
+      REAL(DOUBLE), DIMENSION(NVECS,NMOS), INTENT(IN) :: VECTS 
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst_I.F90(8): error #6223: A specification expression is invalid.   [NMOS]
+      REAL(DOUBLE), DIMENSION(NVECS,NMOS), INTENT(IN) :: VECTS 
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst_I.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [NMOS]
+      use meci_C, only : nmos, lab 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst_I.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [LAB]
+      use meci_C, only : nmos, lab 
+-------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\charst_I.F90 (code 1)
+
+=== 71/669 MOPAC_source_code\charvi.F90 rc=0
+=== 72/669 MOPAC_source_code\charvi_I.F90 rc=0
+=== 73/669 MOPAC_source_code\check.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(13): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOZYME_C]
+    use MOZYME_C, only : ws
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(51): error #6406: Conflicting attributes or multiple declaration of name.   [WS]
+      ws(i) = sum
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(55): error #6406: Conflicting attributes or multiple declaration of name.   [WS]
+      sum = 1.d0 / Sqrt (ws(i))
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(55): error #6362: The data types of the argument(s) are invalid.   [SQRT]
+      sum = 1.d0 / Sqrt (ws(i))
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(74): error #6406: Conflicting attributes or multiple declaration of name.   [WS]
+    write (iw, "(5F16.12)") (ws(i), i=1, nvec)
+-----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(77): error #6406: Conflicting attributes or multiple declaration of name.   [WS]
+      if (Abs (ws(i)-1.d0) > 0.1d0) then
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(78): error #6406: Conflicting attributes or multiple declaration of name.   [WS]
+        write (iw, "(/,A,I6,A,F12.6/)") "  DETAILS OF LMO", i, " N:", ws (i)
+----------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(88): error #6406: Conflicting attributes or multiple declaration of name.   [WS]
+        sum = Sqrt (ws(i))
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(88): error #6362: The data types of the argument(s) are invalid.   [SQRT]
+        sum = Sqrt (ws(i))
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [WS]
+    use MOZYME_C, only : ws
+-------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\check.F90 (code 1)
+
+=== 74/669 MOPAC_source_code\chi_I.F90 rc=0
+=== 75/669 MOPAC_source_code\chkion.F90 rc=1
+archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(127): error #6406: Conflicting attributes or multiple declaration of name.   [IB]
+          if (ib(i) <= 0) cycle atom_loop         
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(135): error #6406: Conflicting attributes or multiple declaration of name.   [IZ]
+              if (iz(i) > 1) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(137): error #6406: Conflicting attributes or multiple declaration of name.   [IZ]
+                if (iz(i) == 0 .and. ib(i) == 1) then
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(137): error #6406: Conflicting attributes or multiple declaration of name.   [IB]
+                if (iz(i) == 0 .and. ib(i) == 1) then
+-------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(142): error #6406: Conflicting attributes or multiple declaration of name.   [IONS]
+                  if (ions(ibonds(m,i)) > 0) then ! Adjacent atom is a cation
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(145): error #6406: Conflicting attributes or multiple declaration of name.   [IONS]
+                  else if (ions(ibonds(m,i)) < 0) then ! Adjacent atom is an anion
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(154): error #6404: This name does not have a type, and must have an explicit type.   [IBONDS]
+                  mm = ibonds(m, i)
+-----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(158): error #6404: This name does not have a type, and must have an explicit type.   [TORE]
+                  if (Nint(tore(nat(mm))) == 5) go to 1010
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(158): warning #7319: This argument's data type is incompatible with this intrinsic procedure; procedure assumed EXTERNAL.   [NINT]
+                  if (Nint(tore(nat(mm))) == 5) go to 1010
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(158): error #6404: This name does not have a type, and must have an explicit type.   [NINT]
+                  if (Nint(tore(nat(mm))) == 5) go to 1010
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(235): error #6406: Conflicting attributes or multiple declaration of name.   [IB]
+                if (ib(i) == 0) exit
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90(250): error #6406: Conflicting attributes or multiple declaration of name.   [IZ]
+            else  if (iz(i) > 1) then
+----------------------^
+C:\Users\15632\AppData\Local\Temp\9226846.i90(344): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chkion.F90 (code 1)
+
+=== 76/669 MOPAC_source_code\chklew.F90 rc=1
+on of name.   [IB]
+      ib(i) = nlast(i) - nfirst(i) + 1
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(56): error #6406: Conflicting attributes or multiple declaration of name.   [IZ]
+      iz(i) = Nint (tore(nat(i)))
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(56): error #6404: This name does not have a type, and must have an explicit type.   [TORE]
+      iz(i) = Nint (tore(nat(i)))
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(56): error #6362: The data types of the argument(s) are invalid.   [NINT]
+      iz(i) = Nint (tore(nat(i)))
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(77): error #6404: This name does not have a type, and must have an explicit type.   [NATOMS]
+    do i = 1, natoms
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(81): error #6410: This name has not been declared as an array or a function.   [TXTATM]
+      plus_seven = txtatm(i)(7:7)
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(689): error #6580: Name in only-list does not exist or is not accessible.   [NBONDS]
+    use common_arrays_C, only : nbonds, ibonds
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(689): error #6580: Name in only-list does not exist or is not accessible.   [IBONDS]
+    use common_arrays_C, only : nbonds, ibonds
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(698): error #6404: This name does not have a type, and must have an explicit type.   [NBONDS]
+    ni = nbonds(i)
+---------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(700): error #6404: This name does not have a type, and must have an explicit type.   [IBONDS]
+      j = ibonds(j1, i)
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(750): error #6580: Name in only-list does not exist or is not accessible.   [NBONDS]
+    use common_arrays_C, only : nbonds, ibonds
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(750): error #6580: Name in only-list does not exist or is not accessible.   [IBONDS]
+    use common_arrays_C, only : nbonds, ibonds
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(765): error #6404: This name does not have a type, and must have an explicit type.   [NBONDS]
+    ni = nbonds(ii)
+---------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90(768): error #6404: This name does not have a type, and must have an explicit type.   [IBONDS]
+      iia = ibonds(i, ii)
+------------^
+C:\Users\15632\AppData\Local\Temp\9152446.i90(807): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chklew.F90 (code 1)
+
+=== 77/669 MOPAC_source_code\chrge.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [MOZYME]
+      use molkst_C, only: numat, norbs, mozyme
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge.F90(39): error #6404: This name does not have a type, and must have an explicit type.   [MOZYME]
+      if (mozyme) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge.F90(39): error #6341: A logical data type is required in this context.   [MOZYME]
+      if (mozyme) then
+----------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge.F90 (code 1)
+
+=== 78/669 MOPAC_source_code\chrge_for_MOZYME.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90(5): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+    use molkst_C, only: mpack, numat
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90(6): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOZYME_C]
+    use MOZYME_C, only : iorbs
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90(18): error #6406: Conflicting attributes or multiple declaration of name.   [IORBS]
+      do j = 1, iorbs(i)
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90(8): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: p
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [IORBS]
+    use MOZYME_C, only : iorbs
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90(8): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: p
+---------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_for_MOZYME.F90 (code 1)
+
+=== 79/669 MOPAC_source_code\chrge_I.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_I.F90(5): error #6580: Name in only-list does not exist or is not accessible.   [NATOMS]
+      use molkst_C, only : norbs, natoms
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_I.F90(6): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [NATOMS]
+      real (double), dimension (natoms), intent(out) :: q 
+--------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\chrge_I.F90 (code 1)
+
+=== 80/669 MOPAC_source_code\ciint_I.F90 rc=0
+=== 81/669 MOPAC_source_code\ciosci.F90 rc=1
+(k, j)) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(242): error #6404: This name does not have a type, and must have an explicit type.   [MICROB]
+              if (microb(k, i) /= microb(k, j)) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(310): error #6404: This name does not have a type, and must have an explicit type.   [NSTATE]
+        do ns = 1, nstate
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [NSTATE]
+      use meci_C, only : nstate, lab, nmos, microa, microb
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(34): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [LAB]
+      real(double) , intent(in) :: conf(lab*lab) 
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [LAB]
+      use meci_C, only : nstate, lab, nmos, microa, microb
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(42): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [NMOS]
+      real(double), dimension(norbs,nmos) :: vect1, vect2 
+---------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [NMOS]
+      use meci_C, only : nstate, lab, nmos, microa, microb
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [MICROA]
+      use meci_C, only : nstate, lab, nmos, microa, microb
+--------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [MICROB]
+      use meci_C, only : nstate, lab, nmos, microa, microb
+----------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(34): error #6404: This name does not have a type, and must have an explicit type.   [LAB]
+      real(double) , intent(in) :: conf(lab*lab) 
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90(42): error #6404: This name does not have a type, and must have an explicit type.   [NMOS]
+      real(double), dimension(norbs,nmos) :: vect1, vect2 
+---------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\ciosci.F90 (code 1)
+
+=== 82/669 MOPAC_source_code\ciosci_I.F90 rc=0
+=== 83/669 MOPAC_source_code\cnvg.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvg.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [NUMCAL]
+      use molkst_C, only : norbs, numcal, keywrd, mpack
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvg.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+      use molkst_C, only : norbs, numcal, keywrd, mpack
+--------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvg.F90(39): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+      if (icalcn /= numcal) then 
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvg.F90(15): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+      real(double) , intent(inout) :: pnew(mpack) 
+-------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvg.F90(15): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+      real(double) , intent(inout) :: pnew(mpack) 
+-------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvg.F90 (code 1)
+
+=== 84/669 MOPAC_source_code\cnvg_I.F90 rc=0
+=== 85/669 MOPAC_source_code\cnvgz.F90 rc=1
+AC_source_code\cnvgz.F90(2): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+    use molkst_C, only: norbs, mpack
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(3): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOZYME_C]
+    use MOZYME_C, only : use_three_point_extrap, pmax
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(23): error #6406: Conflicting attributes or multiple declaration of name.   [PMAX]
+    pmax = 0.0d0
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(26): error #6406: Conflicting attributes or multiple declaration of name.   [PMAX]
+      pmax = Max (pmax, sa)
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(26): error #6406: Conflicting attributes or multiple declaration of name.   [PMAX]
+      pmax = Max (pmax, sa)
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(26): error #6362: The data types of the argument(s) are invalid.   [MAX]
+      pmax = Max (pmax, sa)
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(28): error #6406: Conflicting attributes or multiple declaration of name.   [USE_THREE_POINT_EXTRAP]
+    if (use_three_point_extrap) then
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(28): error #6341: A logical data type is required in this context.   [USE_THREE_POINT_EXTRAP]
+    if (use_three_point_extrap) then
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(54): error #6406: Conflicting attributes or multiple declaration of name.   [PMAX]
+        if (pmax > damp) then
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(8): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+    double precision, dimension (mpack), intent (inout) :: p, pnew
+-----------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(3): error #6580: Name in only-list does not exist or is not accessible.   [USE_THREE_POINT_EXTRAP]
+    use MOZYME_C, only : use_three_point_extrap, pmax
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(3): error #6580: Name in only-list does not exist or is not accessible.   [PMAX]
+    use MOZYME_C, only : use_three_point_extrap, pmax
+-------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90(8): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+    double precision, dimension (mpack), intent (inout) :: p, pnew
+-----------------------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cnvgz.F90 (code 1)
+
+=== 86/669 MOPAC_source_code\coe.F90 rc=0
+=== 87/669 MOPAC_source_code\coe_I.F90 rc=0
+=== 88/669 MOPAC_source_code\collid_I.F90 rc=0
+=== 89/669 MOPAC_source_code\collis_I.F90 rc=0
+=== 90/669 MOPAC_source_code\Common_arrays_C.F90 rc=0
+=== 91/669 MOPAC_source_code\compct.F90 rc=0
+=== 92/669 MOPAC_source_code\compfg.F90 rc=1
+--------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [NDEP]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [NVAR]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [ELECT]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [ENUCLR]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [MOPERR]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+-------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [EMIN]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+---------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [MOZYME]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+---------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [METHOD_PM7]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+-----------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(21): error #6580: Name in only-list does not exist or is not accessible.   [LXFAC]
+      & ndep, nvar, elect, enuclr, keywrd, moperr, emin, mozyme, method_PM7, lxfac, &
+-----------------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90(22): error #6580: Name in only-list does not exist or is not accessible.   [ATHEAT]
+      atheat, id, pressure, method_pm6, density, stress, N_3_present, Si_O_H_present, &
+------^
+C:\Users\15632\AppData\Local\Temp\10237246.i90(341): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\compfg.F90 (code 1)
+
+=== 93/669 MOPAC_source_code\compfg_I.F90 rc=0
+=== 94/669 MOPAC_source_code\compfn_I.F90 rc=0
+=== 95/669 MOPAC_source_code\conref_C.F90 rc=0
+=== 96/669 MOPAC_source_code\consts_I.F90 rc=0
+=== 97/669 MOPAC_source_code\convert_storage.F90 rc=1
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(104): error #6404: This name does not have a type, and must have an explicit type.   [CVIR]
+            c_square(k, ii) = cvir(ka)
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [ISORT]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [NCE]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [NCF]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [NCOCC]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+-----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [NCVIR]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [NNCE]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+-------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(48): error #6580: Name in only-list does not exist or is not accessible.   [NNCF]
+    use MOZYME_C, only: isort, nce, ncf, ncocc, ncvir, nnce, nncf, &
+-------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(49): error #6580: Name in only-list does not exist or is not accessible.   [ICOCC]
+          icocc, icvir, cocc, cvir
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(49): error #6580: Name in only-list does not exist or is not accessible.   [ICVIR]
+          icocc, icvir, cocc, cvir
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90(49): error #6580: Name in only-list does not exist or is not accessible.   [COCC]
+          icocc, icvir, cocc, cvir
+------------------------^
+C:\Users\15632\AppData\Local\Temp\10407246.i90(110): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\convert_storage.F90 (code 1)
+
+=== 98/669 MOPAC_source_code\copyc6.F90 rc=0
+=== 99/669 MOPAC_source_code\copym_I.F90 rc=0
+=== 100/669 MOPAC_source_code\cosmo.F90 rc=1
+ p(ipiden(i))
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(17): error #6404: This name does not have a type, and must have an explicit type.   [IPIDEN]
+      qdenet(i, 2) = gden(i) * p(ipiden(i))
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(18): error #6410: This name has not been declared as an array or a function.   [QDENET]
+      qdenet(i, 3) = qdenet(i, 2) + qdenet(i, 1)
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(26): error #6410: This name has not been declared as an array or a function.   [PHINET]
+      phinet(i, 2) = phi
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(27): error #6410: This name has not been declared as an array or a function.   [PHINET]
+      phinet(i, 3) = phinet(i, 1) + phi
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(30): error #6404: This name does not have a type, and must have an explicit type.   [AMAT]
+    call coscl2 (amat, nsetf, qscnet(1, 2), phinet(1, 2), nps)
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(30): error #6404: This name does not have a type, and must have an explicit type.   [NSETF]
+    call coscl2 (amat, nsetf, qscnet(1, 2), phinet(1, 2), nps)
+-----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(30): error #6404: This name does not have a type, and must have an explicit type.   [QSCNET]
+    call coscl2 (amat, nsetf, qscnet(1, 2), phinet(1, 2), nps)
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(31): error #6404: This name does not have a type, and must have an explicit type.   [EDIEL]
+    ediel = 0.d0
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(35): error #6404: This name does not have a type, and must have an explicit type.   [IATSP]
+      iat = iatsp(i)
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(36): error #6410: This name has not been declared as an array or a function.   [QSCNET]
+      qscnet(i, 2) = -fepsi * qscnet(i, 2)
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(36): error #6404: This name does not have a type, and must have an explicit type.   [FEPSI]
+      qscnet(i, 2) = -fepsi * qscnet(i, 2)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(38): error #6410: This name has not been declared as an array or a function.   [QSCNET]
+      qscnet(i, 3) = qsc3
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90(42): error #6410: This name has not been declared as an array or a function.   [QSCAT]
+      qscat(iat) = qscat(iat) + qsc3
+------^
+C:\Users\15632\AppData\Local\Temp\10988446.i90(58): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\cosmo.F90 (code 1)
+
+=== 101/669 MOPAC_source_code\cosmo_C.F90 rc=0
+=== 102/669 MOPAC_source_code\cqden_I.F90 rc=0
+=== 103/669 MOPAC_source_code\csum_I.F90 rc=0
+=== 104/669 MOPAC_source_code\dang.F90 rc=0
+=== 105/669 MOPAC_source_code\dang_I.F90 rc=0
+=== 106/669 MOPAC_source_code\darea1_I.F90 rc=0
+=== 107/669 MOPAC_source_code\daread_I.F90 rc=0
+=== 108/669 MOPAC_source_code\dasum_I.F90 rc=0
+=== 109/669 MOPAC_source_code\datin.F90 rc=1
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(197): error #6404: This name does not have a type, and must have an explicit type.   [READA]
+1100    param = reada (text, Index (text, " "//elemnt(j)))
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(238): error #6580: Name in only-list does not exist or is not accessible.   [PARTYP]
+      USE parameters_C, only : partyp
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(240): error #6580: Name in only-list does not exist or is not accessible.   [LPARS]
+      use molkst_C, only : lpars, line
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(240): error #6580: Name in only-list does not exist or is not accessible.   [LINE]
+      use molkst_C, only : lpars, line
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(273): error #6404: This name does not have a type, and must have an explicit type.   [LPARS]
+              do i = 1, lpars
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(290): error #6404: This name does not have a type, and must have an explicit type.   [LINE]
+                  write (line, "(12X,A7,7X,A2,F16.6)") partyp (iparam)//elemnt2, elemnt(jelmnt), parsij(i)
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(290): error #6404: This name does not have a type, and must have an explicit type.   [PARTYP]
+                  write (line, "(12X,A7,7X,A2,F16.6)") partyp (iparam)//elemnt2, elemnt(jelmnt), parsij(i)
+-------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(290): error #6054: A CHARACTER data type is required in this context.   [PARTYP]
+                  write (line, "(12X,A7,7X,A2,F16.6)") partyp (iparam)//elemnt2, elemnt(jelmnt), parsij(i)
+-------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(292): error #6362: The data types of the argument(s) are invalid.   [TRIM]
+                    write (iw, "(a)") trim(line)
+-------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(296): error #6514: Substring or array slice notation requires CHARACTER type or array.   [LINE]
+                      write(iw,"(12x,'PAR',i1,13x,a)") j1, trim(line(30:))
+----------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90(298): error #6514: Substring or array slice notation requires CHARACTER type or array.   [LINE]
+                      write(iw,"(12x,'PAR',i2,12x,a)") j1, trim(line(30:))
+----------------------------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\datin.F90 (code 1)
+
+=== 110/669 MOPAC_source_code\datin_I.F90 rc=0
+=== 111/669 MOPAC_source_code\dawrit_I.F90 rc=0
+=== 112/669 MOPAC_source_code\dawrt1_I.F90 rc=0
+=== 113/669 MOPAC_source_code\daxpy_I.F90 rc=0
+=== 114/669 MOPAC_source_code\dcart.F90 rc=1
+ly : iorbs, part_dxyz, mode, jopt
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(15): error #6580: Name in only-list does not exist or is not accessible.   [TORE]
+      use parameters_C, only : tore
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(17): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MOLMEC_C]
+      USE molmec_C, only : nnhco, nhco, htype
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(19): error #6580: Name in only-list does not exist or is not accessible.   [FPC_9]
+      USE funcon_C, only : fpc_9, a0, ev
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(23): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [ELEMTS_C]
+      USE elemts_C, only : elemnt 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(81): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+      if (icalcn /= numcal) then 
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(83): error #6404: This name does not have a type, and must have an explicit type.   [FPC_9]
+        const = fpc_9
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(84): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+        if (id == 0) then
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(97): error #6404: This name does not have a type, and must have an explicit type.   [MOZYME]
+      if (mozyme) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(97): error #6341: A logical data type is required in this context.   [MOZYME]
+      if (mozyme) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(102): error #6404: This name does not have a type, and must have an explicit type.   [MODE]
+        if (mode == 0) then
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(105): error #6911: The syntax of this substring is invalid.   [PART_DXYZ]
+          dxyz(1:3, 1:numtot) = part_dxyz(1:3, 1:numtot)
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(465): error #6580: Name in only-list does not exist or is not accessible.   [NUMCAL]
+      use molkst_C, only: numcal, clower, cutofp, cupper
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90(465): error #6580: Name in only-list does not exist or is not accessible.   [CLOWER]
+      use molkst_C, only: numcal, clower, cutofp, cupper
+----------------------------------^
+C:\Users\15632\AppData\Local\Temp\11045246.i90(514): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dcart.F90 (code 1)
+
+=== 115/669 MOPAC_source_code\dcart_I.F90 rc=0
+=== 116/669 MOPAC_source_code\ddot_I.F90 rc=0
+=== 117/669 MOPAC_source_code\ddpo_I.F90 rc=0
+=== 118/669 MOPAC_source_code\delmol_I.F90 rc=0
+=== 119/669 MOPAC_source_code\delri_I.F90 rc=0
+=== 120/669 MOPAC_source_code\delsta.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(12): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+    use molkst_C, only: numat, mpack, cutofp
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(12): error #6580: Name in only-list does not exist or is not accessible.   [CUTOFP]
+    use molkst_C, only: numat, mpack, cutofp
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [FPC_9]
+    use funcon_C, only: fpc_9, ev
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(14): error #6580: Name in only-list does not exist or is not accessible.   [TORE]
+    use parameters_C, only: tore
+----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(39): error #6404: This name does not have a type, and must have an explicit type.   [TORE]
+    qii = tore(nat(ii))
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(53): error #6404: This name does not have a type, and must have an explicit type.   [CUTOFP]
+    if (rij > cutofp) then
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(64): error #6404: This name does not have a type, and must have an explicit type.   [FPC_9]
+      sum = fpc_9 * ev / rij ** 2
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(23): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: p
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90(23): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: p
+---------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\delsta.F90 (code 1)
+
+=== 121/669 MOPAC_source_code\delta_I.F90 rc=0
+=== 122/669 MOPAC_source_code\denrot.F90 rc=1
+hive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [L3U]
+      use molkst_C, only : norbs, numat, mpack, id, l1u, l2u, l3u, &
+--------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [MOZYME]
+      mozyme
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(10): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [ELEMTS_C]
+      use elemts_C, only : elemnt
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(65): error #6404: This name does not have a type, and must have an explicit type.   [MOZYME]
+      if (mozyme) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(65): error #6341: A logical data type is required in this context.   [MOZYME]
+      if (mozyme) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(69): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+      allocate(b(mpack))
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(69): error #6325: An integer data type is required in this context.   [MPACK]
+      allocate(b(mpack))
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(81): error #6404: This name does not have a type, and must have an explicit type.   [ELEMNT]
+          jtext(j1) = elemnt(nat(i)) 
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(81): error #6054: A CHARACTER data type is required in this context.   [ELEMNT]
+          jtext(j1) = elemnt(nat(i)) 
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(90): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+          if (id /= 0) then 
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(92): error #6404: This name does not have a type, and must have an explicit type.   [L1U]
+            do mm = -l1u, l1u 
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(93): error #6404: This name does not have a type, and must have an explicit type.   [L2U]
+              do nn = -l2u, l2u 
+-----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(94): error #6404: This name does not have a type, and must have an explicit type.   [L3U]
+                do kk = -l3u, l3u 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [ELEMNT]
+      use elemts_C, only : elemnt
+---------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot.F90 (code 1)
+
+=== 123/669 MOPAC_source_code\denrot_for_MOZYME.F90 rc=1
+  Sometime this subroutine should be expanded to include "d" orbitals
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(38): error #6404: This name does not have a type, and must have an explicit type.   [MIN]
+      io = min(iorbs(i),4)  !  Sometime this subroutine should be expanded to include "d" orbitals
+-----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(46): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+          if (id == 0) then
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(52): error #6404: This name does not have a type, and must have an explicit type.   [L1U]
+            do is_loc = -l1u, l1u
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(53): error #6404: This name does not have a type, and must have an explicit type.   [L2U]
+              do js = -l2u, l2u
+-----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(54): error #6404: This name does not have a type, and must have an explicit type.   [L3U]
+                do ks = -l3u, l3u
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(144): error #6404: This name does not have a type, and must have an explicit type.   [ELEMNT]
+                write (iw, "(I6,A,I6,A,4F9.5)") i, elemnt (nat(i)) // "(" // &
+---------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(144): error #6054: A CHARACTER data type is required in this context.   [ELEMNT]
+                write (iw, "(I6,A,I6,A,4F9.5)") i, elemnt (nat(i)) // "(" // &
+---------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(145): error #6054: A CHARACTER data type is required in this context.   [ELEMNT]
+               & txtatm (i) (:maxtxt) // ")", j, elemnt (nat(j)) // "(" // &
+-------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(153): error #6054: A CHARACTER data type is required in this context.   [ELEMNT]
+              write (iw, "(A,I6,A,4F9.5)") blank (:imax), j, elemnt (nat(j)) &
+-------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(5): error #6580: Name in only-list does not exist or is not accessible.   [IORBS]
+    use MOZYME_C, only : iorbs
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [ELEMNT]
+    use elemts_C, only: elemnt
+------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\denrot_for_MOZYME.F90 (code 1)
+
+=== 124/669 MOPAC_source_code\denrot_I.F90 rc=0
+=== 125/669 MOPAC_source_code\densf_I.F90 rc=0
+=== 126/669 MOPAC_source_code\densit.F90 rc=0
+=== 127/669 MOPAC_source_code\density_cuda_i.F90 rc=0
+=== 128/669 MOPAC_source_code\density_for_GPU.F90 rc=0
+=== 129/669 MOPAC_source_code\density_for_MOZYME.F90 rc=1
+----^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(60): error #6404: This name does not have a type, and must have an explicit type.   [COCC]
+                sum = cocc(ja+j1+loop)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(134): error #6341: A logical data type is required in this context.   [LIJBO]
+      if (lijbo) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(18): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: partp
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [LIJBO]
+    use MOZYME_C, only : lijbo, nijbo, ncf, ncocc, &
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [NIJBO]
+    use MOZYME_C, only : lijbo, nijbo, ncf, ncocc, &
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [NCF]
+    use MOZYME_C, only : lijbo, nijbo, ncf, ncocc, &
+---------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(13): error #6580: Name in only-list does not exist or is not accessible.   [NCOCC]
+    use MOZYME_C, only : lijbo, nijbo, ncf, ncocc, &
+--------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(14): error #6580: Name in only-list does not exist or is not accessible.   [NNCF]
+      nncf, iorbs, cocc, icocc
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(14): error #6580: Name in only-list does not exist or is not accessible.   [IORBS]
+      nncf, iorbs, cocc, icocc
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(14): error #6580: Name in only-list does not exist or is not accessible.   [COCC]
+      nncf, iorbs, cocc, icocc
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(14): error #6580: Name in only-list does not exist or is not accessible.   [ICOCC]
+      nncf, iorbs, cocc, icocc
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90(18): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+    double precision, dimension (mpack), intent (in) :: partp
+---------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\density_for_MOZYME.F90 (code 1)
+
+=== 130/669 MOPAC_source_code\deri0.F90 rc=0
+=== 131/669 MOPAC_source_code\deri0_I.F90 rc=0
+=== 132/669 MOPAC_source_code\deri1.F90 rc=1
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(67): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [WMAT]
+        if(allocated(wmat)) deallocate(wmat)
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(68): error #6404: This name does not have a type, and must have an explicit type.   [N2ELEC]
+        i = Max (n2elec + mpack, (lab*(lab+1))/2, 20*mpack, maxci*(maxci+1)/2)
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(68): error #6406: Conflicting attributes or multiple declaration of name.   [LAB]
+        i = Max (n2elec + mpack, (lab*(lab+1))/2, 20*mpack, maxci*(maxci+1)/2)
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(68): error #6406: Conflicting attributes or multiple declaration of name.   [LAB]
+        i = Max (n2elec + mpack, (lab*(lab+1))/2, 20*mpack, maxci*(maxci+1)/2)
+---------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(68): error #6406: Conflicting attributes or multiple declaration of name.   [MAXCI]
+        i = Max (n2elec + mpack, (lab*(lab+1))/2, 20*mpack, maxci*(maxci+1)/2)
+------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(68): error #6406: Conflicting attributes or multiple declaration of name.   [MAXCI]
+        i = Max (n2elec + mpack, (lab*(lab+1))/2, 20*mpack, maxci*(maxci+1)/2)
+-------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(70): error #6404: This name does not have a type, and must have an explicit type.   [HMAT]
+        if(allocated(hmat)) deallocate(hmat)
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(70): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [HMAT]
+        if(allocated(hmat)) deallocate(hmat)
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(71): error #6406: Conflicting attributes or multiple declaration of name.   [LAB]
+        i = Max ((lab*(lab+1))/2, 20*minear, mpack)
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(71): error #6406: Conflicting attributes or multiple declaration of name.   [LAB]
+        i = Max ((lab*(lab+1))/2, 20*minear, mpack)
+-----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90(73): error #6404: This name does not have a type, and must have an explicit type.   [FMAT]
+        if(allocated(fmat)) deallocate(fmat)
+---------------------^
+C:\Users\15632\AppData\Local\Temp\11048846.i90(241): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1.F90 (code 1)
+
+=== 133/669 MOPAC_source_code\deri1_I.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1_I.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+      use molkst_C, only : mpack, norbs   
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1_I.F90(9): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+      REAL(DOUBLE), DIMENSION(mpack), INTENT(INOUT) :: F 
+------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri1_I.F90 (code 1)
+
+=== 134/669 MOPAC_source_code\deri2.F90 rc=1
+ve a type, and must have an explicit type.   [LAB]
+        ib = max(lab,20)
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(110): warning #7319: This argument's data type is incompatible with this intrinsic procedure; procedure assumed EXTERNAL.   [MAX]
+        ib = max(lab,20)
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(110): error #6363: The intrinsic data types of the arguments must be the same.   [MAX]
+        ib = max(lab,20)
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(110): error #6404: This name does not have a type, and must have an explicit type.   [MAX]
+        ib = max(lab,20)
+-------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(112): error #6404: This name does not have a type, and must have an explicit type.   [FPC_9]
+        const = fpc_9 
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(116): error #6404: This name does not have a type, and must have an explicit type.   [B]
+        if (allocated(b))  deallocate(b)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(116): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [B]
+        if (allocated(b))  deallocate(b)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(117): error #6404: This name does not have a type, and must have an explicit type.   [AB]
+        if (allocated(ab)) deallocate(ab)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(117): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [AB]
+        if (allocated(ab)) deallocate(ab)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(118): error #6404: This name does not have a type, and must have an explicit type.   [FB]
+        if (allocated(fb)) deallocate(fb)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(118): error #7397: The argument of the ALLOCATED inquiry intrinsic function should have the ALLOCATABLE attribute.   [FB]
+        if (allocated(fb)) deallocate(fb)
+----------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(119): error #6404: This name does not have a type, and must have an explicit type.   [MAXCI]
+        i = max(k, (maxci*(maxci + 1))/2)
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90(129): error #6404: This name does not have a type, and must have an explicit type.   [SECOND]
+      if (debug) time1 = second(1) 
+-------------------------^
+C:\Users\15632\AppData\Local\Temp\10965646.i90(352): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2.F90 (code 1)
+
+=== 135/669 MOPAC_source_code\deri21.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri21.F90(3): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MTXMC_I]
+      use mtxmc_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri21.F90(4): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [MXM_I]
+      use mxm_I 
+----------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri21.F90 (code 1)
+
+=== 136/669 MOPAC_source_code\deri21_I.F90 rc=0
+=== 137/669 MOPAC_source_code\deri22.F90 rc=1
+es or multiple declaration of name.   [NBO]
+      if (nbo(3)/=0 .and. nbo(1)/=0) then 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(87): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(3)/=0 .and. nbo(1)/=0) then 
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(90): error #6404: This name does not have a type, and must have an explicit type.   [NOPEN]
+          call mxm (c(1,nopen+1), norbs, b(l), nbo(3), dp, nbo(1)) 
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(90): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+          call mxm (c(1,nopen+1), norbs, b(l), nbo(3), dp, nbo(1)) 
+-----------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(90): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+          call mxm (c(1,nopen+1), norbs, b(l), nbo(3), dp, nbo(1)) 
+-----------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(92): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        do j = 1, nbo(1)
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(99): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+          call mxm (c(1,nopen+1), norbs, b(l), nbo(3), work, nbo(1)) 
+-----------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(99): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+          call mxm (c(1,nopen+1), norbs, b(l), nbo(3), work, nbo(1)) 
+-------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(102): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        call mxmt (c, norbs, b(l), nbo(1), work(1,nopen+1), nbo(3)) 
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(102): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        call mxmt (c, norbs, b(l), nbo(1), work(1,nopen+1), nbo(3)) 
+------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(103): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        l = l + nbo(3)*nbo(1) 
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90(103): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        l = l + nbo(3)*nbo(1) 
+-----------------------^
+C:\Users\15632\AppData\Local\Temp\10254846.i90(203): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22.F90 (code 1)
+
+=== 138/669 MOPAC_source_code\deri22_I.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22_I.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [N2ELEC]
+      use molkst_C, only : norbs, n2elec 
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22_I.F90(15): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [N2ELEC]
+      REAL(DOUBLE), DIMENSION(n2elec) :: W 
+------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri22_I.F90 (code 1)
+
+=== 139/669 MOPAC_source_code\deri23.F90 rc=1
+06: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(2)>0 .and. nbo(1)>0) then 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(95): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(2)>0 .and. nbo(1)>0) then 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(97): error #6404: This name does not have a type, and must have an explicit type.   [FRACT]
+        scal = 1.D0/(2.D0 - fract + const) 
+----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(98): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        do j = 1, nbo(1) 
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(99): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+          do i = nbo(1) + 1, nopen 
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(107): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(3)>0 .and. nbo(1)>0) then 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(107): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(3)>0 .and. nbo(1)>0) then 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(110): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        do j = 1, nbo(1) 
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(119): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(3)/=0 .and. nbo(2)/=0) then 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(119): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+      if (nbo(3)/=0 .and. nbo(2)/=0) then 
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(122): error #6406: Conflicting attributes or multiple declaration of name.   [NBO]
+        do j = nbo(1) + 1, nopen 
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(4): error #6580: Name in only-list does not exist or is not accessible.   [NELEC]
+      use meci_C, only : nelec, nmos, nbo     
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(4): error #6580: Name in only-list does not exist or is not accessible.   [NMOS]
+      use meci_C, only : nelec, nmos, nbo     
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90(4): error #6580: Name in only-list does not exist or is not accessible.   [NBO]
+      use meci_C, only : nelec, nmos, nbo     
+--------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri23.F90 (code 1)
+
+=== 140/669 MOPAC_source_code\deri23_I.F90 rc=0
+=== 141/669 MOPAC_source_code\deri2_I.F90 rc=1
+0(14): error #6406: Conflicting attributes or multiple declaration of name.   [NMECI]
+      real(double)  :: fci(ninear,nmeci*(nmeci + 1)*10/ninear) 
+-----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(14): error #6223: A specification expression is invalid.   [NMECI]
+      real(double)  :: fci(ninear,nmeci*(nmeci + 1)*10/ninear) 
+-----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(20): error #6406: Conflicting attributes or multiple declaration of name.   [MMCI]
+      real(double)  :: bab(mmci,mmci) 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(20): error #6223: A specification expression is invalid.   [MMCI]
+      real(double)  :: bab(mmci,mmci) 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(20): error #6406: Conflicting attributes or multiple declaration of name.   [MMCI]
+      real(double)  :: bab(mmci,mmci) 
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(20): error #6223: A specification expression is invalid.   [MMCI]
+      real(double)  :: bab(mmci,mmci) 
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(21): error #6406: Conflicting attributes or multiple declaration of name.   [MMCI]
+      real(double)  :: babinv(mmci*mmci) 
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(21): error #6223: A specification expression is invalid.   [MMCI]
+      real(double)  :: babinv(mmci*mmci) 
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(21): error #6406: Conflicting attributes or multiple declaration of name.   [MMCI]
+      real(double)  :: babinv(mmci*mmci) 
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(21): error #6223: A specification expression is invalid.   [MMCI]
+      real(double)  :: babinv(mmci*mmci) 
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(18): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+      real(double)  :: diag(mpack) 
+----------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [NMECI]
+      use meci_C, only : nmeci, mmci
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [MMCI]
+      use meci_C, only : nmeci, mmci
+--------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deri2_I.F90 (code 1)
+
+=== 142/669 MOPAC_source_code\deritr.F90 rc=1
+ 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(56): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+      if (icalcn /= numcal) then 
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(59): error #6404: This name does not have a type, and must have an explicit type.   [METHOD_PM7]
+        PM6_H = (method_pm7 .or. index(keywrd,'PM6-D') + index(keywrd,'PM6-H') /= 0) 
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(68): error #6404: This name does not have a type, and must have an explicit type.   [FPC_9]
+        const = fpc_9 
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(72): error #6404: This name does not have a type, and must have an explicit type.   [READA]
+      if (i /= 0) delta = reada(keywrd,i) 
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(81): error #6404: This name does not have a type, and must have an explicit type.   [NVAR]
+      do i = 1, nvar 
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(84): error #6404: This name does not have a type, and must have an explicit type.   [ESCF]
+      escf_store = escf
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(85): error #6404: This name does not have a type, and must have an explicit type.   [ENUCLR]
+      enuclr_store = enuclr
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(86): error #6404: This name does not have a type, and must have an explicit type.   [ELECT]
+      elect_store = elect
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(91): error #6404: This name does not have a type, and must have an explicit type.   [NDEP]
+        if (ndep /= 0) call symtry 
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(93): error #6404: This name does not have a type, and must have an explicit type.   [NELECS]
+        if (norbs*nelecs > 0) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(94): error #6404: This name does not have a type, and must have an explicit type.   [MOZYME]
+          if (mozyme) then      
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(94): error #6341: A logical data type is required in this context.   [MOZYME]
+          if (mozyme) then      
+--------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90(96): error #6404: This name does not have a type, and must have an explicit type.   [MOPERR]
+            if (moperr) return  
+----------------^
+C:\Users\15632\AppData\Local\Temp\11072046.i90(183): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deritr.F90 (code 1)
+
+=== 143/669 MOPAC_source_code\deritr_I.F90 rc=0
+=== 144/669 MOPAC_source_code\deriv.F90 rc=1
+cessible.   [MOPERR]
+      & ndep, nvar, keywrd, cosine, moperr, mpack, isok, id, l123, line, &
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+      & ndep, nvar, keywrd, cosine, moperr, mpack, isok, id, l123, line, &
+--------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [ISOK]
+      & ndep, nvar, keywrd, cosine, moperr, mpack, isok, id, l123, line, &
+---------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [ID]
+      & ndep, nvar, keywrd, cosine, moperr, mpack, isok, id, l123, line, &
+---------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [L123]
+      & ndep, nvar, keywrd, cosine, moperr, mpack, isok, id, l123, line, &
+-------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [LINE]
+      & ndep, nvar, keywrd, cosine, moperr, mpack, isok, id, l123, line, &
+-------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [PRESSURE]
+      pressure, l1u, l2u, l3u, method_PM7
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [L1U]
+      pressure, l1u, l2u, l3u, method_PM7
+----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [L2U]
+      pressure, l1u, l2u, l3u, method_PM7
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [L3U]
+      pressure, l1u, l2u, l3u, method_PM7
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [METHOD_PM7]
+      pressure, l1u, l2u, l3u, method_PM7
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90(12): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [ELEMTS_C]
+      use elemts_C, only : elemnt
+----------^
+C:\Users\15632\AppData\Local\Temp\11095246.i90(401): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\deriv.F90 (code 1)
+
+=== 145/669 MOPAC_source_code\deriv_I.F90 rc=0
+=== 146/669 MOPAC_source_code\dernvo.F90 rc=1
+o.F90(134): error #6404: This name does not have a type, and must have an explicit type.   [GNORM]
+      if (gnorm<1.D0 .or. dcar) then 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(167): error #6059: A REAL or INTEGER or LOGICAL data type is required in this context.   [NOPEN]
+          write (iw, '(7X,I3,5I12)') (j,j=nclose + 1,nopen) 
+-----------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(184): error #6059: A REAL or INTEGER or LOGICAL data type is required in this context.   [NOPEN]
+          write (iw, '(7X,I3,4I12)') (j,j=nclose + 1,nopen) 
+-----------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(185): error #6363: The intrinsic data types of the arguments must be the same.   [MIN]
+          do i = 1, min(6,nbo(3)) 
+--------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(216): error #6404: This name does not have a type, and must have an explicit type.   [MOPERR]
+      if (moperr) goto 99  
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(216): error #6341: A logical data type is required in this context.   [MOPERR]
+      if (moperr) goto 99  
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [NBO]
+      use meci_C, only : nbo, nmos, nelec, lab
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(29): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [NMOS]
+      real(double), dimension(nmos*norbs + 1) :: fmoon 
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [NMOS]
+      use meci_C, only : nbo, nmos, nelec, lab
+------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [NELEC]
+      use meci_C, only : nbo, nmos, nelec, lab
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [LAB]
+      use meci_C, only : nbo, nmos, nelec, lab
+-------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90(29): error #6404: This name does not have a type, and must have an explicit type.   [NMOS]
+      real(double), dimension(nmos*norbs + 1) :: fmoon 
+------------------------------^
+C:\Users\15632\AppData\Local\Temp\11115246.i90(282): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dernvo.F90 (code 1)
+
+=== 147/669 MOPAC_source_code\dernvo_I.F90 rc=0
+=== 148/669 MOPAC_source_code\ders_I.F90 rc=0
+=== 149/669 MOPAC_source_code\dex2_I.F90 rc=0
+=== 150/669 MOPAC_source_code\dfield.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(17): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [CHRGE_I]
+      use chrge_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [TORE]
+      USE parameters_C, only : tore  
+-------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [EFIELD]
+      USE molkst_C, only :numat, efield
+---------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(8): error #6580: Name in only-list does not exist or is not accessible.   [FPC_9]
+      USE funcon_C, only : ev, a0, fpc_9
+-----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(36): error #6404: This name does not have a type, and must have an explicit type.   [TORE]
+      q2(:numat) = tore(nat(:numat)) - q2(:numat) 
+-------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(40): error #6404: This name does not have a type, and must have an explicit type.   [FPC_9]
+      fldcon = ev/a0*fpc_9 
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90(42): error #6404: This name does not have a type, and must have an explicit type.   [EFIELD]
+        dxyz(3*(i-1) + 1) = dxyz(3*(i-1) + 1) + efield(1)*q2(i)*fldcon 
+------------------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfield.F90 (code 1)
+
+=== 151/669 MOPAC_source_code\dfield_I.F90 rc=0
+=== 152/669 MOPAC_source_code\dfock2.F90 rc=1
+rchive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(15): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [JAB_I]
+      use jab_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(16): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [KAB_I]
+      use kab_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [NUMCAL]
+      use molkst_C, only : numcal, norbs, mpack
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(7): error #6580: Name in only-list does not exist or is not accessible.   [MPACK]
+      use molkst_C, only : numcal, norbs, mpack
+------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(61): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+      if (icalcn /= numcal) then 
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(66): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+        icalcn = numcal 
+-----------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(30): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+      real(double) , intent(in) :: p(mpack) 
+-------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(29): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+      real(double) , intent(in) :: ptot(mpack) 
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(28): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [MPACK]
+      real(double)  :: f(mpack) 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(28): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+      real(double)  :: f(mpack) 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(29): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+      real(double) , intent(in) :: ptot(mpack) 
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90(30): error #6404: This name does not have a type, and must have an explicit type.   [MPACK]
+      real(double) , intent(in) :: p(mpack) 
+-------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfock2.F90 (code 1)
+
+=== 153/669 MOPAC_source_code\dfock2_I.F90 rc=0
+=== 154/669 MOPAC_source_code\dfport.F90 rc=0
+=== 155/669 MOPAC_source_code\dfpsav.F90 rc=1
+        if (prt_gradients .and. index(keywrd," GRADI") /= 0 .and. mozyme) then 
+----------------------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(106): error #6404: This name does not have a type, and must have an explicit type.   [LATOM]
+        if (latom /= 0) then 
+------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(108): error #6404: This name does not have a type, and must have an explicit type.   [KLOOP]
+            write (ires) kloop 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(109): error #6404: This name does not have a type, and must have an explicit type.   [RXN_COORD]
+            write (ires) rxn_coord 
+-------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(110): error #6059: A REAL or INTEGER or LOGICAL data type is required in this context.   [KLOOP]
+            write (ires) (profil(i),i=1,kloop) 
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(112): error #6404: This name does not have a type, and must have an explicit type.   [ALPARM]
+            write (ires) ((alparm(j,i),j=1,3),i=1,nvar) 
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(113): error #6404: This name does not have a type, and must have an explicit type.   [X0]
+            write (ires) iloop, x0, x1, x2 
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(113): error #6404: This name does not have a type, and must have an explicit type.   [X1]
+            write (ires) iloop, x0, x1, x2 
+------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(113): error #6404: This name does not have a type, and must have an explicit type.   [X2]
+            write (ires) iloop, x0, x1, x2 
+----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(138): error #6059: A REAL or INTEGER or LOGICAL data type is required in this context.   [KLOOP]
+            read (ires, end=50, err=50) (profil(i),i=1,kloop) 
+-------------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(140): error #6358: Constants and expressions are invalid in read-only I/O lists.   [ALPARM]
+            read (ires, end=50, err=50) ((alparm(j,i),j=1,3),i=1,nvar) 
+------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [ALPARM]
+      USE ef_C, ONLY: alparm, x0, x1, x2, iloop 
+----------------------^
+C:\Users\15632\AppData\Local\Temp\11118446.i90(156): catastrophic error: Too many errors, exiting
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dfpsav.F90 (code 1)
+
+=== 156/669 MOPAC_source_code\dfpsav_I.F90 rc=0
+=== 157/669 MOPAC_source_code\dftd3.F90 rc=1
+n only-list does not exist or is not accessible.   [FPC_9]
+  use funcon_C, only : a0, fpc_9, fpc_2
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(10): error #6580: Name in only-list does not exist or is not accessible.   [FPC_2]
+  use funcon_C, only : a0, fpc_9, fpc_2
+----------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(11): error #6580: Name in only-list does not exist or is not accessible.   [E_HB]
+  use molkst_C, only : numat, keywrd, E_hb, E_disp, numcal
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(11): error #6580: Name in only-list does not exist or is not accessible.   [E_DISP]
+  use molkst_C, only : numat, keywrd, E_hb, E_disp, numcal
+--------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(11): error #6580: Name in only-list does not exist or is not accessible.   [NUMCAL]
+  use molkst_C, only : numat, keywrd, E_hb, E_disp, numcal
+----------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(14): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [ELEMTS_C]
+  use elemts_C, only: elemnt
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(69): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+      if (icalcn /= numcal) then
+--------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(75): error #6404: This name does not have a type, and must have an explicit type.   [FPC_9]
+        au_to_kcal = fpc_9*fpc_2/a0
+---------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(75): error #6404: This name does not have a type, and must have an explicit type.   [FPC_2]
+        au_to_kcal = fpc_9*fpc_2/a0
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(108): error #6404: This name does not have a type, and must have an explicit type.   [E_DISP]
+      E_disp = (- e6 - e8)*au_to_kcal     
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(118): error #6404: This name does not have a type, and must have an explicit type.   [E_HB]
+      E_hb   = ehb*au_to_kcal
+------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(126): error #6406: Conflicting attributes or multiple declaration of name.   [ELEMNT]
+          write (iw, '(I6,4x,a2,F13.6,2F13.6)') (i, elemnt(nat(i)), dxyz_temp(:,i)*2.d0*au_to_kcal, i = 1,numat) 
+----------------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90(14): error #6580: Name in only-list does not exist or is not accessible.   [ELEMNT]
+  use elemts_C, only: elemnt
+----------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3.F90 (code 1)
+
+=== 158/669 MOPAC_source_code\dftd3_bits.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3_bits.F90(156): error #6580: Name in only-list does not exist or is not accessible.   [N_HBONDS]
+      use molkst_C, only : N_Hbonds, keywrd
+---------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3_bits.F90(248): error #6404: This name does not have a type, and must have an explicit type.   [N_HBONDS]
+      N_Hbonds  =  0
+------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dftd3_bits.F90 (code 1)
+
+=== 159/669 MOPAC_source_code\dgefa_I.F90 rc=0
+=== 160/669 MOPAC_source_code\dgetri_I.F90 rc=0
+=== 161/669 MOPAC_source_code\dhc.F90 rc=1
+urce_code\dhc.F90(2): error #6580: Name in only-list does not exist or is not accessible.   [ID]
+    use molkst_C, only : numcal, cutofp, id, uhf
+-----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(2): error #6580: Name in only-list does not exist or is not accessible.   [UHF]
+    use molkst_C, only : numcal, cutofp, id, uhf
+---------------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(22): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+    if (icalcn /= numcal) then
+------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(27): error #6404: This name does not have a type, and must have an explicit type.   [CUTOFP]
+      cutof = Min (196.d0, (2.d0/3.d0*cutofp)**2)
+--------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(29): error #6404: This name does not have a type, and must have an explicit type.   [NUMCAL]
+      icalcn = numcal
+---------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(33): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+      if (id == 0) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(39): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+    if (mode == 1 .and. id /= 0) then
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(41): error #6404: This name does not have a type, and must have an explicit type.   [CUTOFP]
+      ignor2 = (rij >(4.d0/3.d0*cutofp)**2)
+--------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(47): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+    if (mode == 2 .and. id /= 0 .and. ignor2 .and. ignor1) then
+------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(96): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+      if (id > 0) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(109): error #6404: This name does not have a type, and must have an explicit type.   [ID]
+      if (id /= 0) then
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(150): error #6404: This name does not have a type, and must have an explicit type.   [HELECT]
+    ee = helect (nlast_loc(2), pa, h, f)
+---------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(151): error #6404: This name does not have a type, and must have an explicit type.   [UHF]
+    if (uhf) then
+--------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90(151): error #6341: A logical data type is required in this context.   [UHF]
+    if (uhf) then
+--------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhc.F90 (code 1)
+
+=== 162/669 MOPAC_source_code\dhc_I.F90 rc=0
+=== 163/669 MOPAC_source_code\dhcore.F90 rc=1
+Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.3.0 Build 20251023
+Copyright (C) 1985-2025 Intel Corporation. All rights reserved.
+
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhcore.F90(15): error #7002: Error in opening the compiled module file.  Check INCLUDE paths.   [H1ELEC_I]
+      use h1elec_I 
+----------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhcore.F90(6): error #6580: Name in only-list does not exist or is not accessible.   [N2ELEC]
+      use molkst_C, only : norbs, numat, n2elec
+-----------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhcore.F90(26): error #6279: A specification expression object must be a dummy argument, a COMMON block object, or an object accessible through host or use association.   [N2ELEC]
+      real(double) , intent(out) :: ww(n2elec) 
+---------------------------------------^
+D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhcore.F90(26): error #6404: This name does not have a type, and must have an explicit type.   [N2ELEC]
+      real(double) , intent(out) :: ww(n2elec) 
+---------------------------------------^
+compilation aborted for D:\mopac\mopac-archive\2016_MOPAC2016\MOPAC_source_code\dhcore.F90 (code 1)
+

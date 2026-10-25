@@ -1,3 +1,10 @@
+// ============================================================================
+// 【中文导读】dipole_for_MOZYME.cpp —— MOZYME 偶极矩（dipole_for_MOZYME.F90）
+// ----------------------------------------------------------------------------
+// 由 MOZYME 的原子电荷/局域轨道密度计算偶极矩分量，打印到 iw；与常规 dipole
+// 路径共用单位约定（Debye），MOZYME 分支的密度索引走 ijbo。
+// ============================================================================
+
 // dipole_for_MOZYME.cpp — C++ translation of MOPAC 2016
 // "dipole_for_MOZYME.F90".
 #include "dipole_for_MOZYME.h"
@@ -101,17 +108,17 @@ double dipole_for_MOZYME(std::vector<double>& dipvec, int mode) {
             for (j = 1; j <= numat; ++j) coord[i-1][j] += center[i];
     }
     if (mode == 0) return dip[3][2];
-    if (iw > 0) {
-        char buf[256];
-        std::snprintf(buf, sizeof(buf),
-                      " DIPOLE       X         Y         Z       TOTAL\n"
-                      " POINT-CHG. %9.3f%9.3f%9.3f%9.3f\n"
-                      " HYBRID   %9.3f%9.3f%9.3f%9.3f\n"
-                      " SUM      %9.3f%9.3f%9.3f%9.3f",
-                      dip[0][0], dip[1][0], dip[2][0], dip[3][0],
-                      dip[0][1], dip[1][1], dip[2][1], dip[3][1],
-                      dip[0][2], dip[1][2], dip[2][2], dip[3][2]);
-        to_screen(buf);
+    if (mode != 0) {
+        // F90 dipole_for_MOZYME.F90:110-112:
+        // 10000 format (" DIPOLE",11x,"X         Y         Z       TOTAL",/,
+        //   " POINT-CHG.",4f10.3/, " HYBRID",4x,4f10.3/, " SUM",7x,4f10.3)
+        std::printf(" DIPOLE           X         Y         Z       TOTAL\n");
+        std::printf(" POINT-CHG.%10.3f%10.3f%10.3f%10.3f\n",
+                    dip[0][0], dip[1][0], dip[2][0], dip[3][0]);
+        std::printf(" HYBRID    %10.3f%10.3f%10.3f%10.3f\n",
+                    dip[0][1], dip[1][1], dip[2][1], dip[3][1]);
+        std::printf(" SUM       %10.3f%10.3f%10.3f%10.3f\n",
+                    dip[0][2], dip[1][2], dip[2][2], dip[3][2]);
     }
     return dip[3][2];
 }

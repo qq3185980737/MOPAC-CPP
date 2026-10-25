@@ -1,9 +1,17 @@
+// ============================================================================
+// 【中文导读】frame.cpp —— 刚体平移/转动模式（frame.F90）
+// ----------------------------------------------------------------------------
+// 为力常数矩阵添加 3 个平动与 3 个转动零模向量（经质心/转动惯量主轴），
+// 用于振动分析中剔除刚体模式；1-based coord 约定。
+// ============================================================================
+
 // frame.cpp — C++ translation of MOPAC 2016 "frame.F90".
 // Rigid translation/rotation modes added to force matrix.
 #include "frame.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 
 #include "common_arrays_C.h"
 #include "molkst_C.h"
@@ -90,8 +98,17 @@ void frame(std::vector<double>& fmat, int natoms_in, int mode) {
         for (int i = 1; i <= 6; ++i)
             if (sums[i] > 0) sums[i] = std::sqrt(1.0 / sums[i]);
     }
+    std::fprintf(stderr, "CXXROT");
+    for (int jj = 1; jj <= 3; ++jj)
+        for (int kk = 1; kk <= 3; ++kk) std::fprintf(stderr, " %.14f", rot[kk][jj]);
+    std::fprintf(stderr, "\nCXXVIB");
+    for (int jj = 1; jj <= 3; ++jj)
+        for (int kk = 1; kk <= 6; ++kk) std::fprintf(stderr, " %.10f", vib[kk][jj]);
+    std::fprintf(stderr, "\nCXXFRAME sums");
+    for (int k = 1; k <= 6; ++k) std::fprintf(stderr, " %.14f", sums[k]);
+    std::fprintf(stderr, "\n");
     if (id != 0) { sums[4] = sums[5] = sums[6] = 0.0; }
-    double shift[7] = {0, 41000, 42000, 43000, 44000, 45000, 46000};
+    double shift[7] = {0, 40100, 40200, 40300, 40400, 40500, 40600};  // F90: 40000 + i*100
     for (int i = 1; i <= 6; ++i)
         for (int ii = 1; ii <= n3; ++ii) vib[i][ii] *= sums[i];
     int l = 0;

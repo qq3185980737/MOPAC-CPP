@@ -1,0 +1,184 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only     Version 16.013  64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013 , James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 00:47:59 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  EPS= 78.40 - USE ANDREAS KLAMT'S COSMO IMPLICIT SOLVATION MODEL
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 MOZYME EPS=78.4
+ meoh_moz_cosmo_opt
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       C          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          1.43000000  *   0.00000000  *   0.00000000  *
+     3       H          1.80000000  *   0.89000000  *   0.00000000  *
+     4       H         -0.36000000  *   1.03000000  *   0.00000000  *
+     5       H         -0.36000000  *  -0.51500000  *   0.89000000  *
+     6       H         -0.36000000  *  -0.51500000  *  -0.89000000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         C        0.0000    0.0000    0.0000
+     2         O        1.4300    0.0000    0.0000
+     3         H        1.8000    0.8900    0.0000
+     4         H       -0.3600    1.0300    0.0000
+     5         H       -0.3600   -0.5150    0.8900
+     6         H       -0.3600   -0.5150   -0.8900
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: C H4 O  =     6 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+      Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.003 TIME LEFT:  2.00D  GRAD.:    31.883 HEAT: -53.32319
+ CYCLE:     2 TIME:   0.003 TIME LEFT:  2.00D  GRAD.:    31.313 HEAT: -53.41831
+ CYCLE:     3 TIME:   0.003 TIME LEFT:  2.00D  GRAD.:    11.792 HEAT: -53.82302
+ CYCLE:     4 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:    11.973 HEAT: -53.90703
+ CYCLE:     5 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     5.051 HEAT: -53.98863
+ CYCLE:     6 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:     4.350 HEAT: -54.00030
+ CYCLE:     7 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:     4.010 HEAT: -54.00774
+ CYCLE:     8 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     1.165 HEAT: -54.01260
+ CYCLE:     9 TIME:   0.003 TIME LEFT:  2.00D  GRAD.:     0.866 HEAT: -54.01744
+
+     GRADIENT =  0.86632  IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME EPS=78.4
+ meoh_moz_cosmo_opt
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013 )
+                                                       Mon Oct 26 00:47:59 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -54.01756 KCAL/MOL =    -226.00946 KJ/MOL
+          VAN DER WAALS AREA      =         67.18 SQUARE ANGSTROMS
+
+
+          TOTAL ENERGY            =       -472.27447 EV
+          ELECTRONIC ENERGY       =      -1046.83739 EV
+          CORE-CORE REPULSION     =        573.29350 EV
+          DIELECTRIC ENERGY       =         -0.28965 EV
+          COSMO AREA              =         67.18 SQUARE ANGSTROMS
+          COSMO VOLUME            =         48.23 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.86632
+          NO. OF FILLED LEVELS    =          7
+          MOLECULAR WEIGHT        =         32.0420
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     5    H     3     2.69233
+            H     4    O     2     1.90465
+            H     3    H     6     1.67801
+
+
+          SCF CALCULATIONS        =         11
+ 
+          WALL-CLOCK TIME         =          0.028 SECONDS
+          COMPUTATION TIME        =          0.031 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       C          0.00209493  *   0.01467997  *   0.00043215  *
+     2       O          1.41946766  *  -0.01572955  *   0.00004409  *
+     3       H          1.78162627  *   0.89729072  *  -0.00076145  *
+     4       H         -0.38141696  *   1.03902745  *  -0.00068890  *
+     5       H         -0.32317275  *  -0.51786759  *   0.90245311  *
+     6       H         -0.32230532  *  -0.51645706  *  -0.90267026  *
+
+                             CARTESIAN COORDINATES
+
+   1    C        0.002094933     0.014679975     0.000432154
+   2    O        1.419467664    -0.015729553     0.000044092
+   3    H        1.781626269     0.897290722    -0.000761452
+   4    H       -0.381416959     1.039027453    -0.000688903
+   5    H       -0.323172745    -0.517867593     0.902453111
+   6    H       -0.322305315    -0.516457057    -0.902670258
+
+
+           Empirical Formula: C H4 O  =     6 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          C          -0.145015        4.1450     1.08115     3.06386
+    2          O          -0.625987        6.6260     1.84433     4.78166
+    3          H           0.361007        0.6390     0.63899
+    4          H           0.133984        0.8660     0.86602
+    5          H           0.138422        0.8616     0.86158
+    6          H           0.137589        0.8624     0.86241
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -1.853     1.576     0.001     2.433
+ HYBRID         0.320     0.258    -0.002     0.411
+ SUM           -1.534     1.834    -0.000     2.390
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  C   1.08115   0.76171   1.15177   1.15039
+    2  O   1.84433   1.31652   1.47449   1.99065
+    3  H   0.63899
+    4  H   0.86602
+    5  H   0.86158
+    6  H   0.86241
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.04 SECONDS
+
+ == MOPAC DONE ==

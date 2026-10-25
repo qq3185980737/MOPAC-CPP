@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】geochk.cpp —— 几何/化学结构检查（geochk.F90 主程序）
+// ----------------------------------------------------------------------------
+// 主驱动：Lewis 结构检查、离子/电荷识别、体系总电荷计算、残基重排等，
+// 并在异常时经 mopend 报错；同时更新 txtatm/atom 标签与连接性。
+// 1-based 模块数组约定；MOZYME/生物大分子路径会走 geochk_small 等子例程。
+// ============================================================================
+
 // geochk.cpp — C++ translation of geochk.F90 "subroutine geochk" (lines
 // 1-1489).  Main driver: Lewis-structure check, ionization identification,
 // system-charge calculation and optional residue re-sequencing.

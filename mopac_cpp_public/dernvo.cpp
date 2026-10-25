@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】dernvo.cpp —— 开壳层/CI 解析笛卡尔梯度驱动（dernvo.F90）
+// ----------------------------------------------------------------------------
+// 对每个坐标（按 ilast 分块）：deri1 计算非弛豫（冻结云）贡献到 dxyz 及
+// 非弛豫 Fock 矩阵 fmooff/fmoon；deri2 再把电子弛豫贡献加到 dxyzr。
+// 布局：fmooff/fmoon 为列主序超向量（每坐标 minear/ninear，1-based 填充），
+// 逐列复制到 deri1/deri2 需要的单列容器。
+// ============================================================================
+
 // dernvo.cpp — C++ translation of MOPAC 2016 "dernvo.F90" (complete).
 // Analytical open-shell/CI Cartesian gradient driver. For each coordinate
 // (one per ilast block) deri1 computes the non-relaxed (frozen cloud)

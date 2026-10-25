@@ -4,6 +4,20 @@
 // time steps (velo1/2/3 series), damp kinetic energy, track gradients and
 // errors, call compfg for energies, write restart records on timeout.
 // Fortran 1-based indexing preserved.
+
+//
+// ============================================================================
+// 【中文导读】drc() —— 动态反应坐标（DRC）/ IRC 分子动力学驱动
+// ----------------------------------------------------------------------------
+// 对应 drc.F90。按初始速度（startv）与初始动能（startk）积分牛顿运动方程：
+//   1) 去质心平动/转动、归零净动量；
+//   2) 每步用 compfg 算能量/梯度，按较稳定的时间步做速度 Verlet 积分；
+//   3) 按关键字做动能阻尼/温度控制，记录轨迹与梯度误差；
+//   4) 超时/步数上限时写重启文件（.res）。
+// 输出：.arc/.xyz 轨迹与 .out 中的逐步能量/梯度范数；1-based 下标沿用
+// Fortran（坐标在 dxyz[3*(i-1)+k]）。
+// ============================================================================
+
 #include "drc.h"
 
 #include <algorithm>
@@ -42,6 +56,8 @@ extern void mopend(const char* message);
 extern void den_in_out(int mode);
 extern double ddot(int n, const double* x, int incx, const double* y,
                    int incy);
+
+// drc(): 主入口。startv 为初速度（1-based），startk 为初始动能（通常由振动模式给出）。
 
 void drc(std::vector<double>& startv, const std::vector<double>& startk) {
     bool addk = true;

@@ -3,6 +3,23 @@
 //   n == 0            : destroy all arrays that have been created.
 //   n > 0, mode == 1  : create the arrays essential for reading in data.
 //   n > 0, mode != 1  : create MOPAC arrays (holds electronic info).
+
+//
+// ============================================================================
+// 【中文导读】setup_mopac_arrays() —— 全局数组的分配与释放
+// ----------------------------------------------------------------------------
+// 对应 setup_mopac_arrays.F90。调用约定：
+//   n == 0            : 释放所有数组（作业结束/切换体系）；
+//   n > 0, mode == 1  : 只分配读数据阶段需要的数组（geo/coord/nat/...）；
+//   n > 0, mode != 1  : 分配 SCF 及后续计算所需的全部数组（尺寸由 numat/
+//                       norbs/mpack 等决定）。
+// 数组约定：所有一维数组按 Fortran 1-based 分配（大小 N+1，0 号 padding）；
+// 坐标类数组分配 4 行（0..3），因为 getgeo/gmetry 用 1..3 访问行列；
+// 内存不足时：C++ 用 try/catch 捕获 bad_alloc，统一走 memory_error()。
+// 提示：数组尺寸依赖已被前一步设置好的 maxatoms/norbs；若看到越界，先查
+// 本函数是否在 readmo/getdat 之后以正确的 mode 调用过。
+// ============================================================================
+
 #include "setup_mopac_arrays.h"
 #include "common_arrays_C.h"
 #include "maps_C.h"
@@ -27,6 +44,8 @@ extern void fock2(std::vector<double>&, const std::vector<double>&,
                   const std::vector<double>&, const std::vector<double>&,
                   int, const std::vector<int>&, const std::vector<int>&, int);
 extern void mopend(const std::string&);
+
+// hint(): 32 位版本的提示信息（官方行为；64 位构建不会触发）。
 
 void hint() {
     using namespace molkst_C;
@@ -60,9 +79,14 @@ void setup_mopac_arrays(int n, int mode) {
     using namespace esp_C;
     using namespace to_screen_C;
 
+    // n>0：分配；n==0（走到下面的 else）：释放。
+
     if (n > 0) {
         if (mode == 1) {
             // Create essential arrays only at this point.
+
+            // mode==1：仅读数据所需的最小数组集，避免在还没读到原子数时分配大数组。
+
             // NOTE: geo/coord/coorda are indexed 1..3 (1-based Fortran) in
             // getgeo/gmetry/etc., so allocate 4 rows (0..3); gmetry itself
             // reads coord via 0-based j-1 offsets, but geo uses geo[1..3].
@@ -145,6 +169,10 @@ void setup_mopac_arrays(int n, int mode) {
         }
     } else {
         // Delete all arrays.
+
+        // 中文：释放全部数组。C++ 侧用 clear()/shrink_to_fit() 归还内存；对应
+        // F90 的 deallocate。注意：缩容后再次运行需要重新 setup。
+
         mpack = 0;
         numat = 0;
         n2elec = 0;

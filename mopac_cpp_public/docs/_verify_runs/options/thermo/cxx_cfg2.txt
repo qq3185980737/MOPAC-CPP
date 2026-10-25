@@ -1,0 +1,49 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+cpp.mop
+ Force constant calculation
+NVAR force-end 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+NVAR fmat 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+
+
+MOPAC Job: "cpp.mop" ended normally on Sun Oct 25 20:30:30 2026

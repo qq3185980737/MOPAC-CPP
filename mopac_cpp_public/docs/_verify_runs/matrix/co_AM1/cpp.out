@@ -1,0 +1,150 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              AM1 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:42 2026  *
+ *  AM1        - The AM1 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+AM1 1SCF
+ co AM1
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.12800000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         C        0.0000    0.0000    0.0000
+     2         O        0.0000    0.0000    1.1280
+
+  C: (AM1): M.J.S. DEWAR ET AL, J. AM. CHEM. SOC. 107 3902-3909 (1985)
+  O: (AM1): M.J.S. DEWAR ET AL, J. AM. CHEM. SOC. 107 3902-3909 (1985)
+
+           Empirical Formula: C O  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 5
+
+
+ -------------------------------------------------------------------------------
+AM1 1SCF
+ co AM1
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              AM1 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:42 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         -2.72693 KCAL/MOL =     -11.40949 KJ/MOL
+
+
+          TOTAL ENERGY            =       -447.02679 EV
+          ELECTRONIC ENERGY       =       -688.51547 EV  POINT GROUP:     C*v 
+          CORE-CORE REPULSION     =        241.48868 EV
+          COSMO AREA              =         57.61 SQUARE ANGSTROMS
+          COSMO VOLUME            =         40.07 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         13.119481 EV
+          HOMO LUMO ENERGIES (EV) =        -13.119  1.227
+          NO. OF FILLED LEVELS    =          5
+          MOLECULAR WEIGHT        =         28.0104
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            O     2    C     1     1.12800
+            C     1    C     1     0.00000
+            C     1    O     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.000 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.12800000  *
+
+                             CARTESIAN COORDINATES
+
+   1    C        0.000000000     0.000000000     0.000000000
+   2    O        0.000000000     0.000000000     1.128000000
+
+
+           Empirical Formula: C O  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+                  EIGENVALUES
+ -42.41580 -22.09526 -16.90223 -16.90223 -13.11948   1.22713   1.22713   5.36933
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          C           0.167249        3.8328     1.81833     2.01442
+    2          O          -0.167249        6.1672     1.87668     4.29057
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000     0.000    -0.906     0.906
+ HYBRID        -0.000     0.000     1.086     1.086
+ SUM           -0.000     0.000     0.180     0.180
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  C   1.81833   0.52255   0.52255   0.96933
+    2  O   1.87668   1.47745   1.47745   1.33566
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

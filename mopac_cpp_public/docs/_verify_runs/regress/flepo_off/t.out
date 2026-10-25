@@ -1,0 +1,251 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 21:54:39 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  FLEPO      - PRINT DETAILS OF SUBROUTINE FLEPO 
+ *******************************************************************************
+PM7 FLEPO
+ flepo
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+      Geometry optimization using BFGS
+ FUNCTION VALUE=  -57.7910349  WILL NOT BE REPLACED BY VALUE=  -57.7255735
+          CALCULATED BY RESTART PROCEDURE
+
+ AT THE BEGINNING OF CYCLE    1  THE FUNCTION VALUE IS    -57.791035
+  THE CURRENT POINT IS ...
+  GRADIENT NORM =     2.8155
+  ANGLE COSINE =    0.4983
+  THE CURRENT POINT IS ...
+
+
+    I           1          2          3          4          5          6
+  XPARAM(I)    0.0000     0.0000     0.0000     0.0000     0.7570     0.5860
+  GRAD  (I)    0.0000    -0.0000    -2.2735     0.0000    -0.2947     1.1211
+  PVECT (I)   -0.000000   0.000000   0.003997  -0.000000   0.012900  -0.001919
+
+
+    I           7          8          9
+  XPARAM(I)    0.0000    -0.7570     0.5860
+  GRAD  (I)    0.0000     0.2947     1.1523
+  PVECT (I)   -0.000000  -0.000494  -0.050439
+  -ALPHA.P.G =          0.073309
+
+
+           NUMBER OF COUNTS =     3         COS    =     0.4983
+  ABSOLUTE  CHANGE IN X     =     0.004802  ALPHA  =     0.0919
+  PREDICTED CHANGE IN F     =  -0.7331E-01  ACTUAL =  -0.3152E-02
+  GRADIENT NORM             =    2.856    
+
+
+ TEST ON GRADIENT SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ CYCLE:     1 TIME:   0.008 TIME LEFT:  2.00D  GRAD.:     2.856 HEAT: -57.79419    
+ AT THE BEGINNING OF CYCLE    2  THE FUNCTION VALUE IS    -57.794187
+  THE CURRENT POINT IS ...
+  GRADIENT NORM =     2.8564
+  ANGLE COSINE =    0.3679
+  THE CURRENT POINT IS ...
+
+
+    I           1          2          3          4          5          6
+  XPARAM(I)   -0.0000     0.0000     0.0004    -0.0000     0.7582     0.5858
+  GRAD  (I)    0.0000    -1.7835    -1.1530    -0.0000     0.4026     1.2530
+  PVECT (I)   -0.000000   0.002151   0.003081   0.000000  -0.013413  -0.002611
+
+
+    I           7          8          9
+  XPARAM(I)   -0.0000    -0.7570     0.5814
+  GRAD  (I)   -0.0000     1.3809    -0.1000
+  PVECT (I)    0.000000  -0.002377  -0.009926
+  -ALPHA.P.G =          0.005045
+
+
+           NUMBER OF COUNTS =     4         COS    =     0.3679
+  ABSOLUTE  CHANGE IN X     =     0.001998  ALPHA  =     0.1144
+  PREDICTED CHANGE IN F     =  -0.5045E-02  ACTUAL =  -0.1050E-02
+  GRADIENT NORM             =    2.182    
+
+
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     2.182 HEAT: -57.79524    
+ AT THE BEGINNING OF CYCLE    3  THE FUNCTION VALUE IS    -57.795237
+  THE CURRENT POINT IS ...
+  GRADIENT NORM =     2.1823
+  ANGLE COSINE =    0.7889
+  THE CURRENT POINT IS ...
+
+
+    I           1          2          3          4          5          6
+  XPARAM(I)   -0.0000     0.0002     0.0007     0.0000     0.7567     0.5855
+  GRAD  (I)    0.0000    -1.1077    -0.3514    -0.0000    -0.5278     0.6214
+  PVECT (I)   -0.000000   0.003695   0.004150   0.000000   0.007917  -0.003974
+
+
+    I           7          8          9
+  XPARAM(I)    0.0000    -0.7573     0.5802
+  GRAD  (I)   -0.0000     1.6354    -0.2700
+  PVECT (I)    0.000000  -0.005270  -0.001675
+  -ALPHA.P.G =          0.003439
+
+
+           NUMBER OF COUNTS =     5         COS    =     0.7889
+  ABSOLUTE  CHANGE IN X     =     0.005145  ALPHA  =     0.4350
+  PREDICTED CHANGE IN F     =  -0.3439E-02  ACTUAL =  -0.4433E-02
+  GRADIENT NORM             =   0.1072    
+
+
+ TEST ON GRADIENT SATISFIED
+PETERS TEST SATISFIED
+
+ -------------------------------------------------------------------------------
+PM7 FLEPO
+ flepo
+
+
+
+     PETERS TEST WAS SATISFIED IN BFGS OPTIMIZATION           
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 21:54:39 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.79967 KCAL/MOL =    -241.83383 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67921 EV
+          ELECTRONIC ENERGY       =       -469.18332 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        146.50411 EV
+          COSMO AREA              =         42.43 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.17 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.10724
+          IONIZATION POTENTIAL    =         12.114974 EV
+          HOMO LUMO ENERGIES (EV) =        -12.115  4.048
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51971
+            H     2    O     1     0.57913
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          9
+ 
+          WALL-CLOCK TIME         =          0.008 SECONDS
+          COMPUTATION TIME        =          0.016 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O         -0.00000022  *   0.00185316  *   0.00252498  *
+     2       H          0.00000010  *   0.76009506  *   0.58379654  *
+     3       H          0.00000010  *  -0.75960960  *   0.57950084  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -0.000000217     0.001853161     0.002524981
+   2    H        0.000000102     0.760095060     0.583796538
+   3    H        0.000000102    -0.759609597     0.579500836
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES  
+ -29.61343 -17.83819 -14.21614 -12.11497   4.04817   6.35008
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.649346        6.6493     1.81337     4.83598
+    2          H           0.324676        0.6753     0.67532
+    3          H           0.324669        0.6753     0.67533
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.005     1.806     1.806
+ HYBRID         0.000    -0.001     0.323     0.323
+ SUM            0.000    -0.006     2.129     2.129
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81337   2.00000   1.35059   1.48539
+    2  H   0.67532
+    3  H   0.67533
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

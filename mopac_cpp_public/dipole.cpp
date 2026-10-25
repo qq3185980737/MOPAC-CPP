@@ -1,6 +1,14 @@
 // dipole.cpp — C++ translation of MOPAC 2016 "dipole.F90".
 // DIPOLE CALCULATES DIPOLE MOMENTS (ZDO: point-charge + one-center
 // hybridization terms).
+
+//
+// 【中文导读】dipole() —— 偶极矩计算
+// ----------------------------------------------------------------------------
+// ZDO 近似：核电荷点偶极 + 单中心杂化项 + 双中心原子偶极修正；输入密度 p
+// 与几何 coord，输出偶极分量。writmo() 在 id==0 时调用
+// dipole(p, coord, dumy, 1)（dumy 为占位缓冲）。
+
 #include "dipole.h"
 
 #include <cmath>
@@ -110,16 +118,16 @@ double dipole(const std::vector<double>& pv,
     }
     if (mode == 1) {
         if (iw > 0) {
-            char buf[256];
-            std::snprintf(buf, sizeof(buf),
-                          " DIPOLE       X         Y         Z       TOTAL\n"
-                          " POINT-CHG. %10.3f%10.3f%10.3f%10.3f\n"
-                          " HYBRID   %10.3f%10.3f%10.3f%10.3f\n"
-                          " SUM      %10.3f%10.3f%10.3f%10.3f",
-                          dip[0][0], dip[1][0], dip[2][0], dip[3][0],
-                          dip[0][1], dip[1][1], dip[2][1], dip[3][1],
-                          dip[0][2], dip[1][2], dip[2][2], dip[3][2]);
-            std::printf("%s\n", buf);   // DIPOLE table goes to the .out file
+            // F90 dipole.F90:170-171:
+            // 140 format(' DIPOLE',11x,'X         Y         Z       TOTAL',/,
+            //   ' POINT-CHG.',4f10.3,/,' HYBRID',4x,4f10.3,/,' SUM',7x,4f10.3)
+            std::printf(" DIPOLE           X         Y         Z       TOTAL\n");
+            std::printf(" POINT-CHG.%10.3f%10.3f%10.3f%10.3f\n",
+                        dip[0][0], dip[1][0], dip[2][0], dip[3][0]);
+            std::printf(" HYBRID    %10.3f%10.3f%10.3f%10.3f\n",
+                        dip[0][1], dip[1][1], dip[2][1], dip[3][1]);
+            std::printf(" SUM       %10.3f%10.3f%10.3f%10.3f\n",
+                        dip[0][2], dip[1][2], dip[2][2], dip[3][2]);
         }
     }
     // STORE DIPOLE MOMENT COMPONENTS IN UX,UY,UZ FOR USE IN ASSIGNING

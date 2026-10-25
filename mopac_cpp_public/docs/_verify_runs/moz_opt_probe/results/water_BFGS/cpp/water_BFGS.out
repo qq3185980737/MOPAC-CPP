@@ -1,0 +1,199 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 01:21:13 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  BFGS       - USE THE BFGS GEOMETRY OPTIMIZER
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 MOZYME BFGS
+ water_BFGS
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+ Geometry optimization using BFGS
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   685.134 HEAT:   -57.6636418
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   704.723 HEAT:   -57.7588584
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   710.667 HEAT:   -57.7735926
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   718.425 HEAT:   -57.7879407
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   714.938 HEAT:   -57.7879407
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   718.226 HEAT:   -57.7878511
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   719.367 HEAT:   -57.7882153
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   713.616 HEAT:   -57.7882153
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   722.570 HEAT:   -57.7878286
+
+                    NO POINT LOWER IN ENERGY THAN THE STARTING POINT
+                    COULD BE FOUND IN THE LINE MINIMIZATION
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   713.755 HEAT:   -57.7878286
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   726.623 HEAT:   -57.7837247
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   713.374 HEAT:   -57.7857135
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   717.138 HEAT:   -57.7864960
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   716.666 HEAT:   -57.7885746
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:   717.703 HEAT:   -57.7892773
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+          THERE HAVE BEEN 3 ATTEMPTS TO REDUCE THE GRADIENT.
+          DURING THESE ATTEMPTS THE ENERGY DROPPED BY LESS THAN 0.3 KCAL/MOLE
+          FURTHER CALCULATION IS NOT JUSTIFIED AT THIS TIME.
+          TO CONTINUE, START AGAIN WITH THE WORD "PRECISE"
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME BFGS
+ water_BFGS
+ 
+
+
+     GRADIENT TEST NOT PASSED, BUT FURTHER WORK NOT JUSTIFIED
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 01:21:13 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.78992 KCAL/MOL =    -241.79300 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67879 EV
+          ELECTRONIC ENERGY       =       -468.92886 EV
+          CORE-CORE REPULSION     =        146.25007 EV
+          GRADIENT NORM           =        716.28115
+
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51558
+            H     2    O     1     0.58625
+            H     2    H     3     0.00000
+
+
+          SCF CALCULATIONS        =         75
+ 
+          WALL-CLOCK TIME         =          0.135 SECONDS
+          COMPUTATION TIME        =          0.135 SECONDS
+
+
+
+       FINAL  POINT  AND  DERIVATIVES
+
+
+    1 O    280.080  -379.440  -241.809     0.004     0.002    -0.000      529.991
+    2 H   -151.032   402.732   101.766    -0.024     0.757     0.588      441.996
+    3 H   -129.048   -23.292   140.042     0.001    -0.759     0.584      191.853
+
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00413556  *   0.00188044  *  -0.00039409  *
+     2       H         -0.02360962  *   0.75666510  *   0.58756246  *
+     3       H          0.00149464  *  -0.75869906  *   0.58373456  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.004135555     0.001880435    -0.000394086
+   2    H       -0.023609624     0.756665101     0.587562455
+   3    H        0.001494635    -0.758699063     0.583734564
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.645546        6.6455     1.81722     4.82833
+    2          H           0.322564        0.6774     0.67744
+    3          H           0.322982        0.6770     0.67702
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.047    -0.011     1.817     1.818
+ HYBRID        -0.008    -0.001     0.322     0.323
+ SUM           -0.056    -0.011     2.140     2.140
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81722   1.99946   1.35199   1.47687
+    2  H   0.67744
+    3  H   0.67702
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.14 SECONDS
+
+ == MOPAC DONE ==

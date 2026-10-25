@@ -550,6 +550,8 @@
     <ClCompile Include="vecprt_for_MOZYME.cpp" />
     <ClCompile Include="volume.cpp" />
     <ClCompile Include="write_cell.cpp" />
+    <ClCompile Include="write_pressure.cpp" />
+    <ClCompile Include="write_unit_cell_hof.cpp" />
     <ClCompile Include="write_paras_used.cpp" />
     <ClCompile Include="write_trajectory.cpp" />
     <ClCompile Include="writmo.cpp" />

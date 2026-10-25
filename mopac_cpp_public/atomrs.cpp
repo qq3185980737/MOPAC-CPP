@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】atomrs.cpp —— 结构/成键/电荷处理
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 atomrs.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // atomrs.cpp — C++ translation of MOPAC 2016 "atomrs.F90".
 // Protein residue identification. Output unit iw maps to stdout; unported
 // external routines (dihed, greek, mopend) are stubbed.
@@ -13,6 +22,9 @@
 #include "chanel_C.h"
 #include "common_arrays_C.h"
 #include "elemts_C.h"
+#include "mopend.h"
+#include "greek.h"
+#include "dihed.h"
 #include "funcon_C.h"
 #include "molkst_C.h"
 #include "MOZYME_C.h"
@@ -21,15 +33,6 @@ using namespace common_arrays_C;
 using namespace elemts_C;
 
 namespace {
-// --- stubs for not-yet-portable external routines ---
-void dihed(std::vector<std::vector<double>>&, int, int, int, int, double& sum) {
-    sum = 0.0;  // torsion angle stub; not exercised in peptide_n tests
-}
-void greek(int) {}
-[[noreturn]] void mopend(const char* msg) {
-    std::printf("MOPEND: %s\n", msg);
-    std::exit(1);
-}
 
 // mres(5, size_mres): element counts (C,N,O,S,H) per residue template.
 std::vector<std::vector<int>> build_mres() {

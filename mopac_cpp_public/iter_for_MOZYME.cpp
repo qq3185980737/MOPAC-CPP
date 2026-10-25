@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】iter_for_MOZYME.cpp —— SCF 迭代/收敛/Fock 构建
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 iter_for_MOZYME.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // iter_for_MOZYME.cpp — C++ translation of MOPAC 2016 "iter_for_MOZYME.F90".
 //
 // The MOZYME SCF driver: runs the big SCF loop over localized MOs (LMOs).

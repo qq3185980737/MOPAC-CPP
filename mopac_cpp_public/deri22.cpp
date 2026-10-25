@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】deri22.cpp —— CI 梯度的超向量矩阵 AB 与 FCI 块（deri22.F90）
+// ----------------------------------------------------------------------------
+// 构造 AB = (DIAG + C'*FOC2*C)*B，用于 deri2 的弛豫步，同时给出 CI 活性
+// Fock 对角块 FCI。布局：c 为 [row][col] 1-based；cf/wflat/dp 采用 1-based
+// 填充约定（物理偏移即 Fortran 元素号）；b/ab/fci 是按完整基组堆叠的列主序
+// 超向量，bcol/abcol/fcicol 选当前列，使调用方可用同一容器逐列传入。
+// ============================================================================
+
 // deri22.cpp — C++ translation of MOPAC 2016 "deri22.F90" (complete).
 // Builds the supervector AB = (DIAG + C'*FOC2*C)*B used by the relaxation
 // step of deri2, plus the CI-active Fock diagonal blocks FCI.

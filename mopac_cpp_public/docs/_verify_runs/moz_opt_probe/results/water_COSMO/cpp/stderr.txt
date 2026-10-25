@@ -1,0 +1,39 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+water_COSMO.mop
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 9
+ Job: water_COSMO
+Final heat of formation =        -65.17074 kcal/mol
+GRADIENT NORM           =        693.82239
+
+
+MOPAC Job: "water_COSMO.mop" ended normally on Mon Oct 26 01:21:16 2026

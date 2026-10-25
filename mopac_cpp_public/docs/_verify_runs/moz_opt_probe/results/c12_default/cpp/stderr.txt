@@ -1,0 +1,57 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+c12_default.mop
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+ Job: c12_default
+Final heat of formation =       1252.10375 kcal/mol
+GRADIENT NORM           =       5594.78452
+
+
+MOPAC Job: "c12_default.mop" ended normally on Mon Oct 26 01:21:23 2026

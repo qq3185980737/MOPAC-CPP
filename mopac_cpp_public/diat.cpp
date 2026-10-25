@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】diat.cpp —— 双原子重叠积分（diat.F90）
+// ----------------------------------------------------------------------------
+// 三个层次：diat() 原子对 ni/nj 的完整重叠积分；diat2() s/p 快路径（Slater
+// 重叠）；ss() 通用 STO 重叠（经 bfn/aff/bi 表）。1-based 下标（di[0] 为填充）。
+// 这些积分是 Hcore/Fock/重叠矩阵的基础，改动需与官方逐位对照。
+// ============================================================================
+
 // diat.cpp — C++ translation of MOPAC 2016 "diat.F90".
 //   diat   (lines 1-154): diatomic overlap integrals between atoms ni/nj,
 //   diat2  (lines 155-347): sp-only fast path (Slater overlaps),
@@ -40,6 +48,19 @@ extern "C" double fpw_ftn(double x, int n) {
 typedef double (*fexp_fn)(double);
 static fexp_fn g_fexp = nullptr;
 static bool g_fexp_init = false;
+typedef double (*flog_fn)(double);
+static flog_fn g_flog = nullptr;
+static bool g_flog_init = false;
+extern "C" double log_ftn(double x) {
+    if (!g_flog_init) {
+        g_flog_init = true;
+        HMODULE h = LoadLibraryA("D:\\mopac\\libmmd.dll");
+        if (h) g_flog = (flog_fn)GetProcAddress(h, "log");
+    }
+    if (g_flog) return g_flog(x);
+    return std::log(x);
+}
+
 extern "C" double exp_ftn(double x) {
     if (!g_fexp_init) {
         g_fexp_init = true;

@@ -1,0 +1,436 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 01:21:16 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  EPS= 78.40 - USE ANDREAS KLAMT'S COSMO IMPLICIT SOLVATION MODEL
+ *******************************************************************************
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+EFDBG mxstep=2000 keywrd=[ PM7 MOZYME EPS=78.4 ] find=-1
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+  O     0.00000000 +1   0.00000000 +1   0.00000000 +1
+  H     0.00000000 +1   0.75700000 +1   0.58600000 +1
+  H     0.00000000 +1  -0.75700000 +1   0.58600000 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0000
+  1  3    0.0000
+  2  1    0.0000
+  2  2    0.7570
+  2  3    0.5860
+  3  1    0.0000
+  3  2   -0.7570
+  3  3    0.5860
+ grad
+  278.81890 -380.96603 -217.60255 -141.81366  367.02426   97.64022 -137.00524   13.94176  119.96233
+ CYCLE:     1 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:   684.056 HEAT:     -65.16392
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+      0.0      0.0      0.0      0.0      0.0      0.0    200.0    395.8
+  1   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2   0.0000  -0.9606  -0.0587  -0.0000   0.0001   0.0277  -0.0000   0.2702
+  3   0.0000  -0.0601   0.9349  -0.0000  -0.0001  -0.1019  -0.3345  -0.0000
+  4   0.0000  -0.0000   0.0000   1.0000  -0.0000  -0.0000   0.0000   0.0000
+  5   0.0000  -0.1603  -0.0567  -0.0000  -0.0005  -0.4258   0.0000  -0.5383
+  6   0.0000  -0.1195   0.2889  -0.0000   0.0006   0.5334   0.6664  -0.4167
+  7   0.0000   0.0000   0.0000   0.0000   1.0000  -0.0011  -0.0000   0.0000
+  8   0.0000  -0.1603  -0.0567  -0.0000  -0.0005  -0.4258   0.0000  -0.5383
+  9   0.0000   0.0893   0.1804  -0.0000  -0.0007  -0.5846   0.6664   0.4167
+
+        9
+    500.0
+  1   0.0000
+  2   0.0000
+  3  -0.0000
+  4   0.0000
+  5   0.7071
+  6  -0.0000
+  7  -0.0000
+  8  -0.7071
+  9   0.0000
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   1.41594
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -300.713457808
+ P-RFO-STEP   HAS LENGTH   0.68584
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -1857.437604101
+ QA/TRIM-STEP HAS LENGTH   0.20000
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -42.9421351          22.2217868  -81.7008100     -0.2720
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.1000
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   1.41594
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -300.713457808
+ P-RFO-STEP   HAS LENGTH   0.68584
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -4083.567859316
+ QA/TRIM-STEP HAS LENGTH   0.10000
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -59.9566350           5.2072869  -42.7161711     -0.1219
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0500
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   1.41594
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -300.713457808
+ P-RFO-STEP   HAS LENGTH   0.68584
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -8542.519900244
+ QA/TRIM-STEP HAS LENGTH   0.05000
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -63.8211443           1.3427776  -21.8300084     -0.0615
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0250
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   1.41594
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -300.713457808
+ P-RFO-STEP   HAS LENGTH   0.68584
+ LAMDA THAT MINIMIZES ALONG ALL MODES =   -17463.655236698
+ QA/TRIM-STEP HAS LENGTH   0.02500
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -64.8427692           0.3211526  -11.0336520     -0.0291
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0125
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   1.41594
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -300.713457808
+ P-RFO-STEP   HAS LENGTH   0.68584
+ LAMDA THAT MINIMIZES ALONG ALL MODES =   -35307.511990062
+ QA/TRIM-STEP HAS LENGTH   0.01250
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.0846211           0.0793007   -5.5465701     -0.0143
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0063
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   1.41594
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -300.713457808
+ P-RFO-STEP   HAS LENGTH   0.68584
+ LAMDA THAT MINIMIZES ALONG ALL MODES =   -70996.011071395
+ QA/TRIM-STEP HAS LENGTH   0.00625
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1706128          -0.0066909   -2.7807313      0.0024
+ STEPSIZE USED IS  0.00625
+ CALCULATED STEP
+  0.000000  0.001131  0.001023  0.000000 -0.004722 -0.003782  0.000000  0.000217 -0.000295
+ NEW TRUST RADIUS =  0.00625
+
+ HESSIAN IS BEING UPDATED USING THE BFGS UPDATE
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+  O     0.00000000 +1   0.00113082 +1   0.00102328 +1
+  H     0.00000000 +1   0.75227804 +1   0.58221767 +1
+  H     0.00000000 +1  -0.75678347 +1   0.58570536 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0011
+  1  3    0.0010
+  2  1    0.0000
+  2  2    0.7523
+  2  3    0.5822
+  3  1    0.0000
+  3  2   -0.7568
+  3  3    0.5857
+ grad
+  282.78949 -386.43395 -219.83808 -146.44233  372.91595  100.10981 -136.34716   13.51800  119.72827
+ CYCLE:     2 TIME:   0.011 TIME LEFT:  2.00D  GRAD.:   693.737 HEAT:     -65.17061
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+  -1212.8      0.0      0.0      0.0      0.0      0.0      0.0    220.9
+  1   0.0000   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2   0.1984   0.0000   0.9605   0.0597  -0.0000   0.0000   0.0281  -0.0790
+  3   0.1102   0.0000   0.0614  -0.9349  -0.0000  -0.0003  -0.1017   0.3154
+  4   0.0000   0.0000  -0.0000   0.0000  -1.0000   0.0000   0.0000   0.0000
+  5  -0.8155   0.0000   0.1608   0.0571  -0.0000  -0.0014  -0.4238   0.2742
+  6  -0.5249   0.0000   0.1191  -0.2891  -0.0000   0.0018   0.5314  -0.5097
+  7   0.0000   0.0000  -0.0001  -0.0001   0.0000  -1.0000   0.0033  -0.0000
+  8   0.0251   0.0000   0.1603   0.0574  -0.0000  -0.0014  -0.4264   0.0407
+  9   0.0857   0.0000  -0.0893  -0.1797  -0.0000  -0.0019  -0.5874  -0.7468
+
+        9
+    452.8
+  1   0.0000
+  2   0.1659
+  3   0.0171
+  4   0.0000
+  5   0.2259
+  6  -0.2908
+  7  -0.0000
+  8  -0.8871
+  9   0.2228
+
+ HESSIAN HAS  1 NEGATIVE EIGENVALUE(S)
+-1212.8
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -1360.047896304
+ P-RFO-STEP   HAS LENGTH   0.01250
+ LAMDA THAT MINIMIZES ALONG ALL MODES =   -73721.107316764
+ QA/TRIM-STEP HAS LENGTH   0.00625
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.0929160           0.0776968   -2.8568096     -0.0272
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0031
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -1360.047896304
+ P-RFO-STEP   HAS LENGTH   0.01250
+ LAMDA THAT MINIMIZES ALONG ALL MODES =  -146268.460654638
+ QA/TRIM-STEP HAS LENGTH   0.00312
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1535860           0.0170268   -1.4226763     -0.0120
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0016
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -1360.047896304
+ P-RFO-STEP   HAS LENGTH   0.00625
+ LAMDA THAT MINIMIZES ALONG ALL MODES =  -291364.010019452
+ QA/TRIM-STEP HAS LENGTH   0.00156
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1602431           0.0103697   -0.7099067     -0.0146
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0008
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -1360.047896304
+ P-RFO-STEP   HAS LENGTH   0.00312
+ LAMDA THAT MINIMIZES ALONG ALL MODES =  -581555.539270429
+ QA/TRIM-STEP HAS LENGTH   0.00078
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1707391          -0.0001263   -0.3545956      0.0004
+ STEPSIZE USED IS  0.00078
+ CALCULATED STEP
+  0.000000  0.000142  0.000126  0.000000 -0.000593 -0.000470 -0.000000  0.000028 -0.000033
+ NEW TRUST RADIUS =  0.00078
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+  O     0.00000000 +1   0.00127265 +1   0.00114953 +1
+  H     0.00000000 +1   0.75168528 +1   0.58174747 +1
+  H     0.00000000 +1  -0.75675579 +1   0.58567255 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0013
+  1  3    0.0011
+  2  1    0.0000
+  2  2    0.7517
+  2  3    0.5817
+  3  1    0.0000
+  3  2   -0.7568
+  3  3    0.5857
+ grad
+  282.59992 -386.84307 -218.95978 -146.79055  373.66118  100.09728 -135.80937   13.18189  118.86249
+ CYCLE:     3 TIME:   0.011 TIME LEFT:  2.00D  GRAD.:   693.822 HEAT:     -65.17074
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+  -4811.4      0.0      0.0      0.0      0.0      0.0      0.0     28.7
+  1   0.0000   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2  -0.1415   0.0000   0.9605   0.0598   0.0000   0.0001   0.0275   0.1344
+  3   0.2136   0.0000   0.0613  -0.9349   0.0000  -0.0002  -0.1013   0.2563
+  4   0.0000   0.0000   0.0000  -0.0000  -1.0000  -0.0000  -0.0000   0.0000
+  5   0.6826   0.0000   0.1606   0.0570   0.0000  -0.0007  -0.4237  -0.5545
+  6  -0.2110   0.0000   0.1194  -0.2889   0.0000   0.0009   0.5311  -0.7192
+  7   0.0000   0.0000   0.0000  -0.0000   0.0000  -1.0000   0.0016   0.0000
+  8  -0.1187   0.0000   0.1600   0.0573   0.0000  -0.0007  -0.4266   0.0190
+  9  -0.6402   0.0000  -0.0897  -0.1799   0.0000  -0.0009  -0.5876  -0.3019
+
+        9
+    446.7
+  1   0.0000
+  2  -0.1872
+  3   0.0239
+  4   0.0000
+  5  -0.1343
+  6   0.2416
+  7  -0.0000
+  8   0.8801
+  9  -0.3367
+
+ HESSIAN HAS  1 NEGATIVE EIGENVALUE(S)
+-4811.4
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -4817.039023636
+ P-RFO-STEP   HAS LENGTH   0.00156
+ LAMDA THAT MINIMIZES ALONG ALL MODES =  -581593.325315558
+ QA/TRIM-STEP HAS LENGTH   0.00078
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1602740           0.0104650   -0.3547890     -0.0295
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0004
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -4817.039023636
+ P-RFO-STEP   HAS LENGTH   0.00156
+ LAMDA THAT MINIMIZES ALONG ALL MODES =  -1162571.382193199
+ QA/TRIM-STEP HAS LENGTH   0.00039
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1655738           0.0051653   -0.1773478     -0.0291
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0002
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -4817.039023636
+ P-RFO-STEP   HAS LENGTH   0.00078
+ LAMDA THAT MINIMIZES ALONG ALL MODES =  -2324532.734423373
+ QA/TRIM-STEP HAS LENGTH   0.00020
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1681754           0.0025637   -0.0886623     -0.0289
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0001
+
+ TRUST RADIUS NOW LESS THAN  0.00010 OPTIMIZATION TERMINATING
+ THE GEOMETRY MAY NOT BE COMPLETELY OPTIMIZED
+ (TO CONTINUE, ADD 'LET DDMIN=0.0' TO THE KEYWORD LINE)
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 01:21:16 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -65.17074 KCAL/MOL =    -272.67440 KJ/MOL
+          VAN DER WAALS AREA      =         42.41 SQUARE ANGSTROMS
+
+
+          TOTAL ENERGY            =       -322.99885 EV
+          ELECTRONIC ENERGY       =       -470.07449 EV
+          CORE-CORE REPULSION     =        146.79515 EV
+          DIELECTRIC ENERGY       =         -0.35940 EV
+          COSMO AREA              =         42.41 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.16 CUBIC ANGSTROMS
+          GRADIENT NORM           =        693.82239
+
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.50845
+            O     1    H     3     0.58255
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =         15
+ 
+          WALL-CLOCK TIME         =          0.038 SECONDS
+          COMPUTATION TIME        =          0.038 SECONDS
+
+
+
+       FINAL  POINT  AND  DERIVATIVES
+
+
+    1 O    282.600  -386.843  -218.960     0.000     0.001     0.001      526.739
+    2 H   -146.791   373.661   100.097     0.000     0.752     0.582      413.751
+    3 H   -135.809    13.182   118.862     0.000    -0.757     0.586      180.959
+
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00127265  *   0.00114953  *
+     2       H          0.00000000  *   0.75168528  *   0.58174747  *
+     3       H          0.00000000  *  -0.75675579  *   0.58567255  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000     0.001272649     0.001149531
+   2    H        0.000000000     0.751685279     0.581747467
+   3    H        0.000000000    -0.756755789     0.585672551
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.747414        6.7474     1.80518     4.94224
+    2          H           0.372311        0.6277     0.62769
+    3          H           0.375103        0.6249     0.62490
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.024     2.091     2.092
+ HYBRID        -0.000     0.002     0.313     0.313
+ SUM           -0.000    -0.022     2.404     2.404
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.80518   2.00000   1.40403   1.53821
+    2  H   0.62769
+    3  H   0.62490
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.04 SECONDS
+
+ == MOPAC DONE ==

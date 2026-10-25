@@ -10,6 +10,13 @@
 //           CI matrix derivative (mecid/mecih) and accumulate the
 //           relaxation correction into dxyzr.
 //
+
+// 【中文导读】deri2() —— 非变分导数的“弛豫”部分
+// ---------------------------------------------------------------------------
+// 三步：deri21 由 F 构造正交基 → 迭代求解电子 Hessian 的投影/逆并扩展基
+// → 对每个几何变量解包 CI 活性 MO 导数（deri23）、弛豫双电子积分
+// （dijkl2）、组装 CI 矩阵导数（mecid/mecih），把修正累加进 dxyzr。
+
 // Layout: f/fd/fci are [col][row] 1-based containers; internal flat buffers
 // use the 1-based-padding convention (physical offset == Fortran element
 // number, element 0 unused). b/ab/fb/bcoef are column-major supervectors in

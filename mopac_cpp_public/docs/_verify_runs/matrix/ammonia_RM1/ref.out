@@ -1,0 +1,162 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              RM1 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:40 2026  *
+ *  RM1        - The RM1 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+RM1 1SCF
+ ammonia RM1
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       N          0.00000000  *   0.00000000  *   0.11700000  *
+     2       H          0.00000000  *   0.93900000  *  -0.27300000  *
+     3       H          0.81300000  *  -0.46900000  *  -0.27300000  *
+     4       H         -0.81300000  *  -0.46900000  *  -0.27300000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         N        0.0000    0.0000    0.1170
+     2         H        0.0000    0.9390   -0.2730
+     3         H        0.8130   -0.4690   -0.2730
+     4         H       -0.8130   -0.4690   -0.2730
+
+  H: (RM1): G.B. ROCHA, R.O. FREIRE, A.M.SIMAS, J.J.P. STEWART, J. COMP. CHEM. 27, 1101 (2006)
+  N: (RM1): G.B. ROCHA, R.O. FREIRE, A.M.SIMAS, J.J.P. STEWART, J. COMP. CHEM. 27, 1101 (2006)
+
+           Empirical Formula: H3 N  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C3v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+RM1 1SCF
+ ammonia RM1
+
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED                 
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              RM1 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:40 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         -6.18460 KCAL/MOL =     -25.87635 KJ/MOL
+
+
+          TOTAL ENERGY            =       -252.91609 EV
+          ELECTRONIC ENERGY       =       -437.84946 EV  POINT GROUP:     C3v 
+          CORE-CORE REPULSION     =        184.93338 EV
+          COSMO AREA              =         47.75 SQUARE ANGSTROMS
+          COSMO VOLUME            =         29.99 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         10.239901 EV
+          HOMO LUMO ENERGIES (EV) =        -10.240  3.641
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         17.0304
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     4    H     3     1.62600
+            H     3    H     2     1.40800
+            H     2    N     1     0.39000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.000 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       N          0.00000000  *   0.00000000  *   0.11700000  *
+     2       H          0.00000000  *   0.93900000  *  -0.27300000  *
+     3       H          0.81300000  *  -0.46900000  *  -0.27300000  *
+     4       H         -0.81300000  *  -0.46900000  *  -0.27300000  *
+
+                             CARTESIAN COORDINATES
+
+   1    N        0.000000000     0.000000000     0.117000000
+   2    H        0.000000000     0.939000000    -0.273000000
+   3    H        0.813000000    -0.469000000    -0.273000000
+   4    H       -0.813000000    -0.469000000    -0.273000000
+
+
+           Empirical Formula: H3 N  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C3v 
+
+
+                  EIGENVALUES  
+ -34.00975 -15.97611 -15.97170 -10.23990   3.64109   5.81490   5.81833
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          N          -0.429208        5.4292     1.60707     3.82214
+    2          H           0.143031        0.8570     0.85697
+    3          H           0.143088        0.8569     0.85691
+    4          H           0.143088        0.8569     0.85691
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000     0.000    -0.804     0.804
+ HYBRID         0.000     0.000    -1.206     1.206
+ SUM           -0.000     0.001    -2.010     2.010
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  N   1.60707   1.08085   1.08094   1.66035
+    2  H   0.85697
+    3  H   0.85691
+    4  H   0.85691
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.00 SECONDS
+
+ == MOPAC DONE ==

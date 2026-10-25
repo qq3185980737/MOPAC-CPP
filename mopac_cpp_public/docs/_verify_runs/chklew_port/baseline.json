@@ -1,0 +1,17 @@
+{
+  "comment": "Gate baselines captured 2026-10-25 after the faithful re-translation of chklew.F90 289-618 (see docs/TRANSLATION_GAPS.md sec. 95). 'hof'/'zpe' are the C++ values that must stay unchanged; 'ref_note' records the official mopac_ref.exe value and any tracked residual difference.",
+  "water_bonds":    { "hof": "-57.79103",  "zpe": null,     "ref_note": "exact match with reference" },
+  "benzene_pi":     { "hof": "246.84781",  "zpe": null,     "ref_note": "exact match (non-MOZYME: chklew not on this path)" },
+  "water_thermo":   { "hof": "-57.791035", "zpe": "10.007", "ref_note": "ref ZPE 10.003; known low-precision dcart THERMO path (docs sections 84-93)" },
+  "water_force":    { "hof": "-57.791035", "zpe": "10.120", "ref_note": "ref ZPE 10.119; known dcart precision path" },
+  "water_mozyme":   { "hof": "-57.78972",  "zpe": null,     "ref_note": "exact match (MOZYME: exercises chklew)" },
+  "benzene_mozyme": { "hof": "23.02726",   "zpe": null,     "ref_note": "exact match after the F90 289-618 faithful rewrite (was 23.02722 before)" },
+  "ethene":          { "hof": "14.29865",  "zpe": null,     "ref_note": "exact match; open-ended ene pi bond" },
+  "acetylene":       { "hof": "57.81121",  "zpe": null,     "ref_note": "exact match; acetylenic double pi bond (F90 495-497)" },
+  "butadiene":       { "hof": "261.60662", "zpe": null,     "ref_note": "exact match; conjugated ene chain" },
+  "pyridine":        { "hof": "37.15222",  "zpe": null,     "ref_note": "exact match; N heteroatom aromatic ring" },
+  "naphthalene":     { "hof": "43.04634",  "zpe": null,     "ref_note": "ref 43.04633; 1e-5 downstream MOZYME residual (chklew GEOCHK dumps are byte-identical)" },
+  "cyclopentadiene": { "hof": "120.81544", "zpe": null,     "ref_note": "exact match; five-membered ring (ring5)" },
+  "indole":          { "hof": "70.32731",  "zpe": null,     "ref_note": "exact match; fused five- plus six-membered ring (F90 252-288)" },
+  "anthracene":      { "hof": "67.10911",  "zpe": null,     "ref_note": "exact match; three fused six-membered rings (1040 restart)" }
+}

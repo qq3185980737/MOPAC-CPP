@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】mpcsyb.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 mpcsyb.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // mpcsyb.cpp — SYBYL output driver + Mulliken populations (F90 mpcsyb.F90).
 // Output unit iw maps to stdout (project convention).
 #define _CRT_SECURE_NO_WARNINGS
@@ -38,11 +47,19 @@ void mpcpop(int icok, FILE* isyb) {
             pop[i] = sum;
             chrg[i] = tore[k] - pop[i];
         }
-        std::fprintf(stdout, "\n\n\n         MULLIKEN POPULATIONS AND CHARGES\n\n");
-        std::fprintf(stdout, "     NO.  ATOM   POPULATION      CHARGE\n");
-        for (j = 1; j <= numat; ++j)
-            std::fprintf(stdout, "%5d%3s%16.6f%14.6f\n", j,
-                         elemnt[nat[j]].c_str(), pop[j], chrg[j]);
+        // F90: (3/8X,'MULLIKEN POPULATIONS AND CHARGES',/),
+        //      (6X,'NO.  ATOM   POPULATION      CHARGE'),
+        //      (5X,I4,3X,A2,F13.6,F14.6)
+        std::fprintf(stdout, "\n\n\n        MULLIKEN POPULATIONS AND CHARGES\n\n");
+        std::fprintf(stdout, "      NO.  ATOM   POPULATION      CHARGE\n");
+        for (j = 1; j <= numat; ++j) {
+            // F90 elemnt is a right-justified 2-char field (" O", "CL");
+            // C++ elemnt stores left-justified ("O ", "CL"), so trim then %2s.
+            std::string sym = elemnt[nat[j]];
+            while (!sym.empty() && sym.back() == ' ') sym.pop_back();
+            std::fprintf(stdout, "     %4d   %2s%13.6f%14.6f\n", j,
+                         sym.c_str(), pop[j], chrg[j]);
+        }
         if (icok > -1) {
             for (j = 1; j <= numat; ++j) std::fprintf(isyb, "%12.6f", pop[j]);
             for (j = 1; j <= numat; ++j) std::fprintf(isyb, "%12.6f", chrg[j]);

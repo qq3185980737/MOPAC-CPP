@@ -1,4 +1,17 @@
 // cnvg.cpp — C++ translation of MOPAC 2016 "cnvg.F90".
+// ============================================================================
+// 【中文导读】cnvg() —— SCF 密度收敛判据 + Camp-King 外推
+// ----------------------------------------------------------------------------
+// 输入：pnew 为本次迭代的新密度（打包），p 为上一次密度，p1 保存再上一次的
+// 对角元；输出 pl = max|Δp|（SCF 收敛判定的核心指标）。
+// 流程：
+//   1) 遍历上三角：累计 pl，并按需计算二阶差分，得到外推系数 fac（隔轮
+//      extrap）；把 p 更新为 pnew，p1 记录旧值；
+//   2) 第二遍遍历：非对角元做 p += fac*(p-p1) 的外推，对角元限幅到
+//      [0, rhfuhf]（UHF 时 1，否则 2），同时计算电子数归一化；
+//   3) 若总电子数偏差 >1e-5，按比例缩放密度并重新限幅，循环至收敛。
+// 约定：打包下三角 1-based；rhfuhf 由 numcal 首次调用时按 UHF 关键字设置。
+// ============================================================================
 
 #include "cnvg.h"
 
@@ -21,6 +34,9 @@ void cnvg(std::vector<double>& pnew, std::vector<double>& p,
         icalcn = numcal;
         rhfuhf = (keywrd.find("UHF") != std::string::npos) ? 1.0 : 2.0;
     }
+
+    // pl = 最大密度变化量；damp 限制 >3 轮后的非对角变化，防止振荡。
+
     pl = 0.0;
     double faca = 0.0, damp = 1e10, facb = 0.0, fac = 0.0;
     if (niter > 3) damp = 0.05;
@@ -41,6 +57,9 @@ void cnvg(std::vector<double>& pnew, std::vector<double>& p,
         p1[i] = p[k];
         p[k] = a;
     }
+
+    // Camp-King 型外推系数：用相邻两轮的一阶/二阶差分比估计，满足条件才启用。
+
     if (facb > 1e-10 && faca < 100.0 * facb) fac = std::sqrt(faca / facb);
 
     int ie = 0;
@@ -63,6 +82,8 @@ void cnvg(std::vector<double>& pnew, std::vector<double>& p,
         sum2 += p[ie];
         pnew[ie] = p[ie];
     }
+
+    // 电子数守恒循环：缩放密度后重新限幅，直到总电子数与 sum1 一致。
 
     double sum0 = sum1;
     while (true) {

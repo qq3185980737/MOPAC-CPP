@@ -1,0 +1,33 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+benzene_COSMO.mop
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+ Job: benzene_COSMO
+Final heat of formation =         21.05900 kcal/mol
+GRADIENT NORM           =       6220.59583
+
+
+MOPAC Job: "benzene_COSMO.mop" ended normally on Mon Oct 26 01:21:21 2026

@@ -1,4 +1,16 @@
 // react1.cpp — C++ translation of MOPAC 2016 "react1.F90".
+
+// ============================================================================
+// 【中文导读】react1.cpp —— REACT 双体系反应路径/过渡态搜索
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 react1.F90（已完整移植）。REACT 同时维护两套体系几何：
+// 分别做 SCF 得到各自生成热，把较稳定的体系沿指定原子对方向朝另一体系
+// 移动一步，重复直到两侧能量差/距离满足判据，从而逼近反应过渡态或路径。
+// 关键流程：初始化两套 geo/坐标 → 各自 compfg（SCF+梯度）→ 比较能量 →
+// 按关键字（步长/原子对/约束）移动 → 能量差收敛或达到步数上限。
+// 约定：1-based 索引；两套坐标分别保存在 geo/geoa 与相关全局中。
+// ============================================================================
+
 //
 //  REACT1 DETERMINES THE TRANSITION STATE OF A CHEMICAL REACTION.
 //   REACT WORKS BY USING TWO SYSTEMS SIMULTANEOUSLY, THE HEATS OF
@@ -10,6 +22,18 @@
 //
 //  DOCK rotates and translates the geometry in GEOA so that the root
 //       mean square difference between GEOA and GEO is a minimum.
+
+//
+// ============================================================================
+// 【中文导读】react1() —— 反应过渡态搜索（REACT1/DOCK）
+// ----------------------------------------------------------------------------
+// 对应 react1.F90。REACT1 同时维护两套几何（反应物/产物），每次把能量较高
+// 的一套朝另一套微移，反复比较能量与 RMS 差，直到接近鞍点；DOCK 负责用
+// 旋转/平移把 GEOA 叠到 GEO 上（RMS 最小），为后续 EF 过渡态优化提供初猜。
+// 注意：本函数不直接优化，而是生成好的初猜交给 EF/NLLSQ；1-based 下标与
+// Fortran 一致。
+// ============================================================================
+
 #include "react1.h"
 #include <cstdio>
 #include <cmath>
@@ -65,6 +89,8 @@ std::string trim(const std::string& s) {
 long nint(double x) { return std::lround(x); }
 
 }  // namespace
+
+// react1(): 主入口——两套几何交替移动，逼近鞍点后交给 EF。
 
 void react1() {
   using namespace molkst_C;
@@ -366,6 +392,8 @@ void react1() {
   }
   iflepo = -1;  // Prevent any more calls to writmo
 }
+
+// dock(): 用最小 RMS 的旋转/平移把 GEOA 叠到 GEO 上。
 
 void dock(std::vector<std::vector<double>>& geoa,
           std::vector<std::vector<double>>& geo, double& dist) {

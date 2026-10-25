@@ -1,0 +1,168 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              AM1 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:49 2026  *
+ *  AM1        - The AM1 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+AM1 1SCF
+ silane AM1
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1      SI          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.87800000  *   0.87800000  *   0.87800000  *
+     3       H          0.87800000  *  -0.87800000  *  -0.87800000  *
+     4       H         -0.87800000  *   0.87800000  *  -0.87800000  *
+     5       H         -0.87800000  *  -0.87800000  *   0.87800000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1        SI        0.0000    0.0000    0.0000
+     2         H        0.8780    0.8780    0.8780
+     3         H        0.8780   -0.8780   -0.8780
+     4         H       -0.8780    0.8780   -0.8780
+     5         H       -0.8780   -0.8780    0.8780
+
+  H: (AM1): M.J.S. DEWAR ET AL, J. AM. CHEM. SOC. 107 3902-3909 (1985)
+ Si: (AM1): M.J.S.DEWAR, C. JIE, ORGANOMETALLICS, 6, 1486-1490 (1987).
+
+           Empirical Formula: H4 Si  =     5 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Td  
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+AM1 1SCF
+ silane AM1
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              AM1 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:49 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =          6.98641 KCAL/MOL =      29.23114 KJ/MOL
+
+
+          TOTAL ENERGY            =       -138.02216 EV
+          ELECTRONIC ENERGY       =       -291.29646 EV  POINT GROUP:     Td  
+          CORE-CORE REPULSION     =        153.27430 EV
+          COSMO AREA              =         80.37 SQUARE ANGSTROMS
+          COSMO VOLUME            =         65.95 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         12.190834 EV
+          HOMO LUMO ENERGIES (EV) =        -12.191  1.509
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         32.1171
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     2.48336
+            H     4    H     5     2.48336
+            H     4    H     2     1.75600
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.000 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1      SI          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.87800000  *   0.87800000  *   0.87800000  *
+     3       H          0.87800000  *  -0.87800000  *  -0.87800000  *
+     4       H         -0.87800000  *   0.87800000  *  -0.87800000  *
+     5       H         -0.87800000  *  -0.87800000  *   0.87800000  *
+
+                             CARTESIAN COORDINATES
+
+   1   SI        0.000000000     0.000000000     0.000000000
+   2    H        0.878000000     0.878000000     0.878000000
+   3    H        0.878000000    -0.878000000    -0.878000000
+   4    H       -0.878000000     0.878000000    -0.878000000
+   5    H       -0.878000000    -0.878000000     0.878000000
+
+
+           Empirical Formula: H4 Si  =     5 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Td  
+
+
+                  EIGENVALUES
+ -15.66240 -12.19083 -12.19083 -12.19083   1.50946   1.50946   1.50946   1.93841
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1         SI           0.541086        3.4589     0.89109     2.56783
+    2          H          -0.135271        1.1353     1.13527
+    3          H          -0.135271        1.1353     1.13527
+    4          H          -0.135272        1.1353     1.13527
+    5          H          -0.135271        1.1353     1.13527
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.000     0.000     0.000
+ HYBRID         0.000     0.000     0.000     0.000
+ SUM            0.000    -0.000     0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1 SI   0.89109   0.85594   0.85594   0.85594
+    2  H   1.13527
+    3  H   1.13527
+    4  H   1.13527
+    5  H   1.13527
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

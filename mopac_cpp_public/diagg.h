@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】diagg.h —— 对角化/本征值接口（C++ 头文件）
+// ----------------------------------------------------------------------------
+// 声明对应的模块全局量/函数/常量，与同名 .cpp 配对使用；保持 MOPAC
+// 的 1-based 索引与打包下三角/列主序约定。实现细节与移植缺口见
+// docs/TRANSLATION_GAPS.md 及对应 .cpp 的中文导读。
+// ============================================================================
+
 // diagg.h — C++ translation of diagg.F90 / diagg1.F90 / diagg2.F90 /
 // density_for_MOZYME.F90 / epseta.F90 (MOPAC 2016).
 #pragma once
@@ -9,6 +17,11 @@
 //   partp: partial density matrix (mpack)
 void diagg(const std::vector<double>& fao, int nocc, int nvir, int idiagg,
            std::vector<double>& partp, int indi);
+
+// diagg1_energy: re-run only the diagg1 energy branch (idiagg%4==0) with the
+// current Fock matrix so that eigs(1:noccupied) holds the official LMO
+// expectation values printed by prtlmo.
+void diagg1_energy(const std::vector<double>& fao);
 
 // diagg1: build the significant occupied-virtual matrix elements (stored in
 // fmo/ifmo, count nij).  eigv is the eigs(nocc+1:) slice (full eigs passed,

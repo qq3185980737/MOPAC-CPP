@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】set_up_dentate.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 set_up_dentate.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // set_up_dentate.cpp — C++ translation of "set_up_dentate.F90" (9680 B).
 // Contains set_up_dentate(), nsp2_correction(), nsp2_atom_correction(),
 // C_triple_bond_C(), Si_O_H_Correction(), Si_O_H_bond_correction().

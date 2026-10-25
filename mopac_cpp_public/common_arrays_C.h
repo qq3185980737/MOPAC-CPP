@@ -7,6 +7,26 @@
 // Indexing convention: these Fortran allocatable arrays keep their Fortran
 // (1-based) indexing in C++ — element 0 is padding, and Fortran accesses
 // such as eigs(k) / f(k) are written verbatim as eigs[k] / f[k].
+
+//
+// ============================================================================
+// 【中文导读】common_arrays_C —— 分子相关的公共数组（对应 F90 Common_arrays_C）
+// ----------------------------------------------------------------------------
+// 这里放的是“按体系规模分配”的数组：坐标、原子编号、Fock/密度/积分矩阵、
+// 梯度、热力学数组等。原版是 Fortran allocatable arrays（部分在 COMMON 中），
+// 本移植统一用 std::vector，实体定义在各 *_C.cpp 中。
+//
+// 三条必须记住的约定：
+//   1) 下标从 1 开始：vector 大小是 N+1，0 号元素是 padding，不要从 0 遍历；
+//   2) 对称矩阵用下三角打包：mpack = norbs*(norbs+1)/2，
+//      元素 (i,j)（i>=j）的偏移 = j*(j-1)/2 + i；
+//   3) 二维数组（c/cb/coord 等）用 vector<vector<double>> 按 [i][j] 访问；
+//      其中 c 是 Fortran 列主序的轨道系数矩阵（c[row][col]）。
+//
+// 阅读提示：数组长度在 setup_mopac_arrays() 中按 maxatoms/norbs 分配；若出现
+// 越界或崩溃，先检查该函数是否在读取数据后被正确调用。
+// ============================================================================
+
 #pragma once
 
 #include <string>

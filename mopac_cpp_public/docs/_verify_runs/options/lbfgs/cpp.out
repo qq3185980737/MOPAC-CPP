@@ -1,0 +1,169 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 17:48:02 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  LBFGS      - USE THE LBFGS GEOMETRY OPTIMIZER
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 LBFGS
+ lbfgs
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+Geometry optimization using L-BFGS
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:     2.812 HEAT:     -57.79113
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:    36.308 HEAT:      -45.7561
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:    55.277 HEAT:     -55.10536
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:     1.728 HEAT:     -57.79718
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:     0.653 HEAT:     -57.79917
+ RESTART FILE WRITTEN,      TIME LEFT:  2.00D  GRAD.:     0.213 HEAT:     -57.79962
+
+     GRADIENT =  0.21293  IS LESS THAN CUTOFF =  0.50000
+
+ -------------------------------------------------------------------------------
+PM7 LBFGS
+ lbfgs
+ 
+
+
+     HERBERTS TEST WAS SATISFIED IN BFGS
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 17:48:02 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.79962 KCAL/MOL =    -241.83360 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67921 EV
+          ELECTRONIC ENERGY       =       -469.17602 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        146.49681 EV
+          COSMO AREA              =         42.43 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.17 CUBIC ANGSTROMS
+          GRADIENT NORM           =          0.21293
+
+          IONIZATION POTENTIAL    =         12.115245 EV
+          HOMO LUMO ENERGIES (EV) =        -12.115  4.047
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.52040
+            H     2    O     1     0.57875
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          8
+ 
+          WALL-CLOCK TIME         =          0.039 SECONDS
+          COMPUTATION TIME        =          0.039 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O         -0.00000000  *   0.00003389  *   0.00483542  *
+     2       H         -0.00000000  *   0.76018092  *   0.58365677  *
+     3       H         -0.00000000  *  -0.76021481  *   0.58350781  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -0.000000000     0.000033895     0.004835421
+   2    H       -0.000000000     0.760180920     0.583656772
+   3    H       -0.000000000    -0.760214813     0.583507808
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES
+ -29.61036 -17.84121 -14.21345 -12.11524   4.04689   6.35156
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.649597        6.6496     1.81325     4.83634
+    2          H           0.324799        0.6752     0.67520
+    3          H           0.324797        0.6752     0.67520
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.000     1.806     1.806
+ HYBRID         0.000    -0.000     0.323     0.323
+ SUM            0.000    -0.000     2.129     2.129
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81325   2.00000   1.35046   1.48589
+    2  H   0.67520
+    3  H   0.67520
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.04 SECONDS
+
+ == MOPAC DONE ==

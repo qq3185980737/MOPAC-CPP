@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】mecid.cpp —— CI/激发态与极化
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 mecid.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // mecid.cpp - C++ translation of MOPAC 2016 "mecid.F90" + "diagi.F90".
 // MECID: remove CI-active electrons from ground state; GSE = stabilization
 // energy; EIGA = 1-electron levels; DIAG = microstate energies.

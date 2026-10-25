@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】geoutg.cpp —— 输入/几何解析
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 geoutg.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // geoutg.cpp — C++ translation of MOPAC 2016 "geoutg.F90".
 // Writes the geometry in Gaussian-style format.
 #include "geoutg.h"
@@ -138,31 +147,31 @@ void geoutg(int iprt) {
         std::string bl = blank.substr(0, j);
         switch (k) {
             case 1:
-                std::fprintf(stdout, "%s\n", bl.c_str());
+                std::fprintf(chanel_C::out_unit(), "%s\n", bl.c_str());
                 break;
             case 2:
-                std::fprintf(stdout, "%s %4d %s\n", bl.c_str(), common_arrays_C::na[k], line[1][k].substr(3).c_str());
+                std::fprintf(chanel_C::out_unit(), "%s %4d %s\n", bl.c_str(), common_arrays_C::na[k], line[1][k].substr(3).c_str());
                 break;
             case 3:
-                std::fprintf(stdout, "%s %4d %s %4d %s\n", bl.c_str(), common_arrays_C::na[k],
+                std::fprintf(chanel_C::out_unit(), "%s %4d %s %4d %s\n", bl.c_str(), common_arrays_C::na[k],
                              line[1][k].substr(3).c_str(), common_arrays_C::nb[k], line[2][k].substr(3).c_str());
                 break;
             default:
-                std::fprintf(stdout, "%s %4d %s %4d %s %4d %s %4d\n", bl.c_str(), common_arrays_C::na[k],
+                std::fprintf(chanel_C::out_unit(), "%s %4d %s %4d %s %4d %s %4d\n", bl.c_str(), common_arrays_C::na[k],
                              line[1][k].substr(3).c_str(), common_arrays_C::nb[k], line[2][k].substr(3).c_str(),
                              common_arrays_C::nc[k], line[3][k].substr(3).c_str(), 0);
                 break;
         }
     }
-    std::fprintf(stdout, "\n");
+    std::fprintf(chanel_C::out_unit(), "\n");
     for (int l = 1; l <= 3; ++l) {
         for (int k = 1; k <= nopt; ++k) {
             if (common_arrays_C::loc[2][k] != l) continue;
             if (common_arrays_C::loc[2][k] != 1)
-                std::fprintf(stdout, "%s%12.6f\n", optdat[k].substr(3).c_str(),
+                std::fprintf(chanel_C::out_unit(), "%s%12.6f\n", optdat[k].substr(3).c_str(),
                              common_arrays_C::geo[common_arrays_C::loc[2][k]][common_arrays_C::loc[1][k]] * degree);
             else
-                std::fprintf(stdout, "%s%12.6f\n", optdat[k].substr(3).c_str(),
+                std::fprintf(chanel_C::out_unit(), "%s%12.6f\n", optdat[k].substr(3).c_str(),
                              common_arrays_C::geo[common_arrays_C::loc[2][k]][common_arrays_C::loc[1][k]]);
         }
     }

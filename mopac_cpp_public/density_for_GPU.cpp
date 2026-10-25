@@ -4,6 +4,22 @@
 // then packs the upper triangle (dtrttp) into pp.
 // The GPU-only iopc=2/4 paths (CUBLAS) are implemented with the same CPU
 // arithmetic so behaviour matches the BLAS paths (iopc=3/5).
+
+//
+// ============================================================================
+// 【中文导读】density_for_GPU() —— 由占据轨道系数构建（打包）密度矩阵
+// ----------------------------------------------------------------------------
+// 对应 density_for_GPU.F90。输入 c 是列主序轨道系数（每一列是一个 MO），
+// 输出 pp 是 1-based 打包上三角密度矩阵，索引 pp[pack_idx(i,j)]，
+// pack_idx(i,j) = j*(j-1)/2 + i（i<=j）。
+// 两种占据模式：正常电子（sign=+1，前 ndubl 个双占据 + nsingl 个单占据）
+// 或正电子等价（sign=-1、占据数取补），由 ndubl/nsingl 的关系决定。
+// iopc 选择实现：2/3 是 gemm 路径（2*C2*C2^T + frac*C1*C1^T），4/5 是
+// dsyrk 路径（occ*C*C^T）；路径区别只影响求和顺序。为保逐位一致，4/5 在
+// MKL 下调用 cblas_dsyrk（与官方一致），GPU/OpenCL 路径为可选加速。
+// 注意：ndubl==0 时必须把 pp 清零（否则 UHF 单原子会保留初始猜测）。
+// ============================================================================
+
 #include "density_for_GPU.h"
 
 #include <cmath>
@@ -42,6 +58,9 @@ void density_for_GPU(std::vector<double>& c, double fract, int ndubl, int nsingl
 void density_for_GPU(double* c, double fract, int ndubl, int nsingl,
                      double occ, int /*mpack*/, int norbs, int mode, double* pp,
                      int iopc) {
+
+    // 先判定电子/正电子等价，确定占据列区间与符号。
+
     double sign, frac, cst;
     int nl1, nl2, nu1, nu2;
     if (ndubl != 0 && nsingl > (norbs / 2) && mode != 2) {
@@ -63,6 +82,9 @@ void density_for_GPU(double* c, double fract, int ndubl, int nsingl,
         nl1 = ndubl + 1;
         nu1 = nsingl;
     }
+
+    // iopc：2/3 = gemm 路径；4/5 = dsyrk 路径；其他值不处理（返回）。
+
     switch (iopc) {
         case 2:
         case 3: {  // gemm path: xmat = 2*sign*c2*c2^T + frac*sign*c1*c1^T; diag += cst
@@ -136,6 +158,9 @@ void density_for_GPU(double* c, double fract, int ndubl, int nsingl,
                 }
             break;
         }
+
+        // 4/5 走 dsyrk：xmat = occ * c(:,1:ndubl) * c(:,1:ndubl)^T，再打包上三角。
+
         case 4:
         case 5: {  // syrk path: xmat = occ*c(:,1:ndubl)*c(:,1:ndubl)^T
 #ifdef MOPAC_USE_OPENCL

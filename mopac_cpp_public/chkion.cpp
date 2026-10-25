@@ -1,4 +1,13 @@
 // chkion.cpp — C++ translation of MOPAC 2016 "chkion.F90".
+//
+// ============================================================================
+// 【中文导读】chkion() —— Lewis 结构与氧化态检查（离子/电荷合法性）
+// ----------------------------------------------------------------------------
+// 对应 chkion.F90。按默认氧化态表检查每个原子的形式电荷/价电子是否合理，
+// 并在发现异常时通过 mopend 报告；错误处理现在走真实 mopend（此前本文件
+// 用空 mopend stub 吞掉了错误）。
+// ============================================================================
+
 // add_Lewis_element / mopend are external stubs.
 
 #include "chkion.h"
@@ -13,6 +22,7 @@
 #include "common_arrays_C.h"
 #include "elemts_C.h"
 #include "molkst_C.h"
+#include "mopend.h"
 #include "parameters_C.h"
 
 using namespace common_arrays_C;
@@ -21,7 +31,6 @@ using namespace molkst_C;
 using namespace MOZYME_C;
 
 namespace {
-void mopend(const char*) {}
 int sgn(double x) { return (x > 0) ? 1 : ((x < 0) ? -1 : 0); }
 
 // Default oxidation states (1..107).

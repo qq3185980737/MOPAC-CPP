@@ -1,3 +1,10 @@
+// ============================================================================
+// 【中文导读】forsav.cpp —— FORCE 计算的 RESTART 存取（forsav.F90）
+// ----------------------------------------------------------------------------
+// 把 FORCE 计算所需数据写入/读出未格式化 RESTART 文件（二进制），失败时经
+// mopend 报错；字段顺序必须与 Fortran 版一致，供中断后续算。
+// ============================================================================
+
 // forsav.cpp — C++ translation of MOPAC 2016 "forsav.F90".
 // Saves/restores data used in the FORCE calculation (unformatted RESTART file).
 #include "forsav.h"

@@ -1,6 +1,22 @@
 // getdat.cpp — C++ translation of MOPAC 2016 "getdat.F90".
 // Reads the data-set (command-line argument), resolves <file>.mop/.dat/.arc,
 // copies cleaned lines to a scratch buffer, and returns the line count.
+
+//
+// ============================================================================
+// 【中文导读】getdat() —— 读取数据卡（.mop/.dat/.arc）并做预处理
+// ----------------------------------------------------------------------------
+// 对应 getdat.F90。职责：
+//   1) 从命令行取作业名（run=1 -> __argv[1]），解析扩展名（无扩展名时尝试
+//      .mop/.dat/.arc），拼出 jobnam/input_fn；
+//   2) 打开输入文件，逐行扫描：跳过空行/注释行，展开 tab，关键字转大写；
+//   3) 把有效行存入 getdat_lines（替代 Fortran 的 scratch unit "input"），
+//      供 getgeo/getgeg/gettxt 等消费；同时记录 all_comments 与行数 natoms；
+//   4) 文件缺失/不可写时给出与官方一致的错误信息并 mopend()。
+// 注意：GUI 模式与 PARAM 模式分支保留；__argv 仅 MSVC 可用；.arc 输入还要
+// 扫描 "HEAT OF FORMATION" 与几何段（见文件后半）。
+// ============================================================================
+
 #include "getdat_lines_C.h"
 #include "getdat.h"
 #include "molkst_C.h"
@@ -56,9 +72,15 @@ void getdat(int input, int output) {
     using namespace molkst_C;
     using namespace chanel_C;
     using namespace common_arrays_C;
+
+    // 每次调用都从空缓冲开始；natoms 记录有效行数（含几何+关键字）。
+
     getdat_lines.clear();
     natoms = 0;
     bool exists = false, arc_file = false;
+
+    // GUI 分支用固定作业名；控制台分支按命令行参数解析文件名与扩展名。
+
     if (gui) {
         jobnam = "MOPAC input";
         natoms = 1;

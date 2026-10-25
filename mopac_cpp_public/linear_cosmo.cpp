@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】linear_cosmo.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 linear_cosmo.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // linear_cosmo.cpp — C++ translation of MOPAC 2016 "linear_cosmo.F90".
 // Batch A: module data (cosmo_mini + linear_cosmo), ini_linear_cosmo,
 // bpnew_vec, bz_vec, get_bvec, mult_triangle_vec, some_norm.
@@ -227,7 +236,7 @@ void coscavz() {
                             nset, rsc, nipsrs, iatsp, tm, ioldcv, maxrs, lenabc,
                             false, ndim);
         }
-        a_part.assign(ndim, 0.0);
+        a_part.assign(ndim + 1, 0.0);  // F90 a_part(1:ndim): index 0 unused
     }
 
     if (!m_vec.empty()) m_vec.clear();
@@ -701,11 +710,9 @@ void coscanz() {
         for (int a = 1; a <= numat; ++a)
             for (int ix = 0; ix < 3; ++ix)
                 coord_flat[ix * (numat + 1) + a] = coord[ix][a];
-        std::vector<std::array<double, 4>> rsc_local(maxrs + 1);
-        std::vector<double*> rsc_ptrs(maxrs + 1);
-        for (int i2 = 1; i2 <= maxrs; ++i2) rsc_ptrs[i2] = &rsc_local[i2][0];
+        // rsc 是列主序扁平缓冲（Fortran rsc(4,maxrs)）
         surclo(coord_flat.data(), nipa.data(), lipa.data(),
-               reinterpret_cast<const bool*>(din.data()), idim, rsc_ptrs.data(),
+               reinterpret_cast<const bool*>(din.data()), idim, rsc.data(),
                isort.data(), ipsrs.data(), nipsrs.data(), nat.data(),
                srad.data(), maxrs);
     }
@@ -826,7 +833,7 @@ void aq_vec(const std::vector<std::vector<double>>& coord,
                                             (x3 - finel[1][2][l]) * (x3 - finel[1][2][l]));
                         }
                     }
-                    aa /= (cosurf[3][ii] * cosurf[3][jj]);
+                    aa /= (cosurf[4][ii] * cosurf[4][jj]);
                 }
             }
             v[ii] += aa * q[jj];
@@ -883,7 +890,7 @@ void simulate_aq_vec(const std::vector<std::vector<double>>& coord,
                                             (x3 - finel[1][2][l]) * (x3 - finel[1][2][l]));
                         }
                     }
-                    aa /= (cosurf[3][ii] * cosurf[3][jj]);
+                    aa /= (cosurf[4][ii] * cosurf[4][jj]);
                     a_part[ndim] = aa;
                 }
             }
@@ -946,7 +953,7 @@ void aq_dir_int(const int* ind1, int n1, const int* ind2, int n2,
                                                 (x3 - finel[1][2][l]) * (x3 - finel[1][2][l]));
                             }
                         }
-                        aa /= (cosurf[3][ii] * cosurf[3][jj]);
+                        aa /= (cosurf[4][ii] * cosurf[4][jj]);
                     }
                 }
                 r[ii] += aa * q[jj];
@@ -994,7 +1001,7 @@ void aq_dir_int(const int* ind1, int n1, const int* ind2, int n2,
                                                 (x3 - finel[1][2][l]) * (x3 - finel[1][2][l]));
                             }
                         }
-                        aa /= (cosurf[3][ii] * cosurf[3][jj]);
+                        aa /= (cosurf[4][ii] * cosurf[4][jj]);
                     }
                 }
                 r[ii] += aa * q[jj];
@@ -1049,7 +1056,7 @@ void simulate_aq_dir_int(const int* ind1, int n1, const int* ind2, int n2,
                                                 (x3 - finel[1][2][l]) * (x3 - finel[1][2][l]));
                             }
                         }
-                        aa /= (cosurf[3][ii] * cosurf[3][jj]);
+                        aa /= (cosurf[4][ii] * cosurf[4][jj]);
                         a_part[npos] = aa;
                     }
                 }
@@ -1091,7 +1098,7 @@ void simulate_aq_dir_int(const int* ind1, int n1, const int* ind2, int n2,
                                                 (x3 - finel[1][2][l]) * (x3 - finel[1][2][l]));
                             }
                         }
-                        aa /= (cosurf[3][ii] * cosurf[3][jj]);
+                        aa /= (cosurf[4][ii] * cosurf[4][jj]);
                         a_part[npos] = aa;
                     }
                 }
@@ -1258,7 +1265,7 @@ void amat_diag(const std::vector<std::vector<double>>& coord1,
                                 (x3 - finel[0][2][l]) * (x3 - finel[0][2][l]));
             }
         }
-        m[ii] = aa / (cosurf1[3][ii] * cosurf1[3][ii]);
+        m[ii] = aa / (cosurf1[4][ii] * cosurf1[4][ii]);
     }
 }
 

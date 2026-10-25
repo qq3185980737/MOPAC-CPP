@@ -4,10 +4,32 @@
 // gradients (deriv). Routines not yet ported (cosmo surface builders, MOZYME
 // SCF, PM6 corrections, printing/timing) are declared extern here and stubbed
 // in the test driver; their numerical closure is a documented gap.
+
+//
+// ============================================================================
+// 【中文导读】compfg() —— 能量与梯度驱动器（单点/优化的一步）
+// ----------------------------------------------------------------------------
+// 对应 compfg.F90。把内坐标变量 xparam 转换成笛卡尔几何（gmetry），跑一次
+// SCF（hcore + iter），组装生成热（heat of formation），可选计算解析梯度
+// （deriv）。EF/L-BFGS/NLLSQ 等优化器每步都会调用它。
+// 主要步骤（代码中有英文分段注释，这里给顺序）：
+//   1) XFAC 特殊路径：由关键字直接给布居或返回核-核能；
+//   2) 把 xparam 写回 geo、按对称性生成坐标；
+//   3) COSMO 腔体/表面（useps 时）；
+//   4) 调用 hcore()/iter()（MOZYME 时走 hcore_for_MOZYME/iter_for_MOZYME）；
+//   5) 生成热 = 电子能 + 核排斥 + 各种校正（PM6/PM7 色散、H 键等）；
+//   6) 需要梯度时调用 deriv()；CI/力场等分支再修正密度。
+// 已知缺口（2026-10 审计）：prtpar() 仍是空 stub；Si_O_H_correction() 的小写 stub
+// 遮蔽了 set_up_dentate.cpp 中真实实现 Si_O_H_Correction()（大写 C），导致 PM7 的
+// Si-O-H 校正恒为 0——需改接线；部分打印因 iw 通道未接线而省略；COSMO/MOZYME 的
+// 部分子路径也未闭合（见 docs/TRANSLATION_GAPS.md）。
+// ============================================================================
+
 #include "compfg.h"
 
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <string>
@@ -39,6 +61,7 @@ extern void to_point(double, double&, double&);
 #include "timer.h"
 #include "buildf.h"
 #include "helecz.h"
+#include "set_up_dentate.h"
 
 using namespace common_arrays_C;
 using namespace cosmo_C;
@@ -50,8 +73,7 @@ using namespace parameters_C;
 // Not-yet-ported kernels referenced by compfg (stubs; flagged as known gaps
 // until their own subsystem batch closes them).
 namespace {
-void prtpar() {}
-double Si_O_H_correction() { return 0.0; }
+void prtpar() {}  // 参数打印——仍为占位（仅影响 HCORE 调试输出）
 }  // namespace
 
 // Ported kernels implemented elsewhere (no dedicated header yet).
@@ -146,6 +168,8 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
   }
 
   // Place the new values of the variables in array GEO.
+  // 中文：把优化变量 xparam 写回几何数组 geo（1-based），为下一步 gmetry 准备。
+
   for (int i = 1; i <= nvar; ++i) {
     int k = loc[1][i];
     int l = loc[2][i];
@@ -190,6 +214,9 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
   if (times) timer("AFTER  HCORE");
 
   // Compute the heat of formation.
+  // 中文：生成热 = (电子能 + 核-核排斥) × 转换因子 + 原子生成热 + 校正项；
+  // 具体校正取决于 PM6/PM7/色散等关键字。
+
   if (norbs > 0 && nelecs > 0) {
     hpress = 0.0;
     if (std::fabs(pressure) > 1e-4) {
@@ -209,7 +236,7 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
       atheat += nsp2_corr;
     }
     if (method_pm7 && Si_O_H_present) {
-      Si_O_H_corr = Si_O_H_correction();
+      Si_O_H_corr = Si_O_H_Correction();   // 2026-10 修复：调用真实实现（set_up_dentate.cpp）
       atheat += Si_O_H_corr;
     }
     sum_dihed = 0.0;
@@ -277,10 +304,21 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
   if (escf < emin || emin == 0.0) emin = escf;
 
   // Find derivatives if desired.
+  // 中文：需要梯度时调用 deriv() 做解析导数（力场/优化器依赖）；之后按需
+  // 处理 CI 或力场修正的密度。
+
   if (lgrad) {
     if (times) timer("Before DERIV");
     auto _b2 = std::chrono::steady_clock::now();
+    std::fprintf(stderr, "CXXCFG iscf last lgrad %d %d %d\n", iscf, last, (int)lgrad);
     if (nelecs > 0) deriv(geo, grad);
+    if (std::getenv("P_DEBUG")) {
+        double sump = 0.0;
+        for (int j = 1; j <= norbs; ++j) sump += common_arrays_C::p[j];
+        std::fprintf(stderr, "CXXP %.16f", sump);
+        for (int j = 1; j <= 10; ++j) std::fprintf(stderr, " %.14f", common_arrays_C::p[j]);
+        std::fprintf(stderr, "\n");
+    }
     if (moperr) return;
     _td = std::chrono::duration_cast<std::chrono::microseconds>(
               std::chrono::steady_clock::now() - _b2).count();

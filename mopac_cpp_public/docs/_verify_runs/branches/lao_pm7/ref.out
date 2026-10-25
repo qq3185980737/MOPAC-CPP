@@ -1,0 +1,172 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:05:05 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 1SCF
+ lao_pm7
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1      La          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.80000000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1        La        0.0000    0.0000    0.0000
+     2         O        0.0000    0.0000    1.8000
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: O La  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    5
+                           NO. OF BETA  ELECTRONS =    4
+
+ -------------------------------------------------------------------------------
+PM7 1SCF
+ lao_pm7
+
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED                 
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:05:05 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         -7.33139 KCAL/MOL =     -30.67455 KJ/MOL
+
+
+          TOTAL ENERGY            =       -330.35318 EV
+          ELECTRONIC ENERGY       =       -453.17219 EV  POINT GROUP:     C*v 
+          CORE-CORE REPULSION     =        122.81900 EV
+          COSMO AREA              =        102.26 SQUARE ANGSTROMS
+          COSMO VOLUME            =         96.17 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =          4.900762 EV
+          ALPHA SOMO LUMO (EV)    =         -4.901  1.136
+          BETA  SOMO LUMO (EV)    =         -9.459  2.132
+          NO. OF ALPHA ELECTRONS  =          5
+          NO. OF BETA  ELECTRONS  =          4
+          MOLECULAR WEIGHT        =        154.9054
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            O     2   La     1     1.80000
+            O     2   La     1     0.00000
+           La     1    O     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.016 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1      La          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.80000000  *
+
+                             CARTESIAN COORDINATES
+
+   1   La        0.000000000     0.000000000     0.000000000
+   2    O        0.000000000     0.000000000     1.800000000
+
+
+           Empirical Formula: O La  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+          ALPHA EIGENVALUES  
+ -22.38514 -10.60754  -9.56887  -9.56887  -4.90076   1.13607   1.13607   3.19989
+   3.19989   5.47833  75.90947  75.90947  77.06189
+
+
+           BETA EIGENVALUES 
+ -22.01767 -10.08926  -9.45868  -9.45868   2.13198   2.13198   3.41839   3.81384
+   3.81384   6.24660  76.83322  76.83322  78.03956
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       d-Pop       
+    1         La           1.124487        1.8755     0.70737     0.01316     1.15499
+    2          O          -1.124487        7.1245     1.88013     5.24436
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000     0.000    -9.722     9.722
+ HYBRID         0.000    -0.000    -0.659     0.659
+ SUM            0.000    -0.000   -10.381    10.381
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz      x^2-y^2     xz        z^2       yz        xy
+    1 La   0.70737   0.00166   0.00166   0.00983   0.00000   0.20285   0.74928   0.20285   0.00000
+    2  O   1.88013   1.79549   1.79549   1.65338
+
+
+                    (SZ)    =    0.500000
+                    (S**2)  =    0.751845
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+    Atom   Total    s     px     py     pz   x^2-y^2  xz     z^2    yz     xy
+         Atomic
+    1 La  0.9703  0.369 -0.000 -0.000  0.001  0.000  0.015  0.570  0.015  0.000
+    2  O  0.0297  0.026 -0.015 -0.015  0.035
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.03 SECONDS
+
+ == MOPAC DONE ==

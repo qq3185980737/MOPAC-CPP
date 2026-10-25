@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】sqrdc_sqrsl.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 sqrdc_sqrsl.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // sqrdc_sqrsl.cpp — C++ port of LINPACK SQRDC / SQRSL (single precision),
 // LAPACK-style Householder storage:
 //   after sqrdc, R(i,j) (i<=j) lives at x[(j-1)*ldx + (i-1)];

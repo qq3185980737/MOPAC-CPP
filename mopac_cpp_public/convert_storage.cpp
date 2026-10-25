@@ -1,5 +1,13 @@
 // convert_storage.cpp — C++ translation of MOPAC 2016 "convert_storage.F90".
-// ijbo / memory_error / mopend are external stubs.
+// 2026-10：删除了遮蔽真实实现的局部 ijbo/mopend/memory_error 空 stub。
+
+//
+// ============================================================================
+// 【中文导读】convert_storage() —— 密度矩阵存储格式转换
+// ----------------------------------------------------------------------------
+// 对应 convert_storage.F90。在 MOZYME 的打包/三角存储之间转换矩阵；成键表
+// 查询走真实 ijbo（此前本文件的局部空 ijbo 会让查询恒失败）。
+// ============================================================================
 
 #include "convert_storage.h"
 
@@ -9,17 +17,12 @@
 
 #include "MOZYME_C.h"
 #include "common_arrays_C.h"
+#include "ijbo.h"
 #include "molkst_C.h"
 
 using namespace common_arrays_C;
 using namespace molkst_C;
 using namespace MOZYME_C;
-
-namespace {
-int ijbo(int, int) { return -1; }
-void memory_error(const char*) {}
-void mopend(const char*) {}
-}
 
 void convert_mat_packed_to_triangle(const std::vector<double>& matrix_packed,
                                     std::vector<double>& matrix_triangle) {

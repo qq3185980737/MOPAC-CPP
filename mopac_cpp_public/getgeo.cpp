@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】getgeo.cpp —— 几何输入解析（getgeo.F90）
+// ----------------------------------------------------------------------------
+// 从 .mop/.arc 文件读取几何：元素符号或原子序数、内坐标/笛卡尔坐标、优化标志
+// （lopt）、连接性 na/nb/nc、原子标签、速度向量，并做坐标系统转换；另含
+// txt_to_atom_no()（lewis.F90）解析带引号的原子标签。
+// 输入行缓冲来自 getdat_lines 队列（替代 Fortran unit ir）；1-based 约定。
+// ============================================================================
+
 // getgeo.cpp — C++ translation of MOPAC 2016 "getgeo.F90".
 // Reads the geometry from a MOPAC input (or .ARC) file: element symbols or
 // atomic numbers, internal or Cartesian coordinates, optimization flags,

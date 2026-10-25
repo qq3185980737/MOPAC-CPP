@@ -1,4 +1,13 @@
-﻿// mullik.cpp — C++ translation of MOPAC 2016 "mullik.F90".
+// ============================================================================
+// 【中文导读】mullik.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 mullik.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
+// mullik.cpp — C++ translation of MOPAC 2016 "mullik.F90".
 #define _CRT_SECURE_NO_WARNINGS
 // S^{-1/2}, orthogonalises C, builds the density P = (C S^{-1/2}) occ (C S^{-1/2})^T
 // and computes atom charges and per-orbital populations.
@@ -204,14 +213,12 @@ void mullik() {
             buf_w[(j - 1) + (i - 1) * n] = work[j][i];
         }
     mult(buf_c.data(), buf_w.data(), vecs_orth.data(), n);
-    // Build density into pb (1-based vector).
-    // density_for_GPU expects row-major input; mult emits column-major.
-    std::vector<double> vecs_rm(n * n);
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j) vecs_rm[i * n + j] = vecs_orth[j * n + i];
+    // Build density into pb (1-based packed vector).
+    // density_for_GPU expects column-major c (column = MO), which is exactly
+    // the layout mult emits: c[(row-1)+(col-1)*n] = M[row][col].
     if (static_cast<int>(pb.size()) < nlower + 1) pb.resize(nlower + 1);
-    density_for_GPU(vecs_rm.data(), fract, nclose, nopen, 2.0, nlower, n, 2,
-                    pb.data() + 1, mod_vars_cuda::lgpu ? 2 : 3);
+    density_for_GPU(vecs_orth.data(), fract, nclose, nopen, 2.0, nlower, n, 2,
+                    pb.data(), mod_vars_cuda::lgpu ? 2 : 3);
     // P = (C S^{-1/2}) occ (C S^{-1/2})^T * S
     for (int i = 1; i <= nlower; ++i) pb[i] *= store[i];
     double summ = 0.0;

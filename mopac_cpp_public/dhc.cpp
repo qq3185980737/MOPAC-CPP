@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】dhc.cpp —— MOPAC 2016 计算/工具模块
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 dhc.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // dhc.cpp — C++ translation of MOPAC 2016 "dhc.F90".
 // D/H matrix contributions to the derivative energy for an atom pair.
 // p/pa/pb are passed as 0-based contiguous arrays (dhc.h ABI); internally
@@ -5,6 +14,8 @@
 #include "dhc.h"
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
+#include <cstdio>
 #include <vector>
 #include "molkst_C.h"
 #include "h1elec.h"
@@ -62,10 +73,14 @@ void dhc(double* p, double* pa, double* pb, double* xi, int* nat, int if_,
         pav[t] = pa[t - 1];
         pbv[t] = pb[t - 1];
     }
-    std::vector<double> f(linear + 1, 0.0), h(linear + 1, 0.0);
+    // Fortran declares f/h dimension(171); keep at least that size so packed
+    // indices ii=j*(j-1)/2+i cannot exceed the buffer.
+    const size_t fh_size = (size_t)std::max(171, linear) + 1;
+    std::vector<double> f(fh_size, 0.0), h(fh_size, 0.0);
     int kr = 0;
     int ia = nfirst_loc[2], ic = nlast_loc[2];
     int ja = nfirst_loc[1], jc = nlast_loc[1];
+
     int j = 1, i = 2;
     int nj = nat[0], ni = nat[1];
     double e1b[45] = {}, e2a[45] = {};

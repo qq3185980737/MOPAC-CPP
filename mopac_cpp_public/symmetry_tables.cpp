@@ -1,3 +1,21 @@
+// ============================================================================
+// 【中文导读】symmetry_tables.cpp —— 点群/特征标表（对应 symmetry_C.F90 DATA）
+// ----------------------------------------------------------------------------
+// 逐表转写 MOPAC 的 57 个点群表：nallop/nallg/nope/nrep/ntab/ntbs、allrep、
+// elem、group 等，全部保持 1-based 与 Fortran DATA 语句的顺序。
+// 这些表被 molsym/cartab/makopr/chi 等使用；2026-10 修复 molsym 后，
+// 点群识别（C2v/D*h/Cs 等）已与官方一致（见 docs/TRANSLATION_GAPS.md §25）。
+// ============================================================================
+
+// ============================================================================
+// 【中文导读】symmetry_tables.cpp —— 点群/特征标表（对应 symmetry_C.F90 DATA）
+// ----------------------------------------------------------------------------
+// 逐表转写 MOPAC 的 57 个点群表：nallop/nallg/nope/nrep/ntab/ntbs、allrep、
+// elem、group 等，全部保持 1-based 与 Fortran DATA 语句的顺序。
+// 这些表被 molsym/cartab/makopr/chi 等使用；2026-10 修复 molsym 后，
+// 点群识别（C2v/D*h/Cs 等）已与官方一致（见 docs/TRANSLATION_GAPS.md §25）。
+// ============================================================================
+
 // symmetry_tables.cpp — point-group tables (57 groups) transcribed from
 // symmetry_C.F90 DATA statements. 1-based indexing preserved.
 #include "symmetry_C.h"

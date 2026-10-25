@@ -1,0 +1,162 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM3 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 16:02:39 2026  *
+ *  PM3        - The PM3 Hamiltonian to be used
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM3 1SCF
+ ammonia PM3
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       N          0.00000000  *   0.00000000  *   0.11700000  *
+     2       H          0.00000000  *   0.93900000  *  -0.27300000  *
+     3       H          0.81300000  *  -0.46900000  *  -0.27300000  *
+     4       H         -0.81300000  *  -0.46900000  *  -0.27300000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         N        0.0000    0.0000    0.1170
+     2         H        0.0000    0.9390   -0.2730
+     3         H        0.8130   -0.4690   -0.2730
+     4         H       -0.8130   -0.4690   -0.2730
+
+  H: (PM3): J. J. P. STEWART, J. COMP. CHEM. 10, 209 (1989).
+  N: (PM3): J. J. P. STEWART, J. COMP. CHEM. 10, 209 (1989).
+
+           Empirical Formula: H3 N  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C3v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+
+ -------------------------------------------------------------------------------
+PM3 1SCF
+ ammonia PM3
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM3 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 16:02:39 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         -2.54648 KCAL/MOL =     -10.65447 KJ/MOL
+
+
+          TOTAL ENERGY            =       -208.62239 EV
+          ELECTRONIC ENERGY       =       -391.46296 EV  POINT GROUP:     C3v 
+          CORE-CORE REPULSION     =        182.84057 EV
+          COSMO AREA              =         47.75 SQUARE ANGSTROMS
+          COSMO VOLUME            =         29.99 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =          9.843295 EV
+          HOMO LUMO ENERGIES (EV) =         -9.843  3.308
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         17.0304
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     4    H     3     1.62600
+            H     3    H     2     1.40800
+            H     2    N     1     0.39000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.001 SECONDS
+          COMPUTATION TIME        =          0.001 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       N          0.00000000  *   0.00000000  *   0.11700000  *
+     2       H          0.00000000  *   0.93900000  *  -0.27300000  *
+     3       H          0.81300000  *  -0.46900000  *  -0.27300000  *
+     4       H         -0.81300000  *  -0.46900000  *  -0.27300000  *
+
+                             CARTESIAN COORDINATES
+
+   1    N        0.000000000     0.000000000     0.117000000
+   2    H        0.000000000     0.939000000    -0.273000000
+   3    H        0.813000000    -0.469000000    -0.273000000
+   4    H       -0.813000000    -0.469000000    -0.273000000
+
+
+           Empirical Formula: H3 N  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C3v 
+
+
+                  EIGENVALUES
+ -28.56600 -14.98748 -14.98343  -9.84329   3.30752   5.11684   5.11990
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          N           0.005508        4.9945     1.44557     3.54892
+    2          H          -0.001863        1.0019     1.00186
+    3          H          -0.001822        1.0018     1.00182
+    4          H          -0.001822        1.0018     1.00182
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000    -0.000     0.010     0.010
+ HYBRID         0.000     0.000    -1.603     1.603
+ SUM           -0.000     0.000    -1.592     1.592
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  N   1.44557   0.98164   0.98171   1.58557
+    2  H   1.00186
+    3  H   1.00182
+    4  H   1.00182
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

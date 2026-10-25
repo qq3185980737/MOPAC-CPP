@@ -1,11 +1,36 @@
-// cosmo.cpp — C++ translation of MOPAC 2016 "cosmo.F90".
-// Heavy geometric routines (coscav, mkbmat, surclo, cosini, ...) are stubbed.
+// ============================================================================
+// 【中文导读】cosmo.cpp —— COSMO 溶剂化模型（cavity / B 矩阵 / 介电求解）
+// ----------------------------------------------------------------------------
+// 对应 cosmo.F90。主要流程：
+//   1) cosini()  初始化半径 srad、原子对列表 nipa/lipa、方向向量 dirvec/dirsm、
+//                n0、disex2 等；
+//   2) coscav()  构造 SAS 腔体：逐原子撒点、按 Segments 归属、surclo() 闭合凹面
+//                环段、累加 area/cosvol，并用 mfinel() 生成 finel 列表、组装并
+//                做 Cholesky 分解得到 amat；
+//   3) mkbmat()  B 矩阵（网格/环段到原子的 1/r 多极作用）；
+//   4) addnuc()/addfck() 计算核/电子屏蔽电荷 qscnet 与介电能量 ediel，并把
+//                B*qscel 反馈到 Fock 矩阵；
+//   5) coscl1()/coscl2() 打包下三角 Cholesky 分解与回代求解。
+// 关键约定：rsc、dirvec、dirsm、finel 等按 Fortran 列主序打包；cosurf/iatsp/
+// nsetf 等为 1-based。COSMO 的数值闭环已在 2026-10 与官方逐项对照（见
+// docs/TRANSLATION_GAPS.md §19-§26）。
+// ============================================================================
+
+
+// cosmo.cpp 鈥?C++ translation of MOPAC 2016 "cosmo.F90".
+// 2026-10: coscav/surclo/mkbmat/cosini 已完整移植（曾为占位）。
 
 #include "cosmo.h"
 
 #include <cmath>
+#include <cstdio>
 #include <vector>
 #include <array>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iomanip>
 
 #include "common_arrays_C.h"
 #include "cosmo_C.h"
@@ -148,7 +173,16 @@ void dmecip(double* coeffs, double* deltap, double* delta, double* eig,
             for (int j = 1; j <= lm61; ++j) sum += bmat[j][i]*qdenet[j][1];
             phinet[i][1] = sum;
         }
-        coscl2(amat.data(), nsetf, &qscnet[1][1], &phinet[1][1], nps);
+        // coscl2 闇€瑕佽繛缁?1..nps 鐨勪竴鍒楋紱C++ 瀛樺偍鏄?[segment][slot]锛?
+        // 鍥犳鍏堝鍒?slot-1 鍒楀埌鎵佸钩缂撳啿锛岃В瀹屽啀鍐欏洖锛堝悓 addnuc锛夈€?
+        {
+            std::vector<double> q_flat(nps + 1, 0.0), p_flat(nps + 1, 0.0);
+            std::vector<int> id_c2(nps + 1, 0);
+            for (int k = 1; k <= nps; ++k) p_flat[k] = phinet[k][1];
+            for (int i = 2; i <= nps; ++i) id_c2[i] = id_c2[i - 1] + i - 1;
+            coscl2(amat.data(), id_c2, &q_flat[0], &p_flat[0], nps);
+            for (int k = 1; k <= nps; ++k) qscnet[k][1] = q_flat[k];
+        }
         double edie = 0;
         for (int i = 1; i <= nps; ++i) edie += qscnet[i][1]*phinet[i][1];
         eig[ist] += fact * edie;
@@ -175,9 +209,9 @@ void diegrd(double* dxyz) {
                 double xl3 = cosurf[3][l] - xk3;
                 double d2 = xl1*xl1 + xl2*xl2 + xl3*xl3;
                 double ff = qsk * qscnet[l][3] * fact * std::pow(d2, -1.5) / fepsi;
-                dxyz[0*(numat+1)+iak] -= xl1*ff; dxyz[0*(numat+1)+ial] += xl1*ff;
-                dxyz[1*(numat+1)+iak] -= xl2*ff; dxyz[1*(numat+1)+ial] += xl2*ff;
-                dxyz[2*(numat+1)+iak] -= xl3*ff; dxyz[2*(numat+1)+ial] += xl3*ff;
+                dxyz[(iak-1)*3+0] -= xl1*ff; dxyz[(ial-1)*3+0] += xl1*ff;
+                dxyz[(iak-1)*3+1] -= xl2*ff; dxyz[(ial-1)*3+1] += xl2*ff;
+                dxyz[(iak-1)*3+2] -= xl3*ff; dxyz[(ial-1)*3+2] += xl3*ff;
             }
         }
     }
@@ -191,9 +225,9 @@ void diegrd(double* dxyz) {
         double x2 = coord[1][ib]-coord[1][ia];
         double x3 = coord[2][ib]-coord[2][ia];
         deab /= std::sqrt(x1*x1+x2*x2+x3*x3);
-        dxyz[0*(numat+1)+ia] -= x1*deab; dxyz[0*(numat+1)+ib] += x1*deab;
-        dxyz[1*(numat+1)+ia] -= x2*deab; dxyz[1*(numat+1)+ib] += x2*deab;
-        dxyz[2*(numat+1)+ia] -= x3*deab; dxyz[2*(numat+1)+ib] += x3*deab;
+        dxyz[(ia-1)*3+0] -= x1*deab; dxyz[(ib-1)*3+0] += x1*deab;
+        dxyz[(ia-1)*3+1] -= x2*deab; dxyz[(ib-1)*3+1] += x2*deab;
+        dxyz[(ia-1)*3+2] -= x3*deab; dxyz[(ib-1)*3+2] += x3*deab;
     }
     for (int k = 1; k <= nps; ++k) {
         int iak = iatsp[k];
@@ -235,9 +269,9 @@ void diegrd(double* dxyz) {
                     double dx1=(xx1*db[0][j]-db[1][j])*ff;
                     double dx2=(xx2*db[0][j]-db[2][j])*ff;
                     double dx3=(xx3*db[0][j]-db[3][j])*ff;
-                    dxyz[0*(numat+1)+iak]+=dx1; dxyz[0*(numat+1)+i]-=dx1;
-                    dxyz[1*(numat+1)+iak]+=dx2; dxyz[1*(numat+1)+i]-=dx2;
-                    dxyz[2*(numat+1)+iak]+=dx3; dxyz[2*(numat+1)+i]-=dx3;
+                    dxyz[(iak-1)*3+0]+=dx1; dxyz[(i-1)*3+0]-=dx1;
+                    dxyz[(iak-1)*3+1]+=dx2; dxyz[(i-1)*3+1]-=dx2;
+                    dxyz[(iak-1)*3+2]+=dx3; dxyz[(i-1)*3+2]-=dx3;
                 }
             }
             iden += idel*(idel+1)/2;
@@ -315,7 +349,16 @@ void addfck(double* pin, double* fin) {
         phinet[i][2] = phi;
         phinet[i][3] = phinet[i][1] + phi;
     }
-    coscl2(amat.data(), nsetf, &qscnet[1][2], &phinet[1][2], nps);
+    // coscl2 闇€瑕佽繛缁?1..nps 鐨勪竴鍒楋紱C++ 瀛樺偍鏄?[segment][slot]锛岀洿鎺ュ彇
+    // &qscnet[1][2] 浼氳秺鐣屽啓鍧忓唴瀛橈紙COSMO = NaN 鐨勬牴鍥狅級锛屾晠鐢ㄦ墎骞崇紦鍐层€?
+    {
+        std::vector<double> q_flat(nps + 1, 0.0), p_flat(nps + 1, 0.0);
+        std::vector<int> id_c2(nps + 1, 0);
+        for (int k = 1; k <= nps; ++k) p_flat[k] = phinet[k][2];
+        for (int i = 2; i <= nps; ++i) id_c2[i] = id_c2[i - 1] + i - 1;
+        coscl2(amat.data(), id_c2, &q_flat[0], &p_flat[0], nps);
+        for (int k = 1; k <= nps; ++k) qscnet[k][2] = q_flat[k];
+    }
     ediel = 0.0;
     double s1 = 0.0, s3 = 0.0;
     for (int i = 1; i <= nps; ++i) {
@@ -335,6 +378,7 @@ void addfck(double* pin, double* fin) {
         for (int j = 1; j <= nps; ++j) fim += bmat[i][j] * qscnet[j][2];
         fin[im] -= fcon * fim;
     }
+
 }
 
 void addhcr() {
@@ -386,7 +430,7 @@ void coscav() {
     auto DD=[&](int ix,int i)->double& { return (&dirvec[0][0])[(i-1)*4+(ix-1)]; };
     auto DS=[&](int ix,int i)->double& { return (&dirsm[0][0])[(i-1)*4+(ix-1)]; };
     std::vector<double> rdat(numat + 1);
-    std::vector<std::vector<double>> rsc(4, std::vector<double>(maxrs + 1, 0.0));
+    std::vector<double> rsc(4 * (maxrs + 1), 0.0);  // 鍒椾富搴? (i-1)*4+ix
     std::vector<std::array<std::array<double,3>,3>> Tmat(numat + 1);
     std::vector<std::array<int,3>> nn(numat + 1);
     std::vector<int> isort(maxrs + 1), ipsrs(maxrs + 1);
@@ -401,6 +445,26 @@ void coscav() {
     finel.resize(301);
     if (srad.empty()) srad.resize(numat + 1);
     if (nar_csm.empty()) nar_csm.resize(lenabc + 2);
+
+    // ---- coscav differential dump (env COSCAV_DUMP=<prefix>) ----
+    std::string coscav_dump;
+    if (const char* dp = std::getenv("COSCAV_DUMP")) {
+        coscav_dump = dp;
+        std::ofstream f(coscav_dump + ".in");
+        f << std::setprecision(17);
+        auto W = [&](double v) { f << v << '\n'; };
+        W(numat); W(lenabc); W((double)ioldcv); W(rsolv); W(disex2);
+        W((double)n0[1]); W((double)n0[2]);
+        for (int idir = 1; idir <= 1082; ++idir)
+            for (int ix = 1; ix <= 4; ++ix) W(DD(ix, idir));
+        int nds = n0[1] + n0[2];
+        for (int id = 1; id <= nds; ++id)
+            for (int ix = 1; ix <= 4; ++ix) W(DS(ix, id));
+        for (int a = 1; a <= numat; ++a)
+            for (int ix = 0; ix < 3; ++ix) W(coord[ix][a]);
+        for (int a = 1; a <= numat; ++a) W(srad[a]);
+        for (int a = 1; a <= numat; ++a) W((double)nat[a]);
+    }
 
     // MAKE COORDINATES A BIT ASYMMETRIC IN ORDER TO AVOID
     // SYMMETRY PROBLEMS WITH CAVITY CONSTRUCTION (F90 cosmo.F90 235-238)
@@ -584,18 +648,16 @@ void coscav() {
         // at least one segment (iatsp).  surclo skips atoms with din==true.
         for (int i = 1; i <= numat; ++i) din[i] = 1;
         for (int j = 1; j <= nps; ++j) din[iatsp[j]] = 0;
-        // call surclo — closure of the concave regions of the cavity.
+        // call surclo 鈥?closure of the concave regions of the cavity.
         // C++ surclo expects a planar [3][numat+1] coordinate buffer and a
         // bool[] din; convert from the row-major global coord and vector<char>.
         coord_flat.assign((numat + 1) * 3, 0.0);
         for (int a = 1; a <= numat; ++a)
             for (int ix = 0; ix < 3; ++ix)
                 coord_flat[ix * (numat + 1) + a] = coord[ix][a];
-        rsc_ptrs.resize(4);
-        for (int ix = 0; ix < 4; ++ix) rsc_ptrs[ix] = rsc[ix].data();
         surclo(coord_flat.data(), nipa.data(), lipa.data(),
                reinterpret_cast<const bool*>(din.data()),
-               std::max(numat, 1082), rsc_ptrs.data(), isort.data(),
+               std::max(numat, 1082), rsc.data(), isort.data(),
                ipsrs.data(), nipsrs.data(), nat.data(), srad.data(), maxrs);
     }
     cosvol /= 3;
@@ -614,10 +676,12 @@ void coscav() {
         for (int ix=0; ix<3; ++ix) { xi[ix]=coord[ix][i]; xa[ix]=cosurf[ix+1][ips]; }
         arat[i]+=cosurf[4][ips];
         double tm_flat[9];
+        // Fortran tm(row=axis, col=component)锛汿mat 瀛樼殑鏄?[axis][component]锛?
+        // mfinel 閲?TM(ix,j)=tm(ix,j)锛屾晠鎵撳寘鏃跺繀椤昏浆缃紙鍘熸潵鍐欐垚 [j2][ix] 鏄敊鐨勶級銆?
         for (int j2=0; j2<3; ++j2)
-            for (int ix=0; ix<3; ++ix) tm_flat[j2*3+ix]=Tmat[i][j2][ix];
+            for (int ix=0; ix<3; ++ix) tm_flat[j2*3+ix]=Tmat[i][ix][j2];
         int nfl1 = 0;
-        mfinel(ips, 1, finel_flat.data(), nar_csm, nsetf, nset, &rsc[0][0],
+        mfinel(ips, 1, finel_flat.data(), nar_csm, nsetf, nset, rsc.data(),
                nipsrs, dirvec_flat.data(), tm_flat, xi, ri, nfl1, ioldcv,
                lenabc, maxrs);
         double aa = 0.0;
@@ -652,9 +716,9 @@ void coscav() {
                 double rj = srad[j];
                 double tm2_flat[9];
                 for (int j2=0; j2<3; ++j2)
-                    for (int ix=0; ix<3; ++ix) tm2_flat[j2*3+ix]=Tmat[j][j2][ix];
+                    for (int ix=0; ix<3; ++ix) tm2_flat[j2*3+ix]=Tmat[j][ix][j2];
                 int nfl2 = 0;
-                mfinel(jps, 2, finel_flat.data(), nar_csm, nsetf, nset, &rsc[0][0],
+                mfinel(jps, 2, finel_flat.data(), nar_csm, nsetf, nset, rsc.data(),
                        nipsrs, dirvec_flat.data(), tm2_flat, xj, rj, nfl2, ioldcv,
                        lenabc, maxrs);
                 aa = 0.0;
@@ -679,9 +743,38 @@ void coscav() {
     }
     // PERFORM CHOLESKY FACTORIZATION (F90: call coscl1(amat, nsetf, nps, info);
     // nsetf is overwritten with the packed-offset table and reused by coscl2).
+    if (!coscav_dump.empty()) {
+        std::ofstream fp(coscav_dump + ".pre");
+        int ntri_pre = nps * (nps + 1) / 2;
+        for (int i = 1; i <= ntri_pre; ++i) {
+            std::uint64_t b;
+            std::memcpy(&b, &amat[i], 8);
+            fp << std::hex << std::uppercase << std::setfill('0')
+               << std::setw(16) << b << std::dec << '\n';
+        }
+    }
     {
         int info = 0;
         coscl1(amat.data(), nsetf, nps, info);
+    }
+    if (!coscav_dump.empty()) {
+        std::ofstream f(coscav_dump + ".cpp");
+        auto H = [&](double v) {
+            std::uint64_t b;
+            std::memcpy(&b, &v, 8);
+            f << std::hex << std::uppercase << std::setfill('0')
+              << std::setw(16) << b << std::dec << '\n';
+        };
+        f << nps << '\n';
+        H(area); H(cosvol);
+        int ntri = nps * (nps + 1) / 2;
+        for (int i = 1; i <= ntri; ++i) H(amat[i]);
+        for (int ix = 1; ix <= 4; ++ix)
+            for (int ips = 1; ips <= nps; ++ips) H(cosurf[ix][ips]);
+        for (int ips = 1; ips <= nps; ++ips) f << iatsp[ips] << '\n';
+        for (int ips = 1; ips <= nps; ++ips) f << nar_csm[ips] << '\n';
+        for (int ips = 1; ips <= nps; ++ips) f << nsetf[ips] << '\n';
+        for (int a = 1; a <= numat; ++a) H(arat[a]);
     }
 done_coscav:;
 }
@@ -722,6 +815,7 @@ void mkbmat() {
         }
         iden += idel*(idel+1)/2;
     }
+
 }
 
 // Parse VDW(:El=r:...) keyword into per-element vdW radii; verify used radii.
@@ -985,305 +1079,407 @@ void cosini(bool l_print) {
     if (n0[1] + n0[2] > 1082) mopend("CHOSE NSPA < 0.75*1082");
 
     dvfill(n0[1], &dirsm[0][0]);
-    // F90: dirsm(1, n0(1)+1) — column n0(1)+1 starts at planar offset n0(1)*4.
+    // F90: dirsm(1, n0(1)+1) 鈥?column n0(1)+1 starts at planar offset n0(1)*4.
     dvfill(n0[2], &dirsm[0][0] + n0[1] * 4);
     disex2 = 4.0 * std::pow(1.7 * disex, 2.0) / nspa;
     dvfill(1082, &dirvec[0][0]);
 }
 
 // Close concave regions of the cavity by adding ring/intersection segments.
-// coord: [3][numat]; rsc: [4][maxrs]; cosurf: [4][lenabc+1] (global);
-// isude[2][*]/sude[2][*] global work arrays.
+// surclo(): cosmo.F90:1202-1663 鐨勫畬鏁寸Щ妞嶏紙闂悎鍑归潰鍖哄煙鐨勭幆娈电敓鎴愶級銆?
+// 绾﹀畾锛歝oord 骞抽摵涓?[ix][atom]锛坕x=0..2锛宎tom=1..numat锛夛紱rsc 涓哄垪涓诲簭
+// 鎵佸钩缂撳啿锛屽厓绱?(ix,seg) 浣嶄簬 rsc[(seg-1)*4+(ix-1)]锛坕x=1..4锛夈€?
+// cosurf/iatsp/nar_csm/nsetf/isude/sude/nps/lenabc/nipc 浣跨敤 cosmo_C 鍏ㄥ眬閲忋€?
 void surclo(double* coord, const int* nipa, const int* lipa, const bool* din,
-            int dim_din, double** rsc, int* isort, int* ipsrs, int* nipsrs,
+            int dim_din, double* rsc, int* isort, int* ipsrs, int* nipsrs,
             const int* nat, const double* srad, int maxrs) {
     (void)dim_din;
-    auto dot=[&](const double*a,const double*b){double s=0;for(int ix=0;ix<3;++ix)s+=a[ix]*b[ix];return s;};
+    const double twopi = 2.0 * pi;
+    auto X = [&](int ix, int a) -> double { return coord[(ix - 1) * (numat + 1) + a]; };
+    auto R = [&](int ix, int seg) -> double& { return rsc[(seg - 1) * 4 + (ix - 1)]; };
+    auto C = [&](int ix, int ips) -> double& { return cosurf[ix][ips]; };
+
+    // ---- differential-test dump (env SURCLO_DUMP=<prefix>) ----
+    std::string surclo_dump;
+    double surclo_area0 = area, surclo_cosvol0 = cosvol;
+    if (const char* dp = std::getenv("SURCLO_DUMP")) {
+        surclo_dump = dp;
+        std::ofstream f(surclo_dump + ".in");
+        f << std::setprecision(17);
+        auto W = [&](double v) { f << v << '\n'; };
+        W(numat); W(maxrs); W(lenabc); W(nps); W((double)n0[1]); W((double)n0[2]); W(rsolv);
+        for (int a = 1; a <= numat; ++a)
+            for (int ix = 1; ix <= 3; ++ix) W(coord[(ix - 1) * (numat + 1) + a]);
+        for (int a = 1; a <= numat; ++a) W(srad[a]);
+        for (int a = 1; a <= numat; ++a) W((double)nat[a]);
+        for (int a = 1; a <= numat; ++a) W((double)nipa[a]);
+        for (int a = 1; a <= numat; ++a) W(din[a] ? 1.0 : 0.0);
+        for (int i = 1; i <= maxrs; ++i) W((double)lipa[i]);
+        for (int ix = 1; ix <= 4; ++ix)
+            for (int ips = 1; ips <= lenabc + 1; ++ips) W(C(ix, ips));
+        for (int ips = 1; ips <= lenabc + 1; ++ips) W((double)iatsp[ips]);
+        for (int ips = 1; ips <= lenabc + 1; ++ips) W((double)nar_csm[ips]);
+        for (int ips = 1; ips <= lenabc + 1; ++ips) W((double)nsetf[ips]);
+    }
+
     nipc = 0;
     int nrs = 0;
     for (int i = 1; i <= numat; ++i) nipsrs[i] = 0;
     int ilipa = 0;
-    for (int ia = 1; ia <= numat - 1; ++ia) {
-        if (din[ia]) { ilipa += nipa[ia]; continue; }
-        double ra = srad[ia] + rsolv;
-        std::array<double,3> xta;
-        for (int ix = 0; ix < 3; ++ix) xta[ix] = coord[ix*(numat+1)+ia];
-        for (int iib = ilipa + 1; iib <= ilipa + nipa[ia]; ++iib) {
-            int ib = lipa[iib];
-            if (ib <= ia) continue;
-            if (din[ib]) continue;
-            double rb = srad[ib] + rsolv;
-            double dab = 0.0;
-            int nsab = 0; (void)nsab;
-            std::array<double,3> xx;
-            for (int ix = 0; ix < 3; ++ix) {
-                double xb = coord[ix*(numat+1)+ib];
-                double xa = coord[ix*(numat+1)+ia];
-                xx[ix] = xb - xa;
-                dab += xx[ix]*xx[ix];
-            }
-            dab = std::sqrt(dab);
-            double aa,ab,aar,abr,aad,abd,rinc;
-            ansude(ra-rsolv, rb-rsolv, dab, rsolv, aa,ab,aar,abr,aad,abd,rinc);
-            double cosa = (ra*ra+dab*dab-rb*rb)/(2*dab*ra);
-            double cosb  = (rb*rb+dab*dab-ra*ra)/(2*dab*rb);
-            double sina = std::sqrt(std::max(0.0,1.0-cosa*cosa));
-            double da = ra*cosa;
-            double hh = ra*sina;
-            double ddd = rsolv*(cosa+cosb)/dab;
-            double fz1 = (1.0-std::cos(hh*pi/ra))/2.0;
-            double fz2 = (1.0-std::cos(hh*pi/rb))/2.0;
-            if (cosa*cosb < 0) fz1 = 1.0;
-            if (cosa*cosb < 0) fz2 = 1.0;
-            double yx1 = rsolv/ra, yx2 = rsolv/rb;
-            std::array<double,3> xd;
-            for (int ix=0;ix<3;++ix) xd[ix]=coord[ix*(numat+1)+ia]+da*xx[ix]/dab;
-            std::array<double,3> rvx;
-            rvx[0]=xx[1]*3.0-xx[2]*2.0;
-            rvx[1]=xx[2]*1.0-xx[0]*3.0;
-            rvx[2]=xx[0]*2.0-xx[1]*1.0;
-            double dist=std::sqrt(dot(rvx.data(),rvx.data()));
-            for (int ix=0;ix<3;++ix) rvx[ix]=hh*rvx[ix]/dist;
-            std::array<double,3> rvy;
-            rvy[0]=(xx[1]*rvx[2]-xx[2]*rvx[1])/dab;
-            rvy[1]=(xx[2]*rvx[0]-xx[0]*rvx[2])/dab;
-            rvy[2]=(xx[0]*rvx[1]-xx[1]*rvx[0])/dab;
 
-            std::array<int,50> iset{};
-            std::array<double,50> phiset{};
-            static std::array<double,50> tarset; // F90: `tarset=0.d0` in declaration => implicit SAVE; never reset per ring/atom (cosmo.F90 L1243)
-            int ntrp=0, ntrp2=0;
-            for (int iic = ilipa+1; iic <= ilipa+nipa[ia]; ++iic) {
-                int ic = lipa[iic];
-                if (ic == ib) continue;
-                double rc = srad[ic]+rsolv;
-                double dabc=0, sp=0;
-                std::array<double,3> xic;
-                for (int ix=0;ix<3;++ix) {
-                    double xxx = coord[ix*(numat+1)+ic]-xd[ix];
-                    xic[ix]=coord[ix*(numat+1)+ic];
-                    sp += xxx*xx[ix];
-                    dabc += xxx*xxx;
+    for (int ia = 1; ia <= numat - 1; ++ia) {
+        if (!din[ia]) {
+            double ra = srad[ia] + rsolv;
+            double xta[4][4] = {};
+            for (int ix = 1; ix <= 3; ++ix) xta[ix][1] = X(ix, ia);
+            for (int iib = ilipa + 1; iib <= ilipa + nipa[ia]; ++iib) {
+                int ib = lipa[iib];
+                if (!(ib > ia)) continue;
+                if (din[ib]) continue;
+                double rb = srad[ib] + rsolv;
+                double dab = 0.0;
+                int nsab = 0;
+                double xx[4] = {};
+                for (int ix = 1; ix <= 3; ++ix) {
+                    xta[ix][2] = X(ix, ib);
+                    xx[ix] = xta[ix][2] - xta[ix][1];
+                    dab += xx[ix] * xx[ix];
                 }
-                dabc = std::sqrt(dabc);
-                cosa = sp/dab/dabc;
-                sina = std::sqrt(std::max(1e-28,1.0-cosa*cosa));
-                double cj = (dabc*dabc+hh*hh-rc*rc)/(2*dabc*hh*sina);
-                if (cj < 1.0) ntrp2 += 2;
-                if (cj <= 1.0 && cj >= -1.0) {
-                    double sj = std::sqrt(std::max(0.0,1.0-cj*cj));
-                    std::array<double,3> tvx;
-                    for (int ix=0;ix<3;++ix)
-                        tvx[ix]=(xic[ix]-xd[ix])-cosa*dabc*xx[ix]/dab;
-                    dist=std::sqrt(dot(tvx.data(),tvx.data()));
-                    for (int ix=0;ix<3;++ix) tvx[ix]=hh*tvx[ix]/dist;
-                    std::array<double,3> tvy;
-                    tvy[0]=(xx[1]*tvx[2]-xx[2]*tvx[1])/dab;
-                    tvy[1]=(xx[2]*tvx[0]-xx[0]*tvx[2])/dab;
-                    tvy[2]=(xx[0]*tvx[1]-xx[1]*tvx[0])/dab;
-                    for (int lsign : {-1,1}) {
-                        int il = ntrp+1;
-                        std::array<double,3> trp;
-                        for (int ix=0;ix<3;++ix)
-                            trp[ix]=xd[ix]+cj*tvx[ix]+sj*tvy[ix]*lsign;
-                        bool bad=false;
-                        for (int ik=ilipa+1;ik<=ilipa+nipa[ia];++ik) {
-                            int k=lipa[ik];
-                            if (k==ib||k==ic) continue;
-                            double dabck=0;
-                            for (int ix=0;ix<3;++ix) {
-                                double dd=trp[ix]-coord[ix*(numat+1)+k];
-                                dabck+=dd*dd;
+                dab = std::sqrt(dab);
+                double aa, ab, aar, abr, aad, abd, rinc;
+                ansude(ra - rsolv, rb - rsolv, dab, rsolv,
+                       aa, ab, aar, abr, aad, abd, rinc);
+                double cosa = (ra * ra + dab * dab - rb * rb) / (2.0 * dab * ra);
+                double cosb = (rb * rb + dab * dab - ra * ra) / (2.0 * dab * rb);
+                double sina = std::sqrt(1.0 - cosa * cosa);
+                double da = ra * cosa;
+                double hh = ra * sina;
+                double ddd = rsolv * (cosa + cosb) / dab;
+                double fz[4] = {};
+                fz[1] = (1.0 - std::cos(hh * pi / ra)) / 2.0;
+                fz[2] = (1.0 - std::cos(hh * pi / rb)) / 2.0;
+                if (cosa * cosb < 0.0) { fz[1] = 1.0; fz[2] = 1.0; }
+                double yx[4] = {};
+                yx[1] = rsolv / ra;
+                yx[2] = rsolv / rb;
+                double xd[4] = {};
+                for (int ix = 1; ix <= 3; ++ix) xd[ix] = xta[ix][1] + da * xx[ix] / dab;
+                double rvx[4] = {}, rvy[4] = {};
+                rvx[1] = xx[2] * 3.0 - xx[3] * 2.0;
+                rvx[2] = xx[3] * 1.0 - xx[1] * 3.0;
+                rvx[3] = xx[1] * 2.0 - xx[2] * 1.0;
+                double dist = std::sqrt(rvx[1] * rvx[1] + rvx[2] * rvx[2] + rvx[3] * rvx[3]);
+                for (int ix = 1; ix <= 3; ++ix) rvx[ix] = hh * rvx[ix] / dist;
+                rvy[1] = (xx[2] * rvx[3] - xx[3] * rvx[2]) / dab;
+                rvy[2] = (xx[3] * rvx[1] - xx[1] * rvx[3]) / dab;
+                rvy[3] = (xx[1] * rvx[2] - xx[2] * rvx[1]) / dab;
+
+                int iset[51] = {};
+                double phiset[51] = {};
+                static double tarset[51] = {};  // F90 SAVE
+                int ntrp = 0, ntrp2 = 0;
+
+                for (int iic = ilipa + 1; iic <= ilipa + nipa[ia]; ++iic) {
+                    int ic = lipa[iic];
+                    if (ic == ib) continue;
+                    double rc = srad[ic] + rsolv;
+                    double dabc = 0.0, sp = 0.0;
+                    for (int ix = 1; ix <= 3; ++ix) {
+                        double xxx = X(ix, ic) - xd[ix];
+                        xta[ix][3] = X(ix, ic);
+                        sp += xxx * xx[ix];
+                        dabc += xxx * xxx;
+                    }
+                    dabc = std::sqrt(dabc);
+                    cosa = sp / dab / dabc;
+                    sina = std::sqrt(std::max(1.0e-28, 1.0 - cosa * cosa));
+                    double cj = (dabc * dabc + hh * hh - rc * rc) / (2.0 * dabc * hh * sina);
+                    if (cj < 1.0) ntrp2 += 2;
+                    if (cj <= 1.0 && cj >= -1.0) {
+                        double sj = std::sqrt(1.0 - cj * cj);
+                        double tvx[4] = {}, tvy[4] = {};
+                        for (int ix = 1; ix <= 3; ++ix)
+                            tvx[ix] = (xta[ix][3] - xd[ix]) - cosa * dabc * xx[ix] / dab;
+                        dist = std::sqrt(tvx[1] * tvx[1] + tvx[2] * tvx[2] + tvx[3] * tvx[3]);
+                        for (int ix = 1; ix <= 3; ++ix) tvx[ix] = hh * tvx[ix] / dist;
+                        tvy[1] = (xx[2] * tvx[3] - xx[3] * tvx[2]) / dab;
+                        tvy[2] = (xx[3] * tvx[1] - xx[1] * tvx[3]) / dab;
+                        tvy[3] = (xx[1] * tvx[2] - xx[2] * tvx[1]) / dab;
+                        for (int l = -1; l <= 1; l += 2) {
+                            int il = ntrp + 1;
+                            double trp[4] = {};
+                            for (int ix = 1; ix <= 3; ++ix)
+                                trp[ix] = xd[ix] + cj * tvx[ix] + sj * tvy[ix] * l;
+                            bool skip = false;
+                            for (int ik = ilipa + 1; ik <= ilipa + nipa[ia]; ++ik) {
+                                int k = lipa[ik];
+                                if (k != ib && k != ic) {
+                                    double dabck = 0.0;
+                                    for (int ix = 1; ix <= 3; ++ix) {
+                                        double d = trp[ix] - X(ix, k);
+                                        dabck += d * d;
+                                    }
+                                    dabck = std::sqrt(dabck);
+                                    if (dabck < srad[k] + rsolv) { skip = true; break; }
+                                }
                             }
-                            dabck=std::sqrt(dabck);
-                            if (dabck < srad[k]+rsolv) { bad=true; break; }
+                            if (skip) continue;
+                            ++ntrp;
+                            double spx = 0.0, spy = 0.0;
+                            for (int ix = 1; ix <= 3; ++ix) {
+                                spx += rvx[ix] * (trp[ix] - xd[ix]);
+                                spy += rvy[ix] * (trp[ix] - xd[ix]);
+                            }
+                            double phi = std::acos(spx / (hh * hh + 1.0e-10));
+                            if (spy < 0.0) phi = -phi;
+                            phiset[il] = phi;
+                            sp = 0.0;
+                            for (int ix = 1; ix <= 3; ++ix)
+                                sp += (-spy * rvx[ix] + spx * rvy[ix]) * (trp[ix] - xta[ix][3]);
+                            iset[ntrp] = (sp < 0.0) ? -1 : 1;
+                            double ee[4][4] = {};
+                            sp = 0.0;
+                            double dac = 0.0, dbc = 0.0;
+                            for (int ix = 1; ix <= 3; ++ix) {
+                                ee[ix][1] = trp[ix] + rsolv / srad[ia] * (xta[ix][1] - trp[ix]);
+                                ee[ix][2] = trp[ix] + rsolv / srad[ib] * (xta[ix][2] - trp[ix]);
+                                ee[ix][3] = trp[ix] + rsolv / srad[ic] * (xta[ix][3] - trp[ix]);
+                                sp += (ee[ix][1] - ee[ix][3]) * (ee[ix][2] - ee[ix][3]);
+                                dac += (ee[ix][1] - ee[ix][3]) * (ee[ix][1] - ee[ix][3]);
+                                dbc += (ee[ix][2] - ee[ix][3]) * (ee[ix][2] - ee[ix][3]);
+                            }
+                            tarset[il] = 0.8 * std::sqrt(dac * dbc - sp * sp) / 12.0;
                         }
-                        if (bad) continue;
-                        ++ntrp;
-                        double spx=0,spy=0;
-                        for (int ix=0;ix<3;++ix) {
-                            spx+=rvx[ix]*(trp[ix]-xd[ix]);
-                            spy+=rvy[ix]*(trp[ix]-xd[ix]);
-                        }
-                        double phi=std::acos(spx/(hh*hh+1e-10));
-                        if (spy<0) phi=-phi;
-                        phiset[il]=phi;
-                        sp=0;
-                        for (int ix=0;ix<3;++ix)
-                            sp+=(-spy*rvx[ix]+spx*rvy[ix])*(trp[ix]-xic[ix]);
-                        iset[ntrp]= (sp<0)?-1:1;
-                        double ee1[3],ee2[3],ee3[3];
-                        double sp2=0,dac=0,dbc=0;
-                        for (int ix=0;ix<3;++ix) {
-                            ee1[ix]=trp[ix]+rsolv/srad[ia]*(coord[ix*(numat+1)+ia]-trp[ix]);
-                            ee2[ix]=trp[ix]+rsolv/srad[ib]*(coord[ix*(numat+1)+ib]-trp[ix]);
-                            ee3[ix]=trp[ix]+rsolv/srad[ic]*(xic[ix]-trp[ix]);
-                            sp2+=(ee1[ix]-ee3[ix])*(ee2[ix]-ee3[ix]);
-                            dac+=(ee1[ix]-ee3[ix])*(ee1[ix]-ee3[ix]);
-                            dbc+=(ee2[ix]-ee3[ix])*(ee2[ix]-ee3[ix]);
-                        }
-                        tarset[il]=0.8*std::sqrt(std::max(0.0,dac*dbc-sp2*sp2))/12.0;
                     }
                 }
-            }
-            if (ntrp%2 != 0) mopend("ODD NTRP");
-            if (ntrp > 18) mopend("NTRP TOO LARGE");
-            if (ntrp + ntrp2 == 0) {
-                phiset[1]=0; phiset[2]=(2.0*pi); tarset[2]=0;
-                iset[1]=1; iset[2]=-1; ntrp=2;
-            }
-            // insertion sort by phiset
-            bool again=true;
-            while (again) {
-                again=false;
-                for (int l=2;l<=ntrp;++l) {
-                    if (phiset[l]<phiset[l-1]) {
-                        std::swap(phiset[l],phiset[l-1]);
-                        std::swap(iset[l],iset[l-1]);
-                        std::swap(tarset[l],tarset[l-1]);
-                        again=true;
+
+                if ((ntrp % 2) != 0) mopend("ODD NTRP");
+                if (ntrp > 18) mopend("NTRP TOO LARGE");
+                if (ntrp + ntrp2 == 0) {
+                    phiset[1] = 0.0;
+                    phiset[2] = twopi;
+                    tarset[2] = 0.0;
+                    iset[1] = 1;
+                    iset[2] = -1;
+                    ntrp = 2;
+                }
+                for (;;) {
+                    int icnt = 0;
+                    for (int l = 2; l <= ntrp; ++l) {
+                        if (phiset[l] < phiset[l - 1]) {
+                            std::swap(phiset[l], phiset[l - 1]);
+                            std::swap(iset[l], iset[l - 1]);
+                            std::swap(tarset[l], tarset[l - 1]);
+                            ++icnt;
+                        }
+                    }
+                    if (icnt <= 0) {
+                        if (iset[1] == -1) phiset[1] += twopi;
+                        else break;
                     }
                 }
-                if (!again && iset[1]==-1) { phiset[1]+=(2.0*pi); again=true; }
-            }
-            double sumphi=0;
-            int ips0=nrs; (void)ips0;
-            for (int l=2;l<=ntrp;l+=2) {
-                int k=l-1;
-                double phiu=phiset[k], phio=phiset[l];
-                int nsa=(int)((phio-phiu)/2/pi*20);
-                nsa=std::max(nsa+1,2);
-                sumphi += phio-phiu;
-                double dp=(phio-phiu)/(nsa-1);
-                for (int ich=1;ich<=2;++ich) {
-                    int iat=(ich==1)?ib:ia;
-                    double htr=(iat==ia)?aar/(2.0*pi):abr/(2.0*pi);
-                    double fz=(ich==1)?fz1:fz2;
-                    double yx=(ich==1)?yx1:yx2;
-                    // third atom index for offset: xta(:,3-ich)
-                    int offi=(ich==1)?ib:ia;
-                    double yx_other=(ich==1)?yx2:yx1; // yx(3-ich)
-                    for (int ja=ich;ja<=nsa;ja+=2) {
-                        int jb=std::max(ja-1,1), jc=std::min(ja+1,nsa);
-                        double xja[3],xjb[3],xjc[3];
-                        for (int ix=0;ix<3;++ix) {
-                            double phi=phiu+(ja-1)*dp;
-                            double ca=xd[ix]+(std::cos(phi)*rvx[ix]+std::sin(phi)*rvy[ix])*fz;
-                            ca=ca+(coord[ix*(numat+1)+(ich==1?ia:ib)]-ca)*yx;
-                            xja[ix]=ca+(coord[ix*(numat+1)+offi]-coord[ix*(numat+1)+(ich==1?ia:ib)])*ddd*(1.0-fz);
+
+                double sumphi = 0.0;
+                for (int l = 2; l <= ntrp; l += 2) {
+                    int k = l - 1;
+                    double phiu = phiset[k];
+                    double phio = phiset[l];
+                    int nsa = (int)((phio - phiu) / 2.0 / pi * 20.0);
+                    nsa = std::max(nsa + 1, 2);
+                    sumphi += phio - phiu;
+                    double dp = (phio - phiu) / (nsa - 1);
+                    for (int ich = 1; ich <= 2; ++ich) {
+                        int iat = (ich == 2) ? ia : ib;
+                        double htr = (iat == ia) ? aar / twopi : abr / twopi;
+                        for (int ja = ich; ja <= nsa; ja += 2) {
+                            int jb = std::max(ja - 1, 1);
+                            int jc = std::min(ja + 1, nsa);
+                            double cphi, sphi, phi;
+                            double xja[4] = {}, xjb[4] = {}, xjc[4] = {};
+                            phi = phiu + (ja - 1) * dp;
+                            cphi = std::cos(phi);
+                            sphi = std::sin(phi);
+                            for (int ix = 1; ix <= 3; ++ix) {
+                                double ca = xd[ix] + (cphi * rvx[ix] + sphi * rvy[ix]) * fz[ich];
+                                ca = ca + (xta[ix][ich] - ca) * yx[ich];
+                                xja[ix] = ca + (xta[ix][3 - ich] - xta[ix][ich]) * ddd * (1.0 - fz[ich]);
+                            }
+                            phi = phiu + (jb - 1) * dp;
+                            cphi = std::cos(phi);
+                            sphi = std::sin(phi);
+                            for (int ix = 1; ix <= 3; ++ix) {
+                                double ca = xd[ix] + cphi * rvx[ix] + sphi * rvy[ix];
+                                xjb[ix] = ca + (xta[ix][3 - ich] - ca) * yx[3 - ich];
+                            }
+                            phi = phiu + (jc - 1) * dp;
+                            cphi = std::cos(phi);
+                            sphi = std::sin(phi);
+                            for (int ix = 1; ix <= 3; ++ix) {
+                                double ca = xd[ix] + cphi * rvx[ix] + sphi * rvy[ix];
+                                xjc[ix] = ca + (xta[ix][3 - ich] - ca) * yx[3 - ich];
+                            }
+                            ++nrs;
+                            ++nsab;
+                            double sp2 = 0.0, dist2 = 0.0, spn = 0.0, spn2 = 0.0;
+                            ipsrs[nrs] = (ich == 2) ? ia : ib;
+                            int iat2 = ipsrs[nrs];
+                            ++nipsrs[iat2];
+                            for (int ix = 1; ix <= 3; ++ix) {
+                                R(ix, nrs) = (xja[ix] * 0.5 + xjb[ix] + xjc[ix]) / 2.5;
+                                int i2 = (ix % 3) + 1;
+                                int i3 = (i2 % 3) + 1;
+                                double cnrs = (xjc[i2] - xjb[i2]) * (xja[i3] - xjb[i3]) -
+                                              (xja[i2] - xjb[i2]) * (xjc[i3] - xjb[i3]);
+                                dist2 += cnrs * cnrs;
+                                spn += cnrs * (R(ix, nrs) - X(ix, iat2));
+                                spn2 += cnrs * R(ix, nrs);
+                            }
+                            dist2 = 1.0 / std::sqrt(dist2);
+                            if (spn < 0.0) dist2 = -dist2;
+                            R(4, nrs) = (jc - jb) * dp * htr;
+                            if (ja == 1) R(4, nrs) += tarset[k] * rinc;
+                            if (ja == nsa) R(4, nrs) += tarset[l] * rinc;
+                            cosvol += R(4, nrs) * spn2 * dist2;
+                            area += R(4, nrs);
                         }
-                        for (int ix=0;ix<3;++ix) {
-                            double phi=phiu+(jb-1)*dp;
-                            double ca=xd[ix]+std::cos(phi)*rvx[ix]+std::sin(phi)*rvy[ix];
-                            xjb[ix]=ca+(coord[ix*(numat+1)+offi]-ca)*yx_other;
-                        }
-                        for (int ix=0;ix<3;++ix) {
-                            double phi=phiu+(jc-1)*dp;
-                            double ca=xd[ix]+std::cos(phi)*rvx[ix]+std::sin(phi)*rvy[ix];
-                            xjc[ix]=ca+(coord[ix*(numat+1)+offi]-ca)*yx_other;
-                        }
-                        ++nrs;
-                        double sp=0,d2=0,spn=0,spn2=0,dist2=0;
-                        int iat2=(ich==2)?ia:ib;
-                        ipsrs[nrs]=iat2;
-                        nipsrs[iat2]=nipsrs[iat2]+1;
-                        for (int ix=0;ix<3;++ix) {
-                            rsc[ix][nrs]=(xja[ix]*0.5+xjb[ix]+xjc[ix])/2.5;
-                            int i2=(ix+1)%3, i3=(i2+1)%3;
-                            double cnrs=(xjc[i2]-xjb[i2])*(xja[i3]-xjb[i3])-(xja[i2]-xjb[i2])*(xjc[i3]-xjb[i3]);
-                            dist2+=cnrs*cnrs;
-                            spn+=cnrs*(rsc[ix][nrs]-coord[ix*(numat+1)+iat2]);
-                            spn2+=cnrs*rsc[ix][nrs];
-                        }
-                        dist2=1.0/std::sqrt(dist2);
-                        if (spn<0) dist2=-dist2;
-                        rsc[3][nrs]=(jc-jb)*dp*htr;
-                        if (ja==1)   rsc[3][nrs]+=tarset[k]*rinc;
-                        if (ja==nsa) rsc[3][nrs]+=tarset[l]*rinc;
-                        cosvol += rsc[3][nrs]*spn2*dist2;
-                        area += rsc[3][nrs];
                     }
                 }
-            }
-            if (sumphi > 1e-10) {
-                ++nipc;
-                isude[0][nipc]=ia; isude[1][nipc]=ib;
-                sumphi/=(2.0*pi);
-                sude[0][nipc]=aad*sumphi;
-                sude[1][nipc]=abd*sumphi;
+                if (sumphi > 1.0e-10) {
+                    ++nipc;
+                    isude[1][nipc] = ia;
+                    isude[2][nipc] = ib;
+                    sumphi = sumphi / twopi;
+                    sude[1][nipc] = aad * sumphi;
+                    sude[2][nipc] = abd * sumphi;
+                }
             }
         }
         ilipa += nipa[ia];
     }
     if (nrs > maxrs) mopend("NRS .GT. MAXRS IN SURCLO");
 
-    // sort ring segments w.r.t. atoms
-    int isum=0;
-    for (int iat=1;iat<=numat;++iat) {
-        int isum2=isum+nipsrs[iat];
-        nipsrs[iat]=isum; isum=isum2;
+    // SORT THE SEGMENTS WITH RESPECT TO ATOMS
+    int isum = 0;
+    for (int iat = 1; iat <= numat; ++iat) {
+        int isum2 = isum + nipsrs[iat];
+        nipsrs[iat] = isum;
+        isum = isum2;
     }
-    for (int i=1;i<=nrs;++i) {
-        int iat=ipsrs[i];
-        int isum2=nipsrs[iat]+1;
-        nipsrs[iat]=isum2; isort[i]=isum2;
+    for (int i = 1; i <= nrs; ++i) {
+        int iat = ipsrs[i];
+        int isum2 = nipsrs[iat] + 1;
+        nipsrs[iat] = isum2;
+        isort[i] = isum2;
     }
-    for (int i=1;i<=nrs;++i) {
-        while (isort[i]!=i) {
-            int is=isort[i];
-            for (int ix=0;ix<4;++ix) std::swap(rsc[ix][i],rsc[ix][is]);
-            std::swap(ipsrs[i],ipsrs[is]);
-            isort[i]=isort[is]; isort[is]=is;
+    for (int i = 1; i <= nrs; ++i) {
+        while (isort[i] != i) {
+            int is = isort[i];
+            for (int ix = 1; ix <= 4; ++ix) std::swap(R(ix, i), R(ix, is));
+            std::swap(ipsrs[i], ipsrs[is]);
+            isort[i] = isort[is];
+            isort[is] = is;
         }
     }
-    // match each ring segment to nearest primary segment of same atom
-    // NOTE: the nearest-segment search and the segment update run for EVERY
-    // ring segment (i loop), not only when a new atom is entered (F90 surclo
-    // L1576-1644: d2min block is outside the if (iat > iat0) block).
-    for (int i=1;i<=nps;++i) nipsrs[i]=0;
-    int iat0=0, ips1=0, ips0=1;
-    double d2max=0;
-    for (int i=1;i<=nrs;++i) {
-        int iat=ipsrs[i];
-        if (iat>iat0) {
-            iat0=iat;
-            d2max=16*srad[iat]*srad[iat]/n0[1];
-            if (nat[iat]==1) d2max*=static_cast<double>(n0[1])/n0[2];
-            int ips;
-            for (ips=ips1+1;ips<=nps;++ips) if (iatsp[ips]==iat) break;
-            ips0=ips;
-            for (;ips<nps;++ips) if (iatsp[ips+1]>iat) break;
-            ips1=ips;
+
+    // FIND FOR EACH RING-SEGMENT THE NEAREST SEGMENT OF THE SAME ATOM
+    for (int i = 1; i <= nps; ++i) nipsrs[i] = 0;
+    int iat0 = 0, ips1 = 0, ips0 = 1, ipsmin = 0;
+    double d2max = 0.0;
+    for (int i = 1; i <= nrs; ++i) {
+        int iat = ipsrs[i];
+        if (iat > iat0) {
+            iat0 = iat;
+            d2max = 16.0 * srad[iat] * srad[iat] / n0[1];
+            if (nat[iat] == 1) d2max = d2max * n0[1] / n0[2];
+            int ips = ips1 + 1;
+            for (; ips <= nps; ++ips) if (iatsp[ips] == iat) break;
+            ips0 = ips;
+            for (ips = ips0; ips <= nps - 1; ++ips) if (iatsp[ips + 1] > iat) break;
+            ips1 = ips;
         }
-        double d2min=1e6; int ipsmin=ips0;
-        for (int ips=ips0;ips<=ips1;++ips) {
-            double d2=0;
-            for (int ix=0;ix<3;++ix) {
-                double dd=cosurf[ix+1][ips]-rsc[ix][i];
-                d2+=dd*dd;
+        double d2min = 1.0e6;
+        for (int ips = ips0; ips <= ips1; ++ips) {
+            double d2 = 0.0;
+            for (int ix = 1; ix <= 3; ++ix) {
+                double d = C(ix, ips) - R(ix, i);
+                d2 += d * d;
             }
-            if (d2<d2min) { d2min=d2; ipsmin=ips; }
+            if (d2 < d2min) { d2min = d2; ipsmin = ips; }
         }
-        if (d2min>d2max) {
+        if (d2min > d2max) {
             ++ips1;
-            for (int ip1=nps;ip1>=ips1;--ip1) {
-                for (int ix=0;ix<4;++ix) cosurf[ix+1][ip1+1]=cosurf[ix+1][ip1];
-                iatsp[ip1+1]=iatsp[ip1];
-                nsetf[ip1+1]=nsetf[ip1];
-                nar_csm[ip1+1]=nar_csm[ip1];
-                nipsrs[ip1+1]=nipsrs[ip1];
+            for (int ip1 = nps; ip1 >= ips1; --ip1) {
+                int ip2 = ip1 + 1;
+                for (int ix = 1; ix <= 4; ++ix) C(ix, ip2) = C(ix, ip1);
+                iatsp[ip2] = iatsp[ip1];
+                nsetf[ip2] = nsetf[ip1];
+                nar_csm[ip2] = nar_csm[ip1];
+                nipsrs[ip2] = nipsrs[ip1];
             }
-            ipsrs[i]=ips1; ++nps;
-            for (int ix=0;ix<4;++ix) cosurf[ix+1][ips1]=rsc[ix][i];
-            iatsp[ips1]=iatsp[ips1-1];
-            nar_csm[ips1]=0; nipsrs[ips1]=1;
-            nsetf[ips1]=nsetf[ips1+1];
+            ipsrs[i] = ips1;
+            ++nps;
+            for (int ix = 1; ix <= 4; ++ix) C(ix, ips1) = R(ix, i);
+            iatsp[ips1] = iatsp[ips1 - 1];
+            nar_csm[ips1] = 0;
+            nipsrs[ips1] = 1;
+            nsetf[ips1] = nsetf[ips1 + 1];
         } else {
-            ipsrs[i]=ipsmin; ++nipsrs[ipsmin];
-            double arseg=cosurf[4][ipsmin], arsegn=arseg+rsc[3][i];
-            for (int ix=0;ix<3;++ix)
-                cosurf[ix+1][ipsmin]=(arseg*cosurf[ix+1][ipsmin]+rsc[3][i]*rsc[ix][i])/arsegn;
-            cosurf[4][ipsmin]=arsegn;
+            ipsrs[i] = ipsmin;
+            ++nipsrs[ipsmin];
+            double arseg = C(4, ipsmin);
+            double arsegn = arseg + R(4, i);
+            for (int ix = 1; ix <= 3; ++ix)
+                C(ix, ipsmin) = (arseg * C(ix, ipsmin) + R(4, i) * R(ix, i)) / arsegn;
+            C(4, ipsmin) = arsegn;
         }
+    }
+
+    // SORT THE RING-SEGMENTS WITH RESPECT TO PRIMARY SEGMENTS
+    isum = 0;
+    for (int ips = 1; ips <= nps; ++ips) {
+        int isum2 = isum + nipsrs[ips];
+        nipsrs[ips] = isum;
+        isum = isum2;
+    }
+    for (int i = 1; i <= nrs; ++i) {
+        int ips = ipsrs[i];
+        int isum2 = nipsrs[ips] + 1;
+        nipsrs[ips] = isum2;
+        isort[i] = isum2;
+    }
+    for (int i = 1; i <= nrs; ++i) {
+        while (isort[i] != i) {
+            int is = isort[i];
+            for (int ix = 1; ix <= 4; ++ix) std::swap(R(ix, i), R(ix, is));
+            isort[i] = isort[is];
+            isort[is] = is;
+        }
+    }
+
+    if (!surclo_dump.empty()) {
+        std::ofstream f(surclo_dump + ".cpp");
+        auto H = [&](double v) {
+            std::uint64_t b;
+            std::memcpy(&b, &v, 8);
+            f << std::hex << std::uppercase << std::setfill('0')
+              << std::setw(16) << b << std::dec << '\n';
+        };
+        f << nps << '\n' << nipc << '\n' << nrs << '\n';
+        H(area - surclo_area0);
+        H(cosvol - surclo_cosvol0);
+        for (int seg = 1; seg <= nrs; ++seg)
+            for (int ix = 1; ix <= 4; ++ix) H(R(ix, seg));
+        for (int i = 1; i <= nps; ++i) f << nipsrs[i] << '\n';
+        for (int i = 1; i <= nrs; ++i) f << ipsrs[i] << '\n';
+        for (int i = 1; i <= nrs; ++i) f << isort[i] << '\n';
+        for (int ix = 1; ix <= 4; ++ix)
+            for (int ips = 1; ips <= nps; ++ips) H(C(ix, ips));
+        for (int ips = 1; ips <= nps; ++ips) f << iatsp[ips] << '\n';
+        for (int ips = 1; ips <= nps; ++ips) f << nar_csm[ips] << '\n';
+        for (int ips = 1; ips <= nps; ++ips) f << nsetf[ips] << '\n';
     }
 }
+
+
+
+

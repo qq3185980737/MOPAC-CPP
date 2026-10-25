@@ -2,6 +2,16 @@
 // Assign irreducible representations to eigenvectors by matching characters.
 // charmo is fully translated; charmvi/charmst have no 2016 source (permanent
 // gap) and are supplied by the caller as stubs.
+
+//
+// ============================================================================
+// 【中文导读】symoir() —— 给本征向量分配不可约表示
+// ----------------------------------------------------------------------------
+// 对应 symoir.F90。按点群特征标匹配，把 MO 本征向量归到各不可约表示；用于
+// 对称性分析和输出（由 symtrz 调用）。注意：charmvi/charmst 在 2016 源码中
+// 找不到对应实现，当前是返回 0 的占位（死代码风险，已记录）。
+// ============================================================================
+
 #include "symoir.h"
 
 #include <cmath>

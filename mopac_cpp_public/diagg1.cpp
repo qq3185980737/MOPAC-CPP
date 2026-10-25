@@ -1,6 +1,15 @@
 // diagg1.cpp — C++ translation of MOPAC 2016 "diagg1.F90".
 // MOZYME significant occupied-virtual matrix-element construction; block-sparse
-// extraction loops kept as skeleton (ijbo/nijbo external).
+// extraction loops kept as skeleton；2026-10 已改调真实 ijbo。
+
+//
+// ============================================================================
+// 【中文导读】diagg1() —— MOZYME 显著占据-虚轨道矩阵元
+// ----------------------------------------------------------------------------
+// 对应 diagg1.F90。构造 MOZYME 的块稀疏占据-虚矩阵元；目前只保留骨架，
+// 依赖真实 ijbo/nijbo 做块定位（2026-10 已去空 stub）。输出供 diagg/diagg2
+// 的伪对角化使用。
+// ============================================================================
 
 #include "diagg1.h"
 
@@ -9,13 +18,12 @@
 
 #include "MOZYME_C.h"
 #include "common_arrays_C.h"
+#include "ijbo.h"
 #include "molkst_C.h"
 
 using namespace common_arrays_C;
 using namespace MOZYME_C;
 using namespace molkst_C;
-
-namespace { int ijbo(int, int) { return -1; } void timer(const char*) {} }
 
 void diagg1(const std::vector<double>&, int nocc, int,
             std::vector<double>&, std::vector<double>&,

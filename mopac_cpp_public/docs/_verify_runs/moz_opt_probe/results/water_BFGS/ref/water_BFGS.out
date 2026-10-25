@@ -1,0 +1,157 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only     Version 16.013  64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013 , James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 01:21:14 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  BFGS       - USE THE BFGS GEOMETRY OPTIMIZER
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 MOZYME BFGS
+ water_BFGS
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+      Geometry optimization using BFGS
+ CYCLE:     1 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     4.000 HEAT: -57.79245    
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ CYCLE:     2 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:     2.848 HEAT: -57.79359    
+ HEAT OF FORMATION TEST SATISFIED
+                    HOWEVER, A COMPONENT OF GRADIENT IS LARGER THAN  1.00
+
+ CYCLE:     3 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     2.748 HEAT: -57.79448    
+ TEST ON GRADIENT SATISFIED
+PETERS TEST SATISFIED
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME BFGS
+ water_BFGS
+
+
+
+     PETERS TEST WAS SATISFIED IN BFGS OPTIMIZATION           
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013 )
+                                                       Mon Oct 26 01:21:14 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.79922 KCAL/MOL =    -241.83192 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67919 EV
+          ELECTRONIC ENERGY       =       -469.24066 EV
+          CORE-CORE REPULSION     =        146.56147 EV
+
+          GRADIENT NORM           =          0.94841
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.52018
+            O     1    H     2     0.57785
+            O     1    H     3     0.00000
+
+
+          SCF CALCULATIONS        =         12
+ 
+          WALL-CLOCK TIME         =          0.012 SECONDS
+          COMPUTATION TIME        =          0.000 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O         -0.00442151  *  -0.00226587  *   0.00307848  *
+     2       H          0.00151085  *   0.76026733  *   0.57859633  *
+     3       H          0.00073262  *  -0.75990475  *   0.58319422  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -0.004421512    -0.002265868     0.003078481
+   2    H        0.001510855     0.760267333     0.578596330
+   3    H        0.000732622    -0.759904747     0.583194215
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.650118        6.6501     1.81256     4.83756
+    2          H           0.325189        0.6748     0.67481
+    3          H           0.324930        0.6751     0.67507
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.017     0.009     1.804     1.804
+ HYBRID         0.003     0.001     0.323     0.323
+ SUM            0.020     0.009     2.128     2.128
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81256   1.99995   1.35041   1.48720
+    2  H   0.67481
+    3  H   0.67507
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

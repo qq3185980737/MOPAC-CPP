@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】anavib.cpp —— 振动模式分析输出（anavib.F90）
+// ----------------------------------------------------------------------------
+// 把简正振动模式翻译成“原子对间伸缩/弯曲”的描述：两两原子距离、能量贡献、
+// 并按固定列宽打印报告（输出到 stdout，对应 Fortran iw）。格式必须与官方
+// 逐列一致，供振动分析表对照。
+// ============================================================================
+
 // anavib.cpp — C++ translation of MOPAC 2016 "anavib.F90".
 #pragma warning(disable: 4459)
 // Description of vibrations: interatomic distances, energy contribution of
@@ -36,6 +44,15 @@ const std::vector<double> vanrad = {
     1.44, 1.34, 1.30, 1.28, 1.26, 1.27, 1.30, 1.34, 1.49, 1.48, 1.47, 1.46, 1.46, 1.45, 1.45,
     1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45, 1.45,
     1.45, 1.45, 1.45, 1.45, 1.45};
+}
+
+namespace {
+int sym_jd(int k) {
+    return (k >= 0 && k < (int)symmetry_C::jndex.size()) ? symmetry_C::jndex[k] : k;
+}
+std::string sym_nm(int k) {
+    return (k >= 0 && k < (int)symmetry_C::namo.size()) ? symmetry_C::namo[k] : std::string(" ");
+}
 }
 
 void anavib(std::vector<double>& eigs, std::vector<double>& dipt, int n3,
@@ -104,8 +121,8 @@ void anavib(std::vector<double>& eigs, std::vector<double>& dipt, int n3,
                 tot += f[l];
             }
         }
-        if (k == nv || symmetry_C::jndex[k] != symmetry_C::jndex[k + 1] ||
-            symmetry_C::namo[k] != symmetry_C::namo[k + 1]) {
+        if (k == nv || sym_jd(k) != sym_jd(k + 1) ||
+            sym_nm(k) != sym_nm(k + 1)) {
             if (std::fabs(tot) >= 1.0e-5) {
                 // NOW TO SORT F INTO DECREASING ORDER
                 for (i = 1; i <= 10; ++i) {

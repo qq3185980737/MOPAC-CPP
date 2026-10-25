@@ -1,0 +1,41 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+c12_COSMO.mop
+CXXCFG iscf last lgrad 1 1 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 114
+ Job: c12_COSMO
+Final heat of formation =       1234.42055 kcal/mol
+GRADIENT NORM           =       5415.20571
+
+
+MOPAC Job: "c12_COSMO.mop" ended normally on Mon Oct 26 01:21:40 2026

@@ -1,0 +1,140 @@
+********************************************************************************
+**                          MOPAC (16.013W)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+benzene_BFGS.mop
+ Geometry optimization using BFGS
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+CXXCFG iscf last lgrad 1 0 1
+NVAR deriv 36
+ Job: benzene_BFGS
+Final heat of formation =         23.16493 kcal/mol
+GRADIENT NORM           =       6291.11312
+
+
+MOPAC Job: "benzene_BFGS.mop" ended normally on Mon Oct 26 01:21:19 2026

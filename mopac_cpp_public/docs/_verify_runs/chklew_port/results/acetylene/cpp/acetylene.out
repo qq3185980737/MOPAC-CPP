@@ -1,0 +1,150 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Sun Oct 25 23:55:25 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 MOZYME 1SCF
+ acetylene mozyme
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          0.00000000  *   0.00000000  *   0.60000000  *
+     2       C          0.00000000  *   0.00000000  *  -0.60000000  *
+     3       H          0.00000000  *   0.00000000  *   1.66000000  *
+     4       H          0.00000000  *   0.00000000  *  -1.66000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         C        0.0000    0.0000    0.6000
+     2         C        0.0000    0.0000   -0.6000
+     3         H        0.0000    0.0000    1.6600
+     4         H        0.0000    0.0000   -1.6600
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: C2 H2  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME 1SCF
+ acetylene mozyme
+ 
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Sun Oct 25 23:55:25 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         57.81121 KCAL/MOL =     241.88212 KJ/MOL
+
+
+          TOTAL ENERGY            =       -270.87380 EV
+          ELECTRONIC ENERGY       =       -557.74230 EV
+          CORE-CORE REPULSION     =        286.86850 EV
+
+          NO. OF FILLED LEVELS    =          5
+          MOLECULAR WEIGHT        =         26.0378
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     4    H     3     3.32000
+            C     1    H     3     0.00000
+            C     1    C     2     0.00000
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.001 SECONDS
+          COMPUTATION TIME        =          0.001 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       C          0.00000000  *   0.00000000  *   0.60000000  *
+     2       C          0.00000000  *   0.00000000  *  -0.60000000  *
+     3       H          0.00000000  *   0.00000000  *   1.66000000  *
+     4       H          0.00000000  *   0.00000000  *  -1.66000000  *
+
+                             CARTESIAN COORDINATES
+
+   1    C        0.000000000     0.000000000     0.600000000
+   2    C        0.000000000     0.000000000    -0.600000000
+   3    H        0.000000000     0.000000000     1.660000000
+   4    H        0.000000000     0.000000000    -1.660000000
+
+
+           Empirical Formula: C2 H2  =     4 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          C          -0.189160        4.1892     1.14609     3.04307
+    2          C          -0.189060        4.1891     1.14611     3.04295
+    3          H           0.189140        0.8109     0.81086
+    4          H           0.189080        0.8109     0.81092
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000     0.000     0.000     0.000
+ HYBRID         0.000     0.000    -0.000     0.000
+ SUM            0.000     0.000    -0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  C   1.14609   1.00002   1.00002   1.04302
+    2  C   1.14611   0.99998   0.99998   1.04300
+    3  H   0.81086
+    4  H   0.81092
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

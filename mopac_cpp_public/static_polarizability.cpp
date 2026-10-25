@@ -7,6 +7,19 @@
 // summarized as H.o.F. (heat of formation) and Dipole expansions, then the
 // polarizability tensors are diagonalized by the packed Jacobi eigensolver rsp.
 
+//
+// ============================================================================
+// 【中文导读】static_polarizability() —— 有限场（finite-field）响应性质
+// ----------------------------------------------------------------------------
+// 对应 static_polarizability.F90（含 ffhpol/dipind）。在 6 个方向（±x,±y,±z）
+// 上分别加电场、各跑若干 SCF（共 36 次 compfg），由能量/偶极的差分得到：
+//   - 偶极矩 μ、极化率 α；
+//   - 一阶/二阶超极化率 β、γ；
+// 然后把张量用 rsp（打包 Jacobi）对角化，输出各向同性值。
+// 注意：compfg 在此仅作为“骨架”驱动，所需 SCF/梯度必须完整；LET 关键字
+// 表示使用输入朝向（不做惯性轴旋转）。
+// ============================================================================
+
 #include "static_polarizability.h"
 #include "dipind.h"
 
@@ -44,13 +57,15 @@ namespace {
 // Flatten the 1-based (3 x n) internal coordinate array geo[d][i] into the
 // 0-based column-major vector compfg expects: xparam[(i-1)*3+(d-1)] = geo[d][i].
 std::vector<double> flatten_geo(const std::vector<std::vector<double>>& g, int n) {
-  std::vector<double> f(3 * n, 0.0);
+  std::vector<double> f(3 * n + 1, 0.0);
   for (int i = 1; i <= n; ++i)
-    for (int d = 1; d <= 3; ++d) f[(i - 1) * 3 + (d - 1)] = g[d][i];
+    for (int d = 1; d <= 3; ++d) f[(i - 1) * 3 + d] = g[d][i];
   return f;
 }
 
 }  // namespace
+
+// static_polarizability(): 主入口——36 次加场 SCF，差分得到 μ/α/β/γ 并打印。
 
 void static_polarizability() {
   bool let = (keywrd.find(" LET") != std::string::npos);
@@ -129,6 +144,8 @@ void static_polarizability() {
 
   ffhpol();
 }
+
+// ffhpol(): 有限场极化率/超极化率的张量组装与输出。
 
 void ffhpol() {
   // Energy: a.u. to kcal/mole

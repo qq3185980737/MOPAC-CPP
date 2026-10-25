@@ -3,6 +3,14 @@
 // extrapolates xyz/vel/geo quadratically, prints large-geometry block and
 // final-geometry block, and writes the trajectory. Fortran 1-based array
 // indexing is preserved for all arrays passed in.
+
+//
+// 【中文导读】drcout() —— DRC 轨迹输出
+// ----------------------------------------------------------------------------
+// 按 fract 插值/外推几何与速度，打印能量与几何块并写 .arc/.xyz 轨迹；
+// LOCAL 关键字下会调用 local() 做局域轨道分析。reverse_aux 等辅助仍为空
+// 实现（见 docs/TRANSLATION_GAPS.md）。
+
 #include "drcout.h"
 
 #include <algorithm>
@@ -109,14 +117,14 @@ void drcout(const std::vector<std::vector<double>>& xyz3,
     if (ii != 0) {
         if (drc) {
             std::snprintf(fmt, sizeof(fmt),
-                          "%%10.3f%%8d%%12.%cf%%11.5f%%12.%cf%%10.5f %%5d   %%%% %%s%%s%%3d",
+                          "%%10.3f%%8d%%12.%cf%%11.5f%%12.%cf%%10.5f %%5d   %%%%%%s%%s%%3d",
                           frmat, frmat);
             std::snprintf(buf, sizeof(buf), fmt, time, iloop - 2, rc_escf,
                           ekin, rc_escf + ekin, errr, jloop, text1.c_str(),
                           text2.c_str(), ii);
         } else {
             std::snprintf(fmt, sizeof(fmt),
-                          "%%8d%%14.%cf%%13.5f%%17.5f%%10.5f%%6d   %%%% %%s%%s%%3d",
+                          "%%8d%%14.%cf%%13.5f%%17.5f%%10.5f%%6d   %%%%%%s%%s%%3d",
                           frmat);
             std::snprintf(buf, sizeof(buf), fmt, iloop - 2, rc_escf, ekin,
                           rc_escf + ekin, errr, jloop, text1.c_str(),
@@ -126,13 +134,13 @@ void drcout(const std::vector<std::vector<double>>& xyz3,
         if (drc) {
             if (text1 == " " && text2 == " ") {
                 std::snprintf(fmt, sizeof(fmt),
-                              "%%10.3f%%8d%%12.%cf%%11.5f%%12.%cf%%10.5f %%5d   %%%% %%8.4f",
+                              "%%10.3f%%8d%%12.%cf%%11.5f%%12.%cf%%10.5f %%5d   %%%%%%8.4f",
                               frmat, frmat);
                 std::snprintf(buf, sizeof(buf), fmt, time, iloop - 2, rc_escf,
                               ekin, rc_escf + ekin, errr, jloop, rxn_coord);
             } else {
                 std::snprintf(fmt, sizeof(fmt),
-                              "%%10.3f%%8d%%12.%cf%%11.5f%%12.%cf%%10.5f %%5d   %%%% %%s%%s%%3d",
+                              "%%10.3f%%8d%%12.%cf%%11.5f%%12.%cf%%10.5f %%5d   %%%%%%s%%s%%3d",
                               frmat, frmat);
                 std::snprintf(buf, sizeof(buf), fmt, time, iloop - 2, rc_escf,
                               ekin, rc_escf + ekin, errr, jloop,
@@ -141,13 +149,13 @@ void drcout(const std::vector<std::vector<double>>& xyz3,
         } else {
             if (text1 == " " && text2 == " ") {
                 std::snprintf(fmt, sizeof(fmt),
-                              "%%8d%%14.%cf%%13.5f%%17.5f%%10.5f %%5d   %%%% %%8.4f",
+                              "%%8d%%14.%cf%%13.5f%%17.5f%%10.5f %%5d   %%%%%%8.4f",
                               frmat);
                 std::snprintf(buf, sizeof(buf), fmt, iloop - 2, rc_escf, ekin,
                               rc_escf + ekin, errr, jloop, rxn_coord);
             } else {
                 std::snprintf(fmt, sizeof(fmt),
-                              "%%8d%%14.%cf%%13.5f%%17.5f%%10.5f %%5d   %%%% %%s%%s%%3d",
+                              "%%8d%%14.%cf%%13.5f%%17.5f%%10.5f %%5d   %%%%%%s%%s%%3d",
                               frmat);
                 std::snprintf(buf, sizeof(buf), fmt, iloop - 2, rc_escf, ekin,
                               rc_escf + ekin, errr, jloop, text1.c_str(),

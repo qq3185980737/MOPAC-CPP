@@ -1,0 +1,4 @@
+
+
+          MOPAC Job: "c12_COSMO.mop" ended normally on Oct 26, 2026, at 01:21.
+

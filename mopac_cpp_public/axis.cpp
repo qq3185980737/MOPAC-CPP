@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】axis.cpp —— 转动惯量/分子量/转动常数（axis.F90）
+// ----------------------------------------------------------------------------
+// 由坐标与原子质量计算质心、主转动惯量（3x3 对称矩阵本征分解）、分子量、
+// 转动常数（GHz/cm^-1）与转动配分函数；rsp() 的 3x3 本征分解也在此文件。
+// 1-based 原子索引；供热力学（thermo）与几何输出使用。
+// ============================================================================
+
 // axis.cpp — C++ translation of MOPAC 2016 "axis.F90".
 // Principal moments of inertia, molecular weight, rotational constants.
 
@@ -115,7 +123,8 @@ void axis(double& a, double& b, double& c, double evec[4][4]) {
     }
 
     if (mol_weight > 0 && first) {
-        std::printf("\n          MOLECULAR WEIGHT =%8.2f\n\n",
+        // F90 axis.F90:76: (/10X,'MOLECULAR WEIGHT =',F8.2,/)
+        std::printf("\n\n          MOLECULAR WEIGHT =%8.2f\n\n",
                     std::min(99999.99, mol_weight));
     }
     sumwx /= mol_weight;
@@ -170,7 +179,8 @@ void axis(double& a, double& b, double& c, double evec[4][4]) {
     rsp(t, 3, eig, evec);
 
     if (mol_weight > 0 && first && keywrd.find("RC=") == std::string::npos) {
-        std::printf("\n\n         ROTATIONAL CONSTANTS IN CM(-1)\n\n");
+        // F90 axis.F90:116/124/127/128
+        std::printf("\n\n          ROTATIONAL CONSTANTS IN CM(-1)\n\n");
         for (int i = 1; i <= 3; ++i) {
             if (eig[i] < 3.0e-4) {
                 eig[i] = 0.0;
@@ -180,11 +190,11 @@ void axis(double& a, double& b, double& c, double evec[4][4]) {
             }
         }
         for (int i = 1; i <= 3; ++i) to_screen_C::xyzmom[i] = eig[i] * const1;
-        std::printf("         A =%14.8f   B =%14.8f   C =%14.8f\n\n",
+        std::printf("          A =%14.8f   B =%14.8f   C =%14.8f\n\n",
                     to_screen_C::rot[1], to_screen_C::rot[2], to_screen_C::rot[3]);
         if (keywrd.find("RC=") == std::string::npos)
-            std::printf("\n\n          PRINCIPAL MOMENTS OF INERTIA IN UNITS OF 10**(-40)*GRAM-CM**2\n\n");
-        std::printf("         A =%14.4f   B =%14.4f   C =%14.4f\n\n",
+            std::printf("\n\n           PRINCIPAL MOMENTS OF INERTIA IN UNITS OF 10**(-40)*GRAM-CM**2\n\n");
+        std::printf("          A =%14.4f   B =%14.4f   C =%14.4f\n\n",
                     to_screen_C::xyzmom[1], to_screen_C::xyzmom[2], to_screen_C::xyzmom[3]);
         c = to_screen_C::rot[1];
         b = to_screen_C::rot[2];

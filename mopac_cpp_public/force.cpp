@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】force.cpp —— 力场/振动/热力学
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 force.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // force.cpp — C++ translation of MOPAC 2016 "force.F90".
 // FORCE: force constants, vibrational frequencies, zero-point energy,
 // isotope substitution, IRC/DRC driving, thermo interface.
@@ -107,7 +116,9 @@ static void xyzint_vec(const std::vector<std::vector<double>>& coord, int numat,
     std::vector<double> xyz, out;
     to_col3(xyz, coord, numat);
     out.assign(3 * numat + 1, 0.0);
-    xyzint(&xyz[1], numat, &na[1], &nb[1], &nc[1], degree, &out[1]);
+    // xyzint.cpp uses 0-based flat indexing for xyz/geo and 1-based na/nb/nc;
+    // pass the vector data pointers directly (the old &v[1] shifted all arrays).
+    xyzint(xyz.data(), numat, na.data(), nb.data(), nc.data(), degree, out.data());
     from_col3(geo, out, numat);
 }
 // Copy cnorml (packed n*n, column-major flat) into anavib's 2-D (n,n) view.
@@ -160,7 +171,9 @@ static void force_thermo(std::vector<double>& store, int nvib, double a, double 
     }
     if (store.size() <= (size_t)nvib) store.assign(nvib + 1, 0.0);
     for (int idx = 1; idx <= nvib; ++idx) store[idx] = freq[idx];
-    thermo(a, b, c, linear ? 1 : 0, sym, &store[i], j, escf);
+    // Fortran passes vibs(i); C++ thermo() indexes vibs[1] as the first
+    // element, so the pointer must be offset by i-1 (not i).
+    thermo(a, b, c, linear ? 1 : 0, sym, &store[i - 1], j, escf);
 }
 void force() {
     using namespace molkst_C;
@@ -217,6 +230,7 @@ void force() {
         for (int i = 1; i <= nvar; ++i)
             xparam[i] = geo[loc[2][i]][loc[1][i]];
     }
+    std::fprintf(stderr, "NVAR force-end %d\n", nvar);
     if (id > 0) {
         natoms = numat + id;
         nvar -= 3 * id;
@@ -264,7 +278,7 @@ void force() {
         std::fprintf(stdout, "\n\n          HEAT OF FORMATION =%17.6f KCALS/MOLE\n", escf);
         time2 = second(1);
         tscf = time2 - time1;
-        compfg(xparam, true, escf, false, grad, true);
+        compfg(xparam, true, escf, false, grad, true);  // F90 force.F90:182 fulscf=.FALSE.
         double time3 = second(1);
         tder = time3 - time2;
         if (prnt && !ts) {
@@ -350,6 +364,16 @@ void force() {
         for (int k = 1; k <= 3; ++k) store_coord[k-1][i] = coord[k-1][i];
     for (i = 1; i <= numat; ++i)
         for (int k = 1; k <= 3; ++k) geo[k][i] = coord[k-1][i];
+    // axis() may reorient coord; keep Cartesian xparam in the same frame so
+    // the force matrix, normal modes and IRC velocities use it consistently.
+    if (nvar == 3 * numat) {
+        // Fortran fmat works on the uncentered frame (first atom at origin);
+        // coord here is COM-centered, so shift back to atom 1 for bitwise
+        // comparability.
+        for (i = 1; i <= numat; ++i)
+            for (int k = 1; k <= 3; ++k)
+                xparam[(i - 1) * 3 + k] = coord[k - 1][i] - coord[k - 1][1];
+    }
     if (rot[1][1] > 2.0) { cleanup(); return; }  // dummy use of rot
     int nvib = 3 * numat - 6;
     if (ts) {
@@ -467,9 +491,17 @@ void force() {
         }
     }
     itemp_2 = nvar - nvib;
+    {
+        std::fprintf(stderr, "CXXFM");
+        int n = 3 * numat;
+        for (int k = 1; k <= std::min(45, n * (n + 1) / 2); ++k)
+            std::fprintf(stderr, " %.14f", fmatrx[k]);
+        std::fprintf(stderr, "\n");
+    }
+
     freqcy(fmatrx, freq, travel, true, deldip, ff, oldf, ts);
-    // Calculate zero-point energy.
-    // const = 0.5*N*H*C/(1e10*4.184)
+
+
     double constv = 0.5 * fpc_10 * fpc_6 * fpc_8 / (1.0e10 * 4.184);
     double sum = 0.0;
     int ni = 0;
@@ -503,6 +535,7 @@ void force() {
         }
         dipt[i] = std::sqrt(trdip[1][i] * trdip[1][i] + trdip[2][i] * trdip[2][i] + trdip[3][i] * trdip[3][i]);
     }
+
     if (prnt && large) {
         std::fprintf(stdout, "\n\n          FREQUENCIES, REDUCED MASSES AND VIBRATIONAL DIPOLES\n");
         int nto6 = nvar / 6;
@@ -565,6 +598,7 @@ void force() {
         matou1(&cnorml[1], &freq[1], nvib, j, nvib, 5);
     }
     // Carry out IRC if requested.
+
     if (f_index(keywrd, " IRC") + f_index(keywrd, " DRC") != 0) {
         if (f_index(keywrd, " HTML") != 0) write_path_html();
         for (i = 1; i <= nvar; ++i) { loc[1][i] = 0; loc[2][i] = 0; }
@@ -654,7 +688,9 @@ void force() {
     std::vector<double> trav2;
     for (i = 1; i <= 3 * numat; ++i)
         for (int k = 1; k <= 3; ++k) trav2.push_back(deldip[k][i]);
+
     freqcy(fmatrx, freq, trav2, false, deldip, ff, oldf, ts);
+
     std::fprintf(stdout, "\n\n          MASS-WEIGHTED COORDINATE ANALYSIS (NORMAL COORDINATES)\n");
     i = -nvar;
     j = nvar;
@@ -663,10 +699,13 @@ void force() {
         std::vector<std::vector<double>> vibs;
         cnorml_to_2d(vibs, cnorml, nvar);
         anavib(freq, dipt, nvar, vibs, store, nvib, fmatrx, ff);
+        std::fprintf(stderr, "STAGE after anavib\n");
         cnorml_from_2d(cnorml, vibs, nvar);
     }
     if (f_index(keywrd, " THERMO") != 0)
-        force_thermo(store, nvib, a, b, c, linear, escf);
+    
+    force_thermo(store, nvib, a, b, c, linear, escf);
+
     for (i = 1; i <= numat; ++i)
         for (int k = 1; k <= 3; ++k) coord[k-1][i] = store_coord[k-1][i];
     for (i = 1; i <= (nvar * (nvar + 1)) / 2; ++i) fmatrx[i] = oldf[i] * 1.0e-5;
@@ -679,6 +718,20 @@ void force() {
     nvar = 0;
     ndep = ndeold;
     cleanup();
+    if (std::getenv("SYMR_PROBE")) {
+        extern void symr();
+        symr();
+        namespace S = symmetry_C;
+        std::fprintf(stderr, "CXXSYMR nsym %d\n", S::nsym);
+        std::fprintf(stderr, "CXXSYMR ipo");
+        for (int i = 1; i <= numat; ++i)
+            for (int j = 1; j <= std::min(S::nsym, 4); ++j) std::fprintf(stderr, " %d", S::ipo[i][j]);
+        std::fprintf(stderr, "\nCXXSYMR r");
+        for (int j = 1; j <= std::min(S::nsym, 4); ++j)
+            for (int k = 1; k <= 9; ++k) std::fprintf(stderr, " %.6f", S::r[k][j]);
+        std::fprintf(stderr, "\n");
+    }
+
 }
 
 // phase_lock: the phase of an eigenvector is set so that the largest

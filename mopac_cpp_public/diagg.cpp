@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】diagg.cpp —— MOZYME 对角化/密度/介电相关集合
+// ----------------------------------------------------------------------------
+// 合并移植自 diagg.F90 / diagg1.F90 / diagg2.F90 / density_for_MOZYME.F90 /
+// epseta.F90 的若干例程：MOZYME 的伪对角化、局域轨道占据/虚轨道处理、
+// 密度矩阵输出与介电（epseta）辅助。1-based LMO 索引，依赖 MOZYME_C。
+// ============================================================================
+
 // diagg.cpp — C++ translation of diagg.F90 / diagg1.F90 / diagg2.F90 /
 // density_for_MOZYME.F90 / epseta.F90 (MOPAC 2016).
 #include "diagg.h"
@@ -347,6 +355,8 @@ void diagg1(const std::vector<double>& fao, int nocc, int nvir,
         if (times1) timer(" AFTER DIAGG1 IN ITER");
     } else {
         //  EVALUATE THE OCCUPIED ENERGY LEVELS
+        if (std::getenv("DIAGG_DEBUG"))
+            std::fprintf(stderr, "DIAGG1 energy branch idiagg=%d nocc=%d eig0=%g\n", idiagg, nocc, (double)eigs[1]);
         for (i = 1; i <= nocc; ++i) {
             loopi = ncocc[i];
             l = 0;
@@ -456,6 +466,8 @@ void diagg1(const std::vector<double>& fao, int nocc, int nvir,
             }
             eigs[i] = sum;
         }
+        if (std::getenv("DIAGG_DEBUG"))
+            std::fprintf(stderr, "DIAGG1 wrote eigs1=%g eigs2=%g\n", (double)eigs[1], (double)eigs[2]);
         oldlim = tiny * safety * 1.e-3;
         fref = tiny * tiny * tiny * tiny;
         if (times1) timer(" AFTER DIAGG1 IN ITER");
@@ -704,6 +716,7 @@ void diagg(const std::vector<double>& fao, int nocc, int nvir, int idiagg,
     std::vector<bool> latoms(numat + 1);
     // allocate failures cannot occur with std::vector; memory errors throw.
     int nij = fmo_dim;
+    if (std::getenv("DIAGG_DEBUG")) std::fprintf(stderr, "DIAGG idiagg=%d nocc=%d nvir=%d\n", idiagg, nocc, nvir);
     //  In diagg1, all significant matrix elements are constructed.  These
     //  nij elements are stored in fmo, and their indices are stored in ifmo.
     diagg1(fao, nocc, nvir, eigs, ws, latoms, ifmo, fmo, fmo_dim, nij, idiagg,
@@ -712,4 +725,18 @@ void diagg(const std::vector<double>& fao, int nocc, int nvir, int idiagg,
     //  two rotation.
     diagg2(nocc, nvir, eigs, iused, latoms, nij, idiagg, storei, storej);
     density_for_MOZYME(p, indi, nocc, partp);
+}
+
+// Recompute the occupied LMO expectation values <i|F|i> exactly the way
+// diagg1() does during SCF (idiagg%4==0 energy branch), using the current
+// Fock matrix and the final LMO coefficients.  This is what official prtlmo
+// prints as the LMO energies; FlmoFromFao's full-basis expectation differs
+// because diagg1 only sums atom pairs passing its cutoff test.
+void diagg1_energy(const std::vector<double>& fao) {
+    std::vector<double> ws(norbs + 1), aov(numat + 1), avir(norbs + 1);
+    std::vector<double> aocc(std::max(1, icocc_dim + 1));
+    std::vector<bool> latoms(numat + 1);
+    int nij = fmo_dim;
+    diagg1(fao, noccupied, nvirtual, eigs, ws, latoms, ifmo, fmo, fmo_dim, nij,
+           4, avir, aocc, aov);
 }

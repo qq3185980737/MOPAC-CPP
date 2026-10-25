@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】mopend.cpp —— MOZYME 局域轨道/成键
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 mopend.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // mopend.cpp — C++ translation of mopend.F90 (mopend + summary).
 #include "mopend.h"
 
@@ -43,30 +52,30 @@ void summary(const std::string& txt, int ntxt) {
         blank[0] = '*';
         blank[max_txt - 1] = '*';
 
-        std::printf("\n%s\n", top.c_str());
-        std::printf("%s\n", blank.c_str());
+        std::printf("\n %s\n", top.c_str());
+        std::printf(" %s\n", blank.c_str());
         if (bad) {
             std::string line = "*     Error and normal termination messages reported in this calculation";
             line += std::string(max_txt - (int)line.size(), ' ');
             line[max_txt - 1] = '*';
-            std::printf("%s\n", line.c_str());
-            std::printf("%s\n", blank.c_str());
+            std::printf(" %s\n", line.c_str());
+            std::printf(" %s\n", blank.c_str());
             for (int i = 0; i < nmessages; ++i) {
                 if (messages[i].find("JOB ENDED NORMALLY") != std::string::npos) continue;
                 line = "* " + messages[i];
                 if ((int)line.size() < max_txt)
                     line += std::string(max_txt - (int)line.size(), ' ');
                 line[max_txt - 1] = '*';
-                std::printf("%s\n", line.c_str());
+                std::printf(" %s\n", line.c_str());
             }
         }
         std::string line = "* JOB ENDED NORMALLY";
         if ((int)line.size() < max_txt)
             line += std::string(max_txt - (int)line.size(), ' ');
         line[max_txt - 1] = '*';
-        std::printf("%s\n", line.c_str());
-        std::printf("%s\n", blank.c_str());
-        std::printf("%s\n", top.c_str());
+        std::printf(" %s\n", line.c_str());
+        std::printf(" %s\n", blank.c_str());
+        std::printf(" %s\n", top.c_str());
 
         nmessages = 0;
         messages[0] = "JOB ENDED NORMALLY";

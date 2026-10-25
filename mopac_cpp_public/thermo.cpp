@@ -1,5 +1,17 @@
 // thermo.cpp — C++ translation of MOPAC 2016 "thermo.F90".
 // Calculated thermodynamic properties (partition functions, HOF, H, Cp, S).
+
+//
+// ============================================================================
+// 【中文导读】thermo() —— 热力学性质计算（配分函数/HOF/H/Cp/S）
+// ----------------------------------------------------------------------------
+// 对应 thermo.F90。基于振动频率（力常数矩阵本征值）与对称数，用统计热力学
+// 公式计算平动/转动/振动配分函数，进而得到 H、Cp、S、G 与生成热随温度的
+// 变化；THERMO 关键字可给出温度范围/步长，结果追加到输出。
+// 约定：a/b/c 为转动常数（或线形分子标记），linear 表示线性分子，sym 为
+// 对称数；温度表由 ilim 等全局量控制。
+// ============================================================================
+
 #include "thermo.h"
 #include "molkst_C.h"
 #include "funcon_C.h"
@@ -27,8 +39,19 @@ extern int iw;
 extern double reada(const std::string&, int);
 extern void web_message(int, const char*);
 
+// thermo(): 主入口；参数为转动常数/线性标记/对称数，结果写入主输出。
+
 void thermo(double a, double b, double c, int linear, double sym,
             double* vibs, int nvibs, double escf) {
+    // Fortran thermo.F90 declares T_range/HOF_tot/H_tot/Cp_tot/S_tot as
+    // dimension(400); size the C++ vectors before use to avoid OOB writes.
+    if (common_arrays_C::T_range.size() < 401) {
+        common_arrays_C::T_range.assign(401, 0.0);
+        common_arrays_C::HOF_tot.assign(401, 0.0);
+        common_arrays_C::H_tot.assign(401, 0.0);
+        common_arrays_C::Cp_tot.assign(401, 0.0);
+        common_arrays_C::S_tot.assign(401, 0.0);
+    }
     double R = funcon_C::fpc_5, h = funcon_C::fpc_6, ak = funcon_C::fpc_7,
            ac = funcon_C::fpc_8;
     int it1 = 200, it2 = 400, istep = 10;
@@ -37,15 +60,18 @@ void thermo(double a, double b, double c, int linear, double sym,
     // Trim trailing whitespace for the index search.
     while (!trimmed.empty() && (trimmed.back() == ' ' || trimmed.back() == '\t')) trimmed.pop_back();
     tmpkey = trimmed;
-    int i = (int)tmpkey.find("THERMO(") + (int)tmpkey.find("THERMO=(");
-    if (i != 0) {
-        if (i == (int)std::string::npos) i = (int)tmpkey.find("THERMO(");
-        if (i == (int)std::string::npos) i = (int)tmpkey.find("THERMO=(");
+    // Fortran index() returns 0 when absent; std::string::find returns npos,
+    // so convert npos to 0 before adding (otherwise plain THERMO parses garbage).
+    size_t p1 = tmpkey.find("THERMO(");
+    size_t p2 = tmpkey.find("THERMO=(");
+    int i = (p1 == std::string::npos ? 0 : (int)p1)
+          + (p2 == std::string::npos ? 0 : (int)p2);
+    if (i > 0) {
         // Erase all text except THERMO data.
         for (int k = 0; k < i; ++k) tmpkey[k] = ' ';
-        int jp = (int)tmpkey.find(')');
-        if (jp != (int)std::string::npos)
-            for (int k = jp; k < (int)tmpkey.size(); ++k) tmpkey[k] = ' ';
+        size_t jp = tmpkey.find(')');
+        if (jp != std::string::npos)
+            for (size_t k = jp; k < tmpkey.size(); ++k) tmpkey[k] = ' ';
         it1 = (int)std::lround(reada(tmpkey, i));
         if (it1 < 100) {
             std::fprintf(stdout, "\n\n          TEMPERATURE RANGE STARTS TOO LOW, LOWER BOUND IS RESET TO 30K\n");

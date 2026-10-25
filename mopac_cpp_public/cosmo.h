@@ -1,3 +1,11 @@
+// ============================================================================
+// 【中文导读】cosmo.h —— MOPAC 2016 模块接口声明（C++ 头文件）
+// ----------------------------------------------------------------------------
+// 声明对应的模块全局量/函数/常量，与同名 .cpp 配对使用；保持 MOPAC
+// 的 1-based 索引与打包下三角/列主序约定。实现细节与移植缺口见
+// docs/TRANSLATION_GAPS.md 及对应 .cpp 的中文导读。
+// ============================================================================
+
 // cosmo.h — C++ translation of MOPAC 2016 "cosmo.F90" (small routines; heavy geometric ones stubbed).
 #pragma once
 #include <vector>
@@ -31,5 +39,5 @@ void mfinel(int ips, int k, double* finel,
 void coscav();
 void cosini(bool l_print);
 void surclo(double* coord, const int* nipa, const int* lipa, const bool* din,
-            int dim_din, double** rsc, int* isort, int* ipsrs, int* nipsrs,
+            int dim_din, double* rsc, int* isort, int* ipsrs, int* nipsrs,
             const int* nat, const double* srad, int maxrs);

@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】symtrz.cpp —— 对称性/特征标
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 symtrz.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // symtrz.cpp — C++ translation of MOPAC 2016 "symtrz.F90".
 // Determine point group and symmetrize orbitals / vibrational modes.
 // makopr is a permanent gap in the 2016 tree (no source) and is supplied
@@ -13,6 +22,12 @@
 #include "molkst_C.h"
 #include "mult33.h"
 #include "symmetry_C.h"
+#include <cstdint>
+#include <cstring>
+#include <cstdlib>
+#include <fstream>
+#include <iomanip>
+#include <string>
 #include "molsymy.h"
 
 using namespace common_arrays_C;
@@ -24,6 +39,9 @@ extern void symoir(int itype, double* vects, double* eigs, int nvecs, double* r,
 extern void makopr(int numat, double* cotim, int& ierror, double* r);  // permanent gap (stub by caller)
 
 void symtrz(double* vects, double* eigs, int itype, int geteig) {
+
+
+
     // cotim(3,numat) column-major, copied from coord (direct indexing).
     std::vector<double> cotim(3 * numat + 1, 0.0);
     for (int i = 1; i <= numat; ++i)

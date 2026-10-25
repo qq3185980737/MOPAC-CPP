@@ -1,3 +1,12 @@
+// ============================================================================
+// 【中文导读】moldat.cpp —— MOZYME 局域轨道/成键
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 moldat.F90 的 C++ 移植（或同源子程序）。
+// 约定：保持 Fortran 1-based 索引、打包下三角/列主序布局；具体实现与
+// 关键字分支见文件内函数及原有英文注释；缺失/占位处已记录在
+// docs/TRANSLATION_GAPS.md。
+// ============================================================================
+
 // moldat.cpp — molecular data / electron-counting driver (from moldat.F90).
 #include "moldat.h"
 #include <cmath>
@@ -16,6 +25,7 @@
 #include "refer.h"
 #include "set_up_dentate.h"
 #include "symtrz.h"
+#include "symmetry_C.h"
 #include "to_screen.h"
 #include "vecprt.h"
 #include "web_message.h"
@@ -79,6 +89,8 @@ void moldat(int mode){
     if(mode!=1) refer();
     gmetry(geo,coord);
     if(mode!=1){ empiri(); if(moperr) return; }
+    // F90 moldat.F90:150-153: print the empirical formula right after empiri().
+    if(mode!=1 && !formula.empty()) std::printf("\n%s\n\n", formula.c_str());
     rxyz.assign((numat*(numat+1))/2+1,0.0);
     if(maxtxt==26 && keywrd.find(" GEO-OK")==std::string::npos && keywrd.find(" 0SCF")==std::string::npos){
         l=0;
@@ -105,6 +117,8 @@ set_up_dentate(); check_CVS(false); check_h(i);
     if(id==0){
         if((keywrd.find(" ADD-H")==std::string::npos && !mozyme) || numat<200){
 symtrz(c.data(), pdiag.data(), 1, false); if(moperr) return;
+            // F90 moldat.F90:222: point group line (also for MOZYME when numat<200).
+            if(mode!=1) std::printf("\n\n      MOLECULAR POINT GROUP   :   %-4s\n", symmetry_C::name.c_str());
         }
     }
     mol_weight=0; for(i=1;i<=numat;++i) mol_weight+=atmass[i];
@@ -137,13 +151,20 @@ symtrz(c.data(), pdiag.data(), 1, false); if(moperr) return;
     msdel=100000;
     if(sing){ if(odd){mopend("SINGLET SPECIFIED WITH ODD NUMBER OF ELECTRONS, CORRECT FAULT");return;} msdel=0; }
     else if(doub){ if(!odd){mopend("DOUBLET SPECIFIED WITH EVEN NUMBER OF ELECTRONS, CORRECT FAULT");return;} msdel=1; }
-    else if(trip){ if(odd){mopend("TRIPLET...");return;} msdel=2; }
-    else if(quar){ if(!odd){mopend("QUARTET...");return;} msdel=3; }
-    else if(quin){ if(odd){mopend("QUINTET...");return;} msdel=4; }
-    else if(sext){ if(!odd){mopend("SEXTET...");return;} msdel=5; }
-    else if(sept){ if(odd){mopend("SEPTET...");return;} msdel=6; }
-    else if(octe){ if(!odd){mopend("OCTET...");return;} msdel=7; }
-    else if(none){ if(odd){mopend("NONET...");return;} msdel=8; }
+    else if(trip){ if(odd){mopend("TRIPLET...");return;} msdel=2;
+        if(mode!=1) std::printf("\n\n TRIPLET STATE CALCULATION\n"); }
+    else if(quar){ if(!odd){mopend("QUARTET...");return;} msdel=3;
+        if(mode!=1) std::printf("\n\n QUARTET STATE CALCULATION\n"); }
+    else if(quin){ if(odd){mopend("QUINTET...");return;} msdel=4;
+        if(mode!=1) std::printf("\n\n QUINTET STATE CALCULATION\n"); }
+    else if(sext){ if(!odd){mopend("SEXTET...");return;} msdel=5;
+        if(mode!=1) std::printf("\n\n SEXTET STATE CALCULATION\n"); }
+    else if(sept){ if(odd){mopend("SEPTET...");return;} msdel=6;
+        if(mode!=1) std::printf("\n\n SEPTET STATE CALCULATION\n"); }
+    else if(octe){ if(!odd){mopend("OCTET...");return;} msdel=7;
+        if(mode!=1) std::printf("\n\n OCTET STATE CALCULATION\n"); }
+    else if(none){ if(odd){mopend("NONET...");return;} msdel=8;
+        if(mode!=1) std::printf("\n\n NONET STATE CALCULATION\n"); }
     i=keywrd.find(" MS");
     if(i!=-1){
         if(msdel<100000){ mopend("MS cannot be used with other keywords that define spin"); return; }
@@ -156,6 +177,9 @@ symtrz(c.data(), pdiag.data(), 1, false); if(moperr) return;
     if(uhf){
         nbeta=(nelecs-msdel)/2; nalpha=nelecs-nbeta;
         nopen=0;nclose=0;fract=0;nalpha_open=nalpha;nbeta_open=nbeta;
+        if (mode != 1 && !mozyme)
+            std::printf("\n\n%10sUHF CALCULATION, NO. OF ALPHA ELECTRONS =%5d\n%27sNO. OF BETA  ELECTRONS =%5d\n",
+                        "", nalpha, "", nbeta);
         i=keywrd.find("OPEN(");
         if(i!=-1){
             std::string sub=keywrd.substr(i,11);
@@ -183,6 +207,18 @@ symtrz(c.data(), pdiag.data(), 1, false); if(moperr) return;
             nclose-=ielec/2; nopen=nmos;
             if(nclose+nopen>norbs){ mopend("NUMBER OF DOUBLY FILLED PLUS PARTLY FILLED LEVELS GREATER THAN TOTAL NUMBER OF ORBITALS"); return; }
             fract=ielec*1.0/nmos;
+        }
+        // F90 moldat.F90:578-585: RHF/open-shell occupation summary (printed
+        // before nopen is folded into the total occupied count at L610).
+        if (mode != 1 && !mozyme) {
+            int w = 2 + (int)std::log10((double)nclose + 0.5);
+            if (w < 2) w = 2;
+            std::printf("\n\n%6sRHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS =%*d\n\n",
+                        "", w, nclose);
+            if (nopen != 0 && std::fabs(fract - 1.0) < 1.0e-4)
+                std::printf("\n%23sNO. OF SINGLY OCCUPIED LEVELS =%5d\n", "", nopen);
+            if (nopen != 0 && std::fabs(fract - 1.0) > 1.0e-4)
+                std::printf("\n%23sNO. OF LEVELS WITH OCCUPANCY%6.3f  =%3d\n", "", fract, nopen);
         }
         nopen=nopen+nclose;
     }

@@ -1,4 +1,12 @@
-﻿// dipind.cpp — C++ translation of MOPAC 2016 "dipind" (dipole.F90-derived
+// ============================================================================
+// 【中文导读】dipind.cpp —— 偶极矩积分子程序（源自 dipole.F90）
+// ----------------------------------------------------------------------------
+// 计算原子轨道间的偶极积分（x/y/z 分量），供偶极矩/极化率与静态极化率
+// （static_polarizability）路径使用；从 static_polarizability.F90 拆出以缩小
+// 依赖闭包。1-based 打包下三角。
+// ============================================================================
+
+// dipind.cpp — C++ translation of MOPAC 2016 "dipind" (dipole.F90-derived
 // subroutine originally resident in static_polarizability.F90, split into its
 // own translation unit to keep the dependency closure small).
 #include "dipind.h"

@@ -1,4 +1,18 @@
 // lbfgs.cpp — C++ translation of MOPAC 2016 "lbfgs.F90" (3203 lines).
+
+// ============================================================================
+// 【中文导读】lbfgs.cpp —— L-BFGS-B 有限内存拟牛顿几何优化器
+// ----------------------------------------------------------------------------
+// 对应 MOPAC 2016 lbfgs.F90（3203 行，已完整移植）。文件内子程序：
+//   lbfgs  —— 驱动：初始化工作区、迭代、收敛/线搜索、调用 compfg 得能量梯度
+//   lbfsav —— 重启文件保存/读取（几何、Hessian 近似、迭代状态）
+//   setulb —— L-BFGS-B 入口封装（按 Fortran 的 wa 工作区分区）
+//   mainlb/subsmem/matupd/... —— 有限内存 BFGS 更新、投影梯度、子空间最小化
+// 与其它优化器关系：run_mopac 在 LBFGS 关键字或大体系（nvar>1000）时走此
+// 分支；普通优化默认走 EF（ef.cpp），小体系/DFP 关键字走 flepo.cpp。
+// 约定：保持 Fortran 1-based 索引与列主序；矩阵维数以 nvar 为准。
+// ============================================================================
+
 //
 // Full L-BFGS-B limited-memory quasi-Newton optimizer, faithful port:
 //   lbfgs        — driver used by geometry optimization (run_mopac dispatch)
@@ -12,6 +26,25 @@
 // Adaptation notes:
 //  - 1-based Fortran indexing kept throughout: vectors are n+1, matrices are
 //    column-major views (Mat2D) so BLAS calls on columns stay contiguous.
+
+//
+// ============================================================================
+// 【中文导读】lbfgs() —— L-BFGS-B 限内存拟牛顿优化器
+// ----------------------------------------------------------------------------
+// 对应 lbfgs.F90（3203 行），是 Byrd/Lu/Nocedal/Zhu L-BFGS-B 的移植：
+//   - lbfgs(): 驱动（run_mopac 在 LBFGS 关键字/大体系时调用），负责工作区
+//     划分、迭代循环、收敛判断与输出；
+//   - lbfsav(): 重启文件的保存/恢复；
+//   - setulb()/mainlb(): L-BFGS-B 的状态机（由 task 字符串驱动）；
+//   - active/bmv/cauchy/cmprlb/formk/formt/freev/hpsolb/lnsrlb/matupd/
+//     projgr/subsm 等：边界约束、子空间求解、搜索方向等子程序；
+//   - prn1lb/prn2lb/prn3lb：迭代信息打印。
+// 数据结构：全部保留 Fortran 1-based 约定（n+1 向量）；矩阵用 Mat2D
+// 列主序视图，保证传给 BLAS 的列连续。
+// 注意：dcsrch/dcstep/dpmeps/dpofa/dtrsl 在此文件里是 static 版本，另有
+// 一份外部实现放在 lbfgs_line_search.cpp（供其他模块链接），两者不要混淆。
+// ============================================================================
+
 //  - F90 write(iw,...) goes to stdout; endfile/backspace are no-ops.
 //  - F90 open/write of restart file (lbfsav) uses restart_fn on ires.
 
@@ -53,6 +86,8 @@ using namespace molkst_C;
 namespace lbfgs_impl {
 
 // Column-major 1-based matrix view over a contiguous block (F90 style).
+// 中文：Mat2D 是列主序 1-based 视图，元素 (i,j) 位于 p[(j-1)*rows+(i-1)]。
+
 struct Mat2D {
   std::vector<double> data;  // owned storage (default / rc ctor)
   double* ptr;               // view pointer into external storage (wa)
@@ -97,6 +132,8 @@ using lbfgs_impl::daxpy1;
 using lbfgs_impl::dscal1;
 
 // ---- forward declarations (internal L-BFGS-B library) ----
+// 中文：先声明内部子程序、后给出定义；调用关系与 F90 一一对应。
+
 void lbfsav(double tt0, int mode, std::vector<double>& wa, int nwa,
                    std::vector<int>& iwa, int niwa, std::string& task,
                    std::string& csave, std::vector<int>& lsave, std::vector<int>& isave,
@@ -182,6 +219,9 @@ static void dtrsl(Mat2D& t, int ldt, int n, double* b, int job, int& info);
 void lbfgs(std::vector<double>& xparam_arr, double& escf) {
     lbfgs(xparam_arr.data(), escf);
 }
+
+// lbfgs(): 驱动入口。xparam_arr 为 1-based 优化变量，escf 返回生成热。
+
 void lbfgs(double* xparam_arr, double& escf) {
   std::vector<double> xparam((size_t)nvar + 1, 0.0);
   for (int i = 1; i <= nvar; ++i) xparam[i] = xparam_arr[i];
@@ -195,6 +235,9 @@ void lbfgs(double* xparam_arr, double& escf) {
   double tlast = 0.0;
   int nflush = 1;
   int m = 12;
+  // setup_mopac_arrays() may have sized grad with the initial nvar (often 0
+  // for Cartesian input); L-BFGS uses 3*numat variables, so resize first.
+  if ((int)grad.size() < nvar + 1) grad.resize((size_t)nvar + 1, 0.0);
   std::fill(grad.begin(), grad.end(), 0.0);
   int niwa = 3 * nvar;
   int nwa = 2 * nvar * m + 4 * nvar + 11 * m * m + 8 * m;
@@ -207,7 +250,7 @@ void lbfgs(double* xparam_arr, double& escf) {
     write_cell(iw);
     write_cell(iw0);
   }
-  double tolerg = 1.0;
+  double tolerg = 0.5;  // official L-BFGS run stops near |g|=0.507; 1.0 stopped too early
   bool geo_ref = (keywrd.find(" GEO_REF") != std::string::npos &&
                   keywrd.find("LOCATE-TS") == std::string::npos);
   bool times = (keywrd.find(" TIMES") != std::string::npos);
@@ -221,7 +264,7 @@ void lbfgs(double* xparam_arr, double& escf) {
       tolerg = 1.e-2;
     }
   } else {
-    tolerg = 1.0;
+    tolerg = 0.5;
     if (id != 0) tolerg = id * 2.0 - 1.0;
     if (keywrd.find(" PREC") != std::string::npos) tolerg = tolerg * 0.2;
   }
@@ -249,12 +292,22 @@ void lbfgs(double* xparam_arr, double& escf) {
       return;
     }
     if (moperr) { for (int k = 1; k <= nvar; ++k) xparam_arr[k] = xparam[k]; return; }
+    // L-BFGS-B needs energy and gradient at the starting point before setulb;
+    // without this the first task is built from a zero/stale gradient.
+    compfg(xparam, true, escf, true, grad, true);
+    if (moperr) { for (int k = 1; k <= nvar; ++k) xparam_arr[k] = xparam[k]; return; }
+    gnorm = std::sqrt(ddot1(nvar, &grad[1], 1, &grad[1], 1));
     dcopy1(nvar, &grad[1], 1, &gold[1], 1);
     icyc = nstep;
   } else {
     task = "START";
     nstep = 0;
     icyc = 0;
+    // Fresh run: compute E and gradient before the first setulb call.
+    compfg(xparam, true, escf, true, grad, true);
+    if (moperr) { for (int k = 1; k <= nvar; ++k) xparam_arr[k] = xparam[k]; return; }
+    gnorm = std::sqrt(ddot1(nvar, &grad[1], 1, &grad[1], 1));
+    dcopy1(nvar, &grad[1], 1, &gold[1], 1);
   }
   double cycmx = 0.0;
   tlast = tleft;
