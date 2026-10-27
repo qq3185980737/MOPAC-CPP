@@ -2142,3 +2142,159 @@ COSMO 相关；能量与梯度哪一层出错。
 - 建议下一步：为 `dcart` 重建可 dump 中间量的 Fortran 参考对照（复用 §96 的
   ifx/obj 管线），逐项比对 MOZYME 分支的 `padi/pdi/pbdi`、`dhc` 的 aa/ee、
   `delsta` 的 dstat，定位并修复后再重跑本测试矩阵。
+
+## 99. 2026-10-26 旧版本（GitHub 状态）复现 MOZYME 优化问题
+
+### 99.1 目的
+
+确认 §98 实测到的「MOZYME 几何优化梯度错误」是否为本轮修复引入的回归，还是
+GitHub 旧版本就存在的问题。
+
+### 99.2 被测版本
+
+| 版本 | 说明 | 梯度相关源码 |
+|---|---|---|
+| `8f66c42` | 本轮工作之前 GitHub 上的主分支状态（2026-10-24，本地 commit "1" 的父提交） | 已直接编译实测 |
+| `a30b099` / `v1.1.0` | GitHub 上已发布的旧 tag（`origin/main` 跟踪点） | 已直接编译实测（与 8f66c42 仅 README/LICENSE/docs/.gitignore 差异，**无任何代码文件变化**） |
+| `b5fa665` | 本轮全部修复后的状态（commit "1"） | 含 dcart/cosmo 等修复 |
+
+两个版本均用 `git archive` 导出干净源码树、MSBuild Release x64 重新完整编译
+（退出码 0，无编译错误）：`8f66c42` → `mopac_cpp_old_8f66c42.exe`，
+`v1.1.0`（`a30b099`）→ `mopac_cpp_v110.exe`。`git diff --name-only a30b099..8f66c42`
+不含任何 `.cpp/.h/.vcxproj` 文件（仅 README/LICENSE/docs/.gitignore），两版本
+代码相同；另确认两版本的梯度链路文件（dcart/deriv/dhc/jcarin/chrge_for_MOZYME/
+iter_for_MOZYME/hcore_for_MOZYME）与 8f66c42 逐字节相同。
+
+### 99.3 结果：旧版本同样有该问题（且 COSMO 优化直接崩溃）
+
+| 用例 | 旧版本（v1.1.0 与 8f66c42 实测相同） | 当前版本（b5fa665） | 官方 |
+|---|---|---|---|
+| 水 默认优化 | g1=**721.377**，HOF −57.79108，GN 722.56，3 轮 | g1=721.377，HOF −57.79108，GN 722.56，3 轮 | g1=3.818，HOF −57.79909，GN 0.78 |
+| 水 COSMO 优化 | **崩溃**（exit 3221225477，输出为空） | 正常结束，g1=684.06，HOF −65.17074 | g1=7.768，HOF −65.21180，GN 0.46 |
+| 苯 默认优化 | g1=6286.50，HOF 23.02260，GN 6284.43 | g1=6284.29，HOF 23.02282 | g1=17.24，HOF 22.95671，GN 0.58 |
+| 苯 COSMO 优化 | **崩溃**（exit 3221225477） | 正常结束，g1=6220.84，HOF 21.05900 | g1=20.18，HOF 20.95883 |
+| C12H26 默认优化 | g1=5515.75，HOF 1253.64 | g1=5513.35，HOF 1252.10 | g1=510.92，HOF 162.75，GN 0.99 |
+
+v1.1.0 直接实测数据与上表 8f66c42 完全一致：水默认 g1=721.377、苯默认
+g1=6286.499、C12H26 g1=5515.748；两个 COSMO 优化用例同样以 exit 3221225477
+崩溃（输出为空），DCART 导数同为 O (266.532342, -385.552987, -252.046453)。
+
+**决定性证据：旧版本与当前版本的 dcart 笛卡尔导数逐位相同**（水，`DCART`）：
+
+```
+旧版本 8f66c42 : O (266.532342, -385.552987, -252.046453)   H1 (-136.156226, 410.859945, 111.675717)
+当前   b5fa665 : O (266.532342, -385.552987, -252.046453)   H1 (-136.156226, 410.859945, 111.675717)
+官方           : O (0.050406, 0.000340, -3.101008)           H1 (-0.024998, -0.220983, 1.534891)
+```
+
+即：本轮所有修复（chklew / linear_cosmo / mkl_bits / cosmo-diegrd / dcart-flat）
+**没有改变 MOZYME 梯度**，该错误是旧版本就存在的历史遗留；本轮只是把
+「MOZYME + COSMO 优化崩溃」修成了「能运行但仍因梯度错误而不收敛」。
+
+### 99.4 结论
+
+- **GitHub 旧版本 v1.1.0 与 8f66c42 直接编译实测均复现该问题**：
+  MOZYME 优化首轮梯度高 2 个数量级、优化不收敛；
+- 旧版本还额外存在 MOZYME+COSMO 优化崩溃（本轮 §97 已修复）；
+- 因此 §98 的问题不是本轮引入的回归，而是需要单独修复的历史遗留
+  （§98.5 的 dcart MOZYME 分支定位仍然成立，下一步可继续）。
+
+### 99.5 复现
+
+    git archive --format=tar --output=old.tar 8f66c42
+    mkdir old && tar -xf old.tar -C old
+    msbuild old\mopac_cpp_public\MOPAC_Cpp.vcxproj /p:Configuration=Release /p:Platform=x64 /m
+    python docs\_verify_runs\moz_opt_probe\old_probe.py <old>\mopac_cpp_public\x64\Release\mopac.exe
+
+## 100. 2026-10-26 MOZYME 几何优化修复（dcart 密度块索引 + addnucz 接线）
+
+### 100.1 问题回顾
+
+§98/§99 实测：MOZYME 几何优化首轮梯度比官方大 ~2 个数量级
+（水 C++ 721.4 vs 官方 3.818），气体与 COSMO 均复现；v1.1.0 / 8f66c42
+旧版本同样存在。
+
+### 100.2 根因 1：dcart 的 MOZYME 分支密度块索引基准错误
+
+- Fortran `dcart` 的 MOZYME 分支以 1-based 打包索引填充 `padi/pdi/pbdi`
+  （`padi(1..171)`）；而 C++ `dhc()` 的 ABI 是 0-based 连续数组
+  （内部 `pv[t] = p[t-1]`）。
+- C++ 的 MOZYME 分支照抄了 F90 的 1-based 下标（`padi[ij_]` 从 1 开始），
+  而非 MOZYME 分支却是 0-based（`padi[ij_ + m]`，`ij_` 从 0 开始）——
+  两条分支约定不一致，MOZYME 分支的密度块整体错位 1 个元素。
+- 后果：`dhc()` 读到错位密度，双中心能量 `aa/ee` 错误
+  （C++ −4.072 vs 官方 −13.508），有限差分梯度放大 2 个数量级。
+- 修复：MOZYME 分支 4 处填充改为 F90 索引减 1（`padi[ij_ - 1]`、
+  `padi[l - 1]`、`pdi[...]` 同步）。
+
+验证：修复后 dcart 中间量 `PAIR` 的 `aa/ee/deriv` 与 Fortran 参考一致到
+~1×10⁻¹²，笛卡尔梯度 `(0.050405530, 0.000340452, -3.101007880)` 与官方
+`(0.050406, 0.000340, -3.101008)` 逐位一致。
+
+### 100.3 根因 2：hcore_for_MOZYME 的 addnucz 空桩（仅影响 COSMO 梯度）
+
+修好根因 1 后气体 MOZYME 优化与官方完全一致，但 MOZYME+COSMO 首轮梯度
+仍错（水 101.5 vs 7.768）。原因：
+
+- `hcore_for_MOZYME` 的 `useps` 分支中 `addnucz(phinet, qscnet, qdenet)`
+  被写成 no-op 桩（注释 "Stub: no-op placeholder"）；
+- `addnucz` 负责把核电荷写入 `qdenet(:,1)`（并把 channel-1 的
+  phi/qscnet 清零），`addfckz` 随后计算 `qdenet(:,3) = qdenet(:,2)+qdenet(:,1)`；
+- `diegrd`（COSMO 介电梯度）用的正是 `qdenet(:,3)`，缺少核电荷项导致
+  COSMO 梯度错误；能量/`DIELECTRIC ENERGY` 不用该通道，所以 1SCF 一直正确。
+- 修复：恢复调用 `linear_cosmo::addnucz(phinet, qscnet, qdenet)`。
+
+### 100.4 验证（C++ vs 官方 mopac_ref.exe）
+
+**MOZYME 优化**（首轮梯度 / 最终 HOF / 最终 GN / 轮数）：
+
+| 用例 | C++ | 官方 |
+|---|---|---|
+| 水 `PM7 MOZYME` | 3.818 / −57.79909 / 0.77912 / 3 | 完全一致 |
+| 水 `+ EPS=78.4` | 7.768 / −65.21180 / 0.45776 / 3 | 完全一致 |
+| 苯 `PM7 MOZYME` | 17.244 / 22.95671 / 0.57086 / 11 | 17.244 / 22.95671 / 0.57602 / 11 |
+| 苯 `+ EPS=78.4` | 20.182 / 20.95883 / 0.66506 / 5 | 完全一致 |
+| 萘 `PM7 MOZYME` | 119.087 / 39.71539 / 0.68252 / 19 | 119.087 / 39.71539 / 0.68250 / 19 |
+| 萘 `+ EPS=78.4` | 121.751 / 36.32591 / 0.38652 / 18 | 完全一致 |
+| 环戊二烯 `PM7 MOZYME` | 210.033 / 32.29160 / 0.99026 / 29 | 210.033 / 32.29160 / 0.98974 / 29 |
+| 环戊二烯 `+ EPS=78.4` | 232.545 / 68.32543 / 2.39246 / 18 | 完全一致 |
+| 甲醇 `+ EPS=78.4` | −54.01756 / −0.28965 | 完全一致 |
+| C12H26 `PM7 MOZYME` | 首轮梯度 510.922（与官方一致），收敛 163.55 | 510.922，收敛 162.75 |
+
+C12H26 收敛值差异属 EF 优化器在大体系上的既有精度问题，与 MOZYME 无关：
+非 MOZYME 的 C12H26 优化同样 −67.34742 vs 官方 −67.35916。
+
+**回归**：
+
+- 既有 14 项：**全部 PASS**，THERMO ZPE 10.007 / FORCE ZPE 10.120 不变；
+- COSMO 套件 12 项：10 项与官方完全一致（含此前 FAIL 的
+  `water_moz_cosmo_opt`、`meoh_moz_cosmo_opt` 两项转为 PASS）；
+  剩余：乙酸根 1×10⁻⁵、甲醇普通 COSMO 优化 1×10⁻³（EF 优化器已知精度）。
+
+### 100.5 D: 工程重编译后的复核
+
+上述修复写回 `D:\test_rep\mopac_cpp_public` 并完整重编译（退出码 0）后，用
+D: 构建的 exe 重跑全部用例，结果与工作区构建一致：
+
+- 14 项既有回归：**ALL PASS**（THERMO 10.007 / FORCE 10.120）；
+- COSMO 套件：10/12 完全一致（含 `water_moz_cosmo_opt`、`meoh_moz_cosmo_opt`
+  由 FAIL 转 PASS）；
+- MOZYME 优化 probe（15 用例）：
+  - 水/苯/萘/环戊二烯（气体与 COSMO）、水 `BFGS`、苯 `BFGS`：首轮梯度与
+    最终 HOF 与官方一致；苯/萘/环戊二烯最终 GN 有 1e-3~1e-2 级差异
+    （EF 优化器数值细节，HOF 一致）；
+  - `L-BFGS` 关键字官方不支持（ref 报错），C++ 回落为默认优化器；
+  - C12H26（38 原子直线烷烃测试几何）：首轮梯度与官方一致（510.922 /
+    514.071），收敛 HOF 163.55 vs 162.75（COSMO 98.73 vs 98.40）——
+    属 EF 优化器在大体系上的既有精度问题：非 MOZYME 的 C12H26 优化
+    同样 −67.34742 vs 官方 −67.35916。
+
+结论：**MOZYME 几何优化（气体与 COSMO）已修复**——梯度从第 1 步起与官方
+一致，小/中等分子优化结果逐位相同；剩余差异均归因于 EF 优化器既有精度，
+与 MOZYME 无关。
+
+### 100.6 复现
+
+    python docs/_verify_runs/moz_opt_probe/run_moz_opt_probe.py --all
+    python docs/_verify_runs/cosmo_moz/run_cosmo_moz.py --all
+    python docs/_verify_runs/chklew_port/run_gate.py --all

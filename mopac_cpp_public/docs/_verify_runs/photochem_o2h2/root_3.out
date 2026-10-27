@@ -1,0 +1,179 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only     Version 16.013  64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013 , James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 15:04:07 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  C.I.=N   - 4 M.O.S TO BE USED IN C.I.
+ *  ROOT       - IN A C.I. CALCULATION, ROOT 3 TO BE OPTIMIZED.
+ *  1SCF       - DO 1 SCF AND THEN STOP 
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+﻿PM7 C.I.=4 ROOT=3 1SCF
+ H2/O2 root 3
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          3.00000000  *   4.00000000  *   4.00000000  *
+     2       O          3.00000000  *   4.00000000  *   5.21000000  *
+     3       H          5.50000000  *   4.00000000  *   4.00000000  *
+     4       H          5.50000000  *   4.00000000  *   4.74000000  *
+     5       H          3.00000000  *   6.50000000  *   4.00000000  *
+     6       H          3.00000000  *   6.50000000  *   4.74000000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        3.0000    4.0000    4.0000
+     2         O        3.0000    4.0000    5.2100
+     3         H        5.5000    4.0000    4.0000
+     4         H        5.5000    4.0000    4.7400
+     5         H        3.0000    6.5000    4.0000
+     6         H        3.0000    6.5000    4.7400
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H4 O2  =     6 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 8
+
+
+ -------------------------------------------------------------------------------
+﻿PM7 C.I.=4 ROOT=3 1SCF
+ H2/O2 root 3
+
+
+
+     1SCF WAS SPECIFIED, SO BFGS WAS NOT USED                 
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013 )
+                                                       Mon Oct 26 15:04:07 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -43.49138 KCAL/MOL =    -181.96795 KJ/MOL
+
+
+          TOTAL ENERGY            =       -642.22805 EV  STATE:   1 SINGLET A"  
+          ELECTRONIC ENERGY       =      -1283.53086 EV  POINT GROUP:     Cs  
+          CORE-CORE REPULSION     =        641.30281 EV
+          COSMO AREA              =         84.17 SQUARE ANGSTROMS
+          COSMO VOLUME            =         59.71 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =          9.569937 EV
+          HOMO LUMO ENERGIES (EV) =         -9.570 -1.452
+          NO. OF FILLED LEVELS    =          8
+          MOLECULAR WEIGHT        =         36.0304
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     5    H     4     3.61215
+            H     3    O     2     2.34875
+            H     6    O     1     1.98166
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.008 SECONDS
+          COMPUTATION TIME        =          0.016 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          3.00000000  *   4.00000000  *   4.00000000  *
+     2       O          3.00000000  *   4.00000000  *   5.21000000  *
+     3       H          5.50000000  *   4.00000000  *   4.00000000  *
+     4       H          5.50000000  *   4.00000000  *   4.74000000  *
+     5       H          3.00000000  *   6.50000000  *   4.00000000  *
+     6       H          3.00000000  *   6.50000000  *   4.74000000  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        3.000000000     4.000000000     4.000000000
+   2    O        3.000000000     4.000000000     5.210000000
+   3    H        5.500000000     4.000000000     4.000000000
+   4    H        5.500000000     4.000000000     4.740000000
+   5    H        3.000000000     6.500000000     4.000000000
+   6    H        3.000000000     6.500000000     4.740000000
+
+
+           Empirical Formula: H4 O2  =     6 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+
+
+                  EIGENVALUES  
+ -30.99572 -27.99040 -17.54341 -16.08306 -15.82936 -14.71773 -14.59790  -9.56994
+  -1.45174   2.71079   7.17389   7.18948
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.001729        6.0017     1.96737     4.03436
+    2          O           0.001781        5.9982     1.96734     4.03088
+    3          H          -0.000032        1.0000     1.00003
+    4          H           0.000006        1.0000     0.99999
+    5          H          -0.000032        1.0000     1.00003
+    6          H           0.000006        1.0000     0.99999
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000    -0.000     0.010     0.010
+ HYBRID         0.000     0.000    -0.000     0.000
+ SUM           -0.000    -0.000     0.010     0.010
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.96737   1.50072   1.50072   1.03293
+    2  O   1.96734   1.49913   1.49913   1.03261
+    3  H   1.00003
+    4  H   0.99999
+    5  H   1.00003
+    6  H   0.99999
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

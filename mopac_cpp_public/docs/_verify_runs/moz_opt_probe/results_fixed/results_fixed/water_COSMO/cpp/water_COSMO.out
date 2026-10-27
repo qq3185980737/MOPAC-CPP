@@ -1,0 +1,308 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 01:54:45 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  MOZYME     - USE LOCALIZED M.O.s IN SOLVING THE SCF EQUATIONS
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *  EPS= 78.40 - USE ANDREAS KLAMT'S COSMO IMPLICIT SOLVATION MODEL
+ *******************************************************************************
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+EFDBG mxstep=2000 keywrd=[ PM7 MOZYME EPS=78.4 ] find=-1
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+  O     0.00000000 +1   0.00000000 +1   0.00000000 +1
+  H     0.00000000 +1   0.75700000 +1   0.58600000 +1
+  H     0.00000000 +1  -0.75700000 +1   0.58600000 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0000
+  1  3    0.0000
+  2  1    0.0000
+  2  2    0.7570
+  2  3    0.5860
+  3  1    0.0000
+  3  2   -0.7570
+  3  3    0.5860
+ grad
+    0.07228    0.03127    5.08711   -0.07360   -3.29559   -2.55088    0.00132    3.26431   -2.53623
+ CYCLE:     1 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     7.768 HEAT:     -65.16392
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+      0.0      0.0      0.0      0.0      0.0      0.0    200.0    395.8
+  1   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2   0.0000  -0.9606  -0.0587  -0.0000   0.0001   0.0277  -0.0000   0.2702
+  3   0.0000  -0.0601   0.9349  -0.0000  -0.0001  -0.1019  -0.3345  -0.0000
+  4   0.0000  -0.0000   0.0000   1.0000  -0.0000  -0.0000   0.0000   0.0000
+  5   0.0000  -0.1603  -0.0567  -0.0000  -0.0005  -0.4258   0.0000  -0.5383
+  6   0.0000  -0.1195   0.2889  -0.0000   0.0006   0.5334   0.6664  -0.4167
+  7   0.0000   0.0000   0.0000   0.0000   1.0000  -0.0011  -0.0000   0.0000
+  8   0.0000  -0.1603  -0.0567  -0.0000  -0.0005  -0.4258   0.0000  -0.5383
+  9   0.0000   0.0893   0.1804  -0.0000  -0.0007  -0.5846   0.6664   0.4167
+
+        9
+    500.0
+  1   0.0000
+  2   0.0000
+  3  -0.0000
+  4   0.0000
+  5   0.7071
+  6  -0.0000
+  7  -0.0000
+  8  -0.7071
+  9   0.0000
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.02710
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.1369777           0.0269441   -0.0863279     -0.3121
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0135
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.02710
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -0.172529256
+ P-RFO-STEP   HAS LENGTH   0.02707
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -226.168954029
+ QA/TRIM-STEP HAS LENGTH   0.01355
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.2099409          -0.0460190   -0.0659870      0.6974
+ STEPSIZE USED IS  0.01355
+ CALCULATED STEP
+  0.000000 -0.000014 -0.003996  0.000000  0.004544  0.007982 -0.000000 -0.004490  0.007940
+ NEW TRUST RADIUS =  0.01916
+
+ HESSIAN IS BEING UPDATED USING THE BFGS UPDATE
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+  O     0.00000000 +1  -0.00001364 +1  -0.00399646 +1
+  H     0.00000000 +1   0.76154396 +1   0.59398241 +1
+  H    -0.00000000 +1  -0.76148961 +1   0.59394034 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2   -0.0000
+  1  3   -0.0040
+  2  1    0.0000
+  2  2    0.7615
+  2  3    0.5940
+  3  1   -0.0000
+  3  2   -0.7615
+  3  3    0.5939
+ grad
+    0.03195   -0.01650   -1.25685   -0.05504    1.75642    0.64014    0.02309   -1.73992    0.61671
+ CYCLE:     2 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:     2.913 HEAT:     -65.20994
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+      0.0      0.0      0.0      0.0      0.0      0.0    300.9    395.8
+  1   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2   0.0000  -0.9609  -0.0592   0.0000   0.0001  -0.0278   0.0022   0.2689
+  3   0.0000  -0.0606   0.9349   0.0000  -0.0005   0.1016  -0.2955   0.0015
+  4   0.0000  -0.0000   0.0000  -1.0000   0.0000   0.0000   0.0000   0.0000
+  5   0.0000  -0.1588  -0.0570   0.0000  -0.0024   0.4297  -0.3358  -0.5292
+  6   0.0000  -0.1201   0.2883   0.0000   0.0030  -0.5306   0.5851  -0.4235
+  7   0.0000  -0.0001  -0.0001   0.0000   1.0000   0.0056  -0.0000  -0.0000
+  8   0.0000  -0.1588  -0.0570   0.0000  -0.0024   0.4296   0.3272  -0.5421
+  9   0.0000   0.0897   0.1810   0.0000  -0.0032   0.5815   0.5920   0.4177
+
+        9
+    823.4
+  1   0.0000
+  2  -0.0016
+  3  -0.1568
+  4   0.0000
+  5   0.6277
+  6   0.3149
+  7   0.0000
+  8  -0.6214
+  9   0.3099
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.00337
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -65.2117235          -0.0017826   -0.0046754      0.3813
+ STEPSIZE USED IS  0.00337
+ CALCULATED STEP
+  0.000000  0.000010  0.000481  0.000000 -0.002177 -0.000974 -0.000000  0.002137 -0.000943
+ NEW TRUST RADIUS =  0.10000
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+  O     0.00000000 +1  -0.00000368 +1  -0.00351538 +1
+  H     0.00000000 +1   0.75936735 +1   0.59300847 +1
+  H    -0.00000000 +1  -0.75935270 +1   0.59299759 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2   -0.0000
+  1  3   -0.0035
+  2  1    0.0000
+  2  2    0.7594
+  2  3    0.5930
+  3  1   -0.0000
+  3  2   -0.7594
+  3  3    0.5930
+ grad
+    0.03480    0.00644   -0.26099   -0.05755    0.22289    0.12798    0.02275   -0.22933    0.13301
+ CYCLE:     3 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     0.458 HEAT:     -65.21172
+
+ GRADIENT =  0.45776  IS LESS THAN CUTOFF =  1.00000
+
+
+ -------------------------------------------------------------------------------
+PM7 MOZYME EPS=78.4
+ water_COSMO
+ 
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 01:54:45 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -65.21180 KCAL/MOL =    -272.84617 KJ/MOL
+          VAN DER WAALS AREA      =         42.58 SQUARE ANGSTROMS
+
+
+          TOTAL ENERGY            =       -323.00064 EV
+          ELECTRONIC ENERGY       =       -468.81541 EV
+          CORE-CORE REPULSION     =        145.47870 EV
+          DIELECTRIC ENERGY       =         -0.36592 EV
+          COSMO AREA              =         42.58 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.28 CUBIC ANGSTROMS
+          GRADIENT NORM           =          0.45776
+
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51872
+            O     1    H     3     0.59652
+            H     2    O     1     0.00000
+
+
+          SCF CALCULATIONS        =          5
+ 
+          WALL-CLOCK TIME         =          0.016 SECONDS
+          COMPUTATION TIME        =          0.016 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *  -0.00000368  *  -0.00351538  *
+     2       H          0.00000000  *   0.75936735  *   0.59300847  *
+     3       H         -0.00000000  *  -0.75935270  *   0.59299759  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000    -0.000003676    -0.003515383
+   2    H        0.000000000     0.759367349     0.593008466
+   3    H       -0.000000000    -0.759352702     0.592997585
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.746947        6.7469     1.81605     4.93090
+    2          H           0.373525        0.6265     0.62647
+    3          H           0.373421        0.6266     0.62658
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000     0.000     2.140     2.140
+ HYBRID         0.000    -0.000     0.308     0.308
+ SUM            0.000     0.000     2.449     2.449
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81605   2.00000   1.40656   1.52434
+    2  H   0.62647
+    3  H   0.62658
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

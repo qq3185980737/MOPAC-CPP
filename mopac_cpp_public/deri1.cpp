@@ -59,7 +59,6 @@ using namespace molkst_C;
 
 static int icalcn = 0;
 static double const_step = 0.0;  // F90 save
-static bool debug = false;
 
 void deri1(int number, double& grad,
            std::vector<double>& fv, int minear,
@@ -78,7 +77,6 @@ void deri1(int number, double& grad,
         fmat.resize(std::max((lab * (lab + 1)) / 2,
                      std::max(20 * minear, mpack)));
         const_step = fpc_9;
-        debug = (keywrd.find("DERI1") != std::string::npos);
         icalcn = numcal;
     }
     double step = 1.0e-3;
@@ -104,9 +102,6 @@ void deri1(int number, double& grad,
     // Derivative of the SCF-only energy (before CI correction).
     grad = (helect(norbs, p.data(), hmat.data(), fmat.data()) + enucl2) *
            step;
-    {
-        double he = helect(norbs, p.data(), hmat.data(), fmat.data());
-    }
     for (int i = 1; i <= mpack; ++i) fmat[i] *= step;
 
     // Column-major flat MO coefficients: c(ip,i) -> cflat[(i-1)*norbs+ip].
@@ -117,7 +112,14 @@ void deri1(int number, double& grad,
 
     // PART 1: work(n,n) = fmat * c(n,n). fmat is a 1-based-padding buffer
     // (Fortran element n sits at physical n), so hoff=1.
-    std::vector<double> wf(norbs * norbs + 1, 0.0);
+    // Size mirrors Fortran dernvo.F90: allocate(work( max(norbs^2+45*lm61,
+    // (lab*(lab+1))/2, n2elec+mpack) )). The CI path (mecid/mecih/supdot)
+    // writes/reads wf[1..lab] and PART1 needs norbs*norbs, so allocate at
+    // least max(norbs^2, lab*(lab+1)/2, n2elec+mpack)+1.
+    const int wf_n =
+        std::max(norbs * norbs,
+                 std::max(lab * (lab + 1) / 2, n2elec + mpack)) + 1;
+    std::vector<double> wf(wf_n, 0.0);
     for (int i = 1; i <= norbs; ++i)
         supdot(&wf[(i - 1) * norbs], fmat.data(), &cflat[(i - 1) * norbs],
                norbs, 1);
@@ -168,8 +170,6 @@ void deri1(int number, double& grad,
 
     // CI-active Fock eigenvalue derivatives, stored in FD (continued).
     int lcut = l;
-    if (number == 3) {
-    }
     for (int i = nelec + 1; i <= nelec + nmos; ++i) {
         double s = 0.0;
         for (int k = 1; k <= norbs; ++k)
@@ -195,8 +195,6 @@ void deri1(int number, double& grad,
     double gse = 0.0;
     mecid(&fd[lcut], gse, eigb.data(), wf.data(), xy.data());
     mecih(wf.data(), wmat.data(), nmos, &lab, xy.data());
-    {
-    }
 
     // Non-relaxed CI contribution to the energy derivative. vectci is
     // 1-based-padding: state i starts at Fortran element j=(i-1)*lab+1.

@@ -1,0 +1,330 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:24:03 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7
+ H2 (singlet)
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       H          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.00000000  *   0.74000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         H        0.0000    0.0000    0.0000
+     2         H        0.0000    0.0000    0.7400
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 1
+
+EFDBG mxstep=2000 keywrd=[ PM7 ] find=-1
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+PM7
+ H2 (singlet)
+ 
+
+  H     0.00000000 +1   0.00000000 +1   0.00000000 +1
+  H     0.00000000 +1   0.00000000 +1   0.74000000 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0000
+  1  3    0.0000
+  2  1    0.0000
+  2  2    0.0000
+  2  3    0.7400
+ grad
+    0.00000    0.00000   27.33509    0.00000    0.00000  -27.33510
+ CYCLE:     1 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:    38.658 HEAT:      -31.7483
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6
+    200.0    200.0    500.0    500.0   1000.0   1000.0
+  1   0.0000   0.0000   0.0000   0.0000   1.0000   0.0000
+  2   0.0000   0.0000   1.0000   0.0000   0.0000   0.0000
+  3   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  4   0.0000   0.0000   0.0000   0.0000   0.0000   1.0000
+  5   0.0000   0.0000   0.0000   1.0000   0.0000   0.0000
+  6   0.0000   1.0000   0.0000   0.0000   0.0000   0.0000
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.19329
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+     -3.9952170          27.7530838   -3.7360371     -7.4285
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0966
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.19329
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -7.212008923
+ P-RFO-STEP   HAS LENGTH   0.18656
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -200.000000001
+ QA/TRIM-STEP HAS LENGTH   0.09664
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -24.5502716           7.1980292   -2.8020279     -2.5689
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0483
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.19329
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -7.212008923
+ P-RFO-STEP   HAS LENGTH   0.18656
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -600.000000007
+ QA/TRIM-STEP HAS LENGTH   0.04832
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -30.5557134           1.1925874   -1.6345162     -0.7296
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0242
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.19329
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -7.212008923
+ P-RFO-STEP   HAS LENGTH   0.18656
+ LAMDA THAT MINIMIZES ALONG ALL MODES =    -1400.000000009
+ QA/TRIM-STEP HAS LENGTH   0.02416
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -31.8716141          -0.1233133   -0.8756337      0.1408
+ STEPSIZE USED IS  0.02416
+ CALCULATED STEP
+ -0.000000 -0.000000 -0.017084 -0.000000 -0.000000  0.017084
+ NEW TRUST RADIUS =  0.02416
+
+ HESSIAN IS BEING UPDATED USING THE BFGS UPDATE
+PM7
+ H2 (singlet)
+ 
+
+  H    -0.00000000 +1  -0.00000000 +1  -0.01708443 +1
+  H    -0.00000000 +1  -0.00000000 +1   0.75708443 +1
+ 
+ XPARAM 
+  1  1   -0.0000
+  1  2   -0.0000
+  1  3   -0.0171
+  2  1   -0.0000
+  2  2   -0.0000
+  2  3    0.7571
+ grad
+    0.00000    0.00000  -18.73441    0.00000    0.00000   18.73440
+ CYCLE:     2 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:    26.494 HEAT:     -31.87161
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6
+    200.0    500.0    500.0   1000.0   1000.0   2696.6
+  1   0.0000  -0.0000  -0.0000  -1.0000   0.0015   0.0000
+  2   0.0000  -1.0000  -0.0008   0.0000  -0.0000   0.0000
+  3  -0.7071  -0.0000   0.0000  -0.0000  -0.0000  -0.7071
+  4   0.0000   0.0000   0.0000  -0.0015  -1.0000   0.0000
+  5   0.0000  -0.0008   1.0000  -0.0000   0.0000   0.0000
+  6  -0.7071   0.0000  -0.0000   0.0000   0.0000   0.7071
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.00983
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -32.0102098          -0.1385956   -0.1301568      1.0648
+ STEPSIZE USED IS  0.00983
+ CALCULATED STEP
+ -0.000000 -0.000000  0.006947 -0.000000 -0.000000 -0.006947
+ NEW TRUST RADIUS =  0.03417
+PM7
+ H2 (singlet)
+ 
+
+  H    -0.00000000 +1  -0.00000000 +1  -0.01013696 +1
+  H    -0.00000000 +1  -0.00000000 +1   0.75013696 +1
+ 
+ XPARAM 
+  1  1   -0.0000
+  1  2   -0.0000
+  1  3   -0.0101
+  2  1   -0.0000
+  2  2   -0.0000
+  2  3    0.7501
+ grad
+    0.00000    0.00000   -0.99615    0.00000    0.00000    0.99614
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     1.409 HEAT:     -32.01021
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6
+    200.0    500.0    500.0   1000.0   1000.0   2553.2
+  1  -0.0000  -0.0000   0.0000  -1.0000   0.0000  -0.0000
+  2  -0.0000   1.0000  -0.0005  -0.0000  -0.0000  -0.0000
+  3   0.7071  -0.0000  -0.0000   0.0000   0.0000  -0.7071
+  4  -0.0000   0.0000  -0.0000  -0.0000  -1.0000  -0.0000
+  5  -0.0000   0.0005   1.0000  -0.0000  -0.0000  -0.0000
+  6   0.7071   0.0000   0.0000  -0.0000  -0.0000   0.7071
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.00055
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -32.0105833          -0.0003736   -0.0003887      0.9612
+ STEPSIZE USED IS  0.00055
+ CALCULATED STEP
+ -0.000000 -0.000000  0.000390 -0.000000 -0.000000 -0.000390
+ NEW TRUST RADIUS =  0.10000
+PM7
+ H2 (singlet)
+ 
+
+  H    -0.00000000 +1  -0.00000000 +1  -0.00974680 +1
+  H    -0.00000000 +1  -0.00000000 +1   0.74974681 +1
+ 
+ XPARAM 
+  1  1   -0.0000
+  1  2   -0.0000
+  1  3   -0.0097
+  2  1   -0.0000
+  2  2   -0.0000
+  2  3    0.7497
+ grad
+    0.00000    0.00000    0.03933    0.00000    0.00000   -0.03933
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.056 HEAT:     -32.01058
+
+ GRADIENT =  0.05562  IS LESS THAN CUTOFF =  1.00000
+
+
+ -------------------------------------------------------------------------------
+PM7
+ H2 (singlet)
+ 
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 10:24:03 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -32.01058 KCAL/MOL =    -133.93228 KJ/MOL
+
+
+          TOTAL ENERGY            =        -28.04697 EV
+          ELECTRONIC ENERGY       =        -42.79825 EV  POINT GROUP:     D*h 
+          CORE-CORE REPULSION     =         14.75128 EV
+          COSMO AREA              =         27.33 SQUARE ANGSTROMS
+          COSMO VOLUME            =         13.10 CUBIC ANGSTROMS
+          GRADIENT NORM           =          0.05562
+
+          IONIZATION POTENTIAL    =         15.026400 EV
+          HOMO LUMO ENERGIES (EV) =        -15.026  7.036
+          NO. OF FILLED LEVELS    =          1
+          MOLECULAR WEIGHT        =          2.0158
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     2    H     1     0.75949
+            H     2    H     1     0.00000
+            H     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          8
+ 
+          WALL-CLOCK TIME         =          0.009 SECONDS
+          COMPUTATION TIME        =          0.009 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       H         -0.00000000  *  -0.00000000  *  -0.00974680  *
+     2       H         -0.00000000  *  -0.00000000  *   0.74974681  *
+
+                             CARTESIAN COORDINATES
+
+   1    H       -0.000000000    -0.000000000    -0.009746800
+   2    H       -0.000000000    -0.000000000     0.749746805
+
+
+           Empirical Formula: H2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+                  EIGENVALUES
+ -15.02640   7.03583
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       
+    1          H          -0.000000        1.0000     1.00000
+    2          H           0.000000        1.0000     1.00000
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.000     0.000     0.000
+ HYBRID         0.000     0.000     0.000     0.000
+ SUM            0.000    -0.000     0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s   
+    1  H   1.00000
+    2  H   1.00000
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

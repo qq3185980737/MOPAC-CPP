@@ -17,6 +17,7 @@
 #include "dfock2.h"
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include "common_arrays_C.h"
 #include "molkst_C.h"
 #include "jab.h"
@@ -225,7 +226,7 @@ restart:
                     pja[mm] = common_arrays_C::ptot2[(ii - 1) * 82 + (mm - 1)];
                     pjb[mm] = common_arrays_C::ptot2[(jj - 1) * 82 + (mm - 1)];
                 }
-                jab(ia, ja, pja, pjb, &w[kk + 1], f);
+                jab(ia, ja, pja, pjb, &w[kk], f);
                 int l = 0;
                 if (ia > ja) {
                     for (int i = ia; i <= ib; ++i) {
@@ -240,7 +241,7 @@ restart:
                         l = jb - ja + 1 + l;
                     }
                 }
-                kab(ia, ja, pk, &w[kk + 1], f);
+                kab(ia, ja, pk, &w[kk], f);
                 kk = kk + 100;
             } else if (ib - ia >= 3) {
                 // light-atom jj - heavy-atom ii (Coulomb + exchange)

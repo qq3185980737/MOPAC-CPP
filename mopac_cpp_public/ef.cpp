@@ -1455,7 +1455,6 @@ void ef(std::vector<double>& xparam, double& funct) {
               dmax, ddmax, ddmin, tol2, time1, time2, nvar, scf1, lupd, ldump,
               rrscal, donr, hesinv, bmat, pmat, grad, oldf, d, vmode);
         if (moperr) goto L1100;
-        std::printf("EFDBG mxstep=%d keywrd=[%s] find=%d\n", mxstep, keywrd.c_str(), (int)keywrd.find(" CYCLES="));
         if (old) iloop = -1;
         let = (keywrd.find(" LET") != std::string::npos);
         saddle = (keywrd.find(" SADDLE") != std::string::npos);
@@ -1537,7 +1536,7 @@ void ef(std::vector<double>& xparam, double& funct) {
         tleft = tleft - tstep;
         if (tleft < 0.0) tleft = -0.1;
         time1 = time2;
-        if (tleft < (tstep - (t_hess2 - t_hess1)) * 2.0) { std::printf("EFDBG tleft=%.6f tstep=%.6f dhess=%.6f\n", tleft, tstep, t_hess2-t_hess1); goto L1030; }
+        if (tleft < (tstep - (t_hess2 - t_hess1)) * 2.0) { goto L1030; }
         if ((!saddle && tstep > 0.5) || first_time) {
             prttim(tleft, tprt, txt);
             if (ldump == 0) {

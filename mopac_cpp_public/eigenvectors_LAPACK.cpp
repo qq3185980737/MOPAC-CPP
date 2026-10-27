@@ -46,6 +46,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include <vector>
 
 #ifdef MOPAC_USE_MKL
@@ -209,17 +210,17 @@ void eigenvectors_LAPACK(double* eigenvecs, double* xmat, double* eigvals,
     int info = LAPACKE_dsyevd(LAPACK_COL_MAJOR, 'V', 'U', ndim, A,
                               ndim, w);
     if (info != 0) {
-        // LAPACK failure: fall back to the scalar Jacobi path.
-#ifdef MOPAC_USE_MKL
-        // (Jacobi is compiled in only when MKL is disabled; emit zeros.)
-        for (int s = 0; s < ndim; ++s) {
-            eigvals[s + 1] = 0.0;
-            for (int i = 0; i < ndim; ++i) eigenvecs[i + s * ndim] = 0.0;
-        }
-        return;
-#endif
+        // Match official eigenvectors_LAPACK.F90: report the LAPACK failure
+        // and carry on with dsyevd's (partial) output instead of zeroing the
+        // eigensystem.  Zeroing here pushed NaN/undefined values into the
+        // SCF/EF callers and caused a stack-buffer fail-fast (0xC0000409) on
+        // the high-spin open-shell O2 (MS=3) EF path, whereas the reference
+        // merely prints the error and continues without crashing.
+        std::fprintf(stderr,
+                     " dsyevd Diagonalization error., CODE = %d\n", info);
     }
-    // dsyevd: eigenvalues ascending in w; columns of A are eigenvectors.
+    // dsyevd: eigenvalues ascending in w; columns of A are eigenvectors
+    // (copy regardless, matching the reference behavior).
     for (int s = 0; s < ndim; ++s) {
         eigvals[s + 1] = w[s];  // 1-based eigvals
         for (int i = 0; i < ndim; ++i)

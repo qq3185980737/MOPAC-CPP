@@ -1,0 +1,298 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:24:03 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 UHF
+ OH radical (doublet)
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.00000000  *   0.97000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.0000    0.9700
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H O  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    4
+                           NO. OF BETA  ELECTRONS =    3
+EFDBG mxstep=2000 keywrd=[ PM7 UHF ] find=-1
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+PM7 UHF
+ OH radical (doublet)
+ 
+
+  O     0.00000000 +1   0.00000000 +1   0.00000000 +1
+  H     0.00000000 +1   0.00000000 +1   0.97000000 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0000
+  1  3    0.0000
+  2  1    0.0000
+  2  2    0.0000
+  2  3    0.9700
+ grad
+    0.00000    0.00000   -2.53465    0.00000    0.00000    2.53465
+ CYCLE:     1 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:     3.585 HEAT:      7.261763
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6
+    200.0    200.0    500.0    500.0   1000.0   1000.0
+  1   0.0000   0.0000   0.0000   0.0000   1.0000   0.0000
+  2   0.0000   0.0000   1.0000   0.0000   0.0000   0.0000
+  3   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  4   0.0000   0.0000   0.0000   0.0000   0.0000   1.0000
+  5   0.0000   0.0000   0.0000   1.0000   0.0000   0.0000
+  6   0.0000   1.0000   0.0000   0.0000   0.0000   0.0000
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.01792
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+      7.4167996           0.1550362   -0.0321222     -4.8265
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0090
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.01792
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -0.064223717
+ P-RFO-STEP   HAS LENGTH   0.01792
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -200.000000001
+ QA/TRIM-STEP HAS LENGTH   0.00896
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+      7.2840720           0.0223086   -0.0240916     -0.9260
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0045
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.01792
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -0.064223717
+ P-RFO-STEP   HAS LENGTH   0.01792
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -600.000000007
+ QA/TRIM-STEP HAS LENGTH   0.00448
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+      7.2592543          -0.0025091   -0.0140534      0.1785
+ STEPSIZE USED IS  0.00448
+ CALCULATED STEP
+ -0.000000 -0.000000  0.003168 -0.000000 -0.000000 -0.003168
+ NEW TRUST RADIUS =  0.00448
+
+ HESSIAN IS BEING UPDATED USING THE BFGS UPDATE
+PM7 UHF
+ OH radical (doublet)
+ 
+
+  O    -0.00000000 +1  -0.00000000 +1   0.00316831 +1
+  H    -0.00000000 +1  -0.00000000 +1   0.96683169 +1
+ 
+ XPARAM 
+  1  1   -0.0000
+  1  2   -0.0000
+  1  3    0.0032
+  2  1   -0.0000
+  2  2   -0.0000
+  2  3    0.9668
+ grad
+    0.00000    0.00000    1.72851    0.00000    0.00000   -1.72851
+ CYCLE:     2 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:     2.444 HEAT:      7.259254
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6
+    200.0    500.0    500.0   1000.0   1000.0   1345.6
+  1  -0.0000   0.0000  -0.0000  -1.0000   0.0005  -0.0000
+  2  -0.0000   1.0000  -0.0004   0.0000   0.0000  -0.0000
+  3   0.7071  -0.0000  -0.0000   0.0000   0.0000  -0.7071
+  4  -0.0000   0.0000   0.0000  -0.0005  -1.0000  -0.0000
+  5   0.0000   0.0004   1.0000   0.0000   0.0000  -0.0000
+  6   0.7071   0.0000   0.0000  -0.0000  -0.0000   0.7071
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.00182
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+      7.2569897          -0.0022646   -0.0022204      1.0199
+ STEPSIZE USED IS  0.00182
+ CALCULATED STEP
+ -0.000000 -0.000000 -0.001285 -0.000000 -0.000000  0.001285
+ NEW TRUST RADIUS =  0.10000
+PM7 UHF
+ OH radical (doublet)
+ 
+
+  O    -0.00000000 +1  -0.00000000 +1   0.00188371 +1
+  H    -0.00000000 +1  -0.00000000 +1   0.96811629 +1
+ 
+ XPARAM 
+  1  1   -0.0000
+  1  2   -0.0000
+  1  3    0.0019
+  2  1   -0.0000
+  2  2   -0.0000
+  2  3    0.9681
+ grad
+    0.00000    0.00000    0.00610    0.00000    0.00000   -0.00610
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.009 HEAT:       7.25699
+
+ GRADIENT =  0.00862  IS LESS THAN CUTOFF =  1.00000
+
+
+ -------------------------------------------------------------------------------
+PM7 UHF
+ OH radical (doublet)
+ 
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 10:24:03 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =          7.25699 KCAL/MOL =      30.36323 KJ/MOL
+
+
+          TOTAL ENERGY            =       -306.52874 EV
+          ELECTRONIC ENERGY       =       -375.17347 EV  POINT GROUP:     C*v 
+          CORE-CORE REPULSION     =         68.64473 EV
+          COSMO AREA              =         39.77 SQUARE ANGSTROMS
+          COSMO VOLUME            =         23.22 CUBIC ANGSTROMS
+          GRADIENT NORM           =          0.00862
+
+          IONIZATION POTENTIAL    =         11.177028 EV
+          ALPHA SOMO LUMO (EV)    =        -12.236  4.530
+          BETA  SOMO LUMO (EV)    =        -11.177 -1.629
+          NO. OF ALPHA ELECTRONS  =          4
+          NO. OF BETA  ELECTRONS  =          3
+          MOLECULAR WEIGHT        =         17.0073
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     2    O     1     0.96623
+            H     2    O     1     0.00000
+            O     1    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          6
+ 
+          WALL-CLOCK TIME         =          0.012 SECONDS
+          COMPUTATION TIME        =          0.012 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O         -0.00000000  *  -0.00000000  *   0.00188371  *
+     2       H         -0.00000000  *  -0.00000000  *   0.96811629  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -0.000000000    -0.000000000     0.001883711
+   2    H       -0.000000000    -0.000000000     0.968116291
+
+
+           Empirical Formula: H O  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C*v 
+
+
+          ALPHA EIGENVALUES
+ -30.76061 -16.35485 -14.13954 -12.23591   4.53000
+
+
+           BETA EIGENVALUES
+ -26.28268 -15.19641 -11.17703  -1.62914   5.06425
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.251321        6.2513     1.93125     4.32007
+    2          H           0.251321        0.7487     0.74868
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.    -0.000    -0.000     1.166     1.166
+ HYBRID        -0.000     0.000     0.224     0.224
+ SUM           -0.000     0.000     1.391     1.391
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.93125   2.00000   1.00000   1.32007
+    2  H   0.74868
+
+
+                    (SZ)    =    0.500000
+                    (S**2)  =    0.753296
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+    Atom   Total    s     px     py     pz
+         Atomic
+    1  O  1.0458  0.016 -0.000  1.000  0.030
+    2  H -0.0458 -0.046
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.02 SECONDS
+
+ == MOPAC DONE ==

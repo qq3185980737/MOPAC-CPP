@@ -1,0 +1,5 @@
+PM7 UHF MS=1
+O2 true triplet S=1 geometry optimization
+
+O 0.000 0.000 0.000
+O 0.000 0.000 1.208

@@ -1,0 +1,160 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:24:02 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 UHF MS=1
+ O atom (triplet 3P)
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: O  =     1 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   R3  
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    4
+                           NO. OF BETA  ELECTRONS =    2
+EFDBG mxstep=2000 keywrd=[ PM7 UHF MS=1 ] find=-1
+
+ GRADIENT =  0.00000  IS LESS THAN CUTOFF =  1.00000
+
+
+ -------------------------------------------------------------------------------
+PM7 UHF MS=1
+ O atom (triplet 3P)
+ 
+
+
+     GRADIENTS WERE INITIALLY ACCEPTABLY SMALL
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 10:24:02 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         59.55900 KCAL/MOL =     249.19486 KJ/MOL
+
+
+          TOTAL ENERGY            =       -290.93134 EV
+          ELECTRONIC ENERGY       =       -290.93134 EV  POINT GROUP:     R3  
+          CORE-CORE REPULSION     =          0.00000 EV
+          COSMO AREA              =         37.18 SQUARE ANGSTROMS
+          COSMO VOLUME            =         21.31 CUBIC ANGSTROMS
+
+          IONIZATION POTENTIAL    =         10.536603 EV
+          ALPHA SOMO LUMO (EV)    =        -12.440  0.000
+          BETA  SOMO LUMO (EV)    =        -10.537 -0.989
+          NO. OF ALPHA ELECTRONS  =          4
+          NO. OF BETA  ELECTRONS  =          2
+          MOLECULAR WEIGHT        =         15.9994
+
+
+          SCF CALCULATIONS        =          1
+ 
+          WALL-CLOCK TIME         =          0.026 SECONDS
+          COMPUTATION TIME        =          0.026 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000     0.000000000     0.000000000
+
+
+           Empirical Formula: O  =     1 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   R3  
+
+
+          ALPHA EIGENVALUES
+ -31.86450 -14.34386 -14.34386 -12.44023
+
+
+           BETA EIGENVALUES
+ -21.80719 -10.53660  -0.98871  -0.98871
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O           0.000000        6.0000     2.00000     4.00000
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000     0.000     0.000     0.000
+ HYBRID         0.000     0.000     0.000     0.000
+ SUM            0.000     0.000     0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   2.00000   2.00000   1.00000   1.00000
+
+
+                    (SZ)    =    1.000000
+                    (S**2)  =    2.000000
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+    Atom   Total    s     px     py     pz
+         Atomic
+    1  O  2.0000  0.000  0.000  1.000  1.000
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.03 SECONDS
+
+ == MOPAC DONE ==

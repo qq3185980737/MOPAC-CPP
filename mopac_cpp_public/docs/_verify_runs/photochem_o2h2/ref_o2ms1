@@ -1,0 +1,5 @@
+PM7 UHF MS=1 1SCF
+O2 true triplet (9a 7b) single point
+
+O 0.000 0.000 0.000
+O 0.000 0.000 1.208

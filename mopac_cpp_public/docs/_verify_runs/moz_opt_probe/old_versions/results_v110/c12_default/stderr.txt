@@ -1,0 +1,30 @@
+********************************************************************************
+**                          MOPAC (16.013)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+c12_default.mop
+EFG-C1 funct=40941B8B21CC2B80
+EFG-C1 g1=40A688071360898B
+EFG-C1 g2=4081E243777FCA4C
+EFG-C1 g3=C069587217ACC3F6
+EFG-C1 g4=C03A7DB39629DD80
+EFG-C1 g5=C05299BB04D9E429
+EFG-C1 g6=C06296FD065E65EB
+EFG-C1 g7=4057FE96920C0FAE
+EFG-C1 g8=C063AEE7D146E057
+EFG-C1 g9=4085FF5C7A736F9E
+EFG-C1 g10=40168DE145C52108
+EFM-C mxstep=2000 nstep=1 iprnt=3
+EFM-C mxstep=2000 nstep=2 iprnt=3
+EFM-C mxstep=2000 nstep=3 iprnt=3
+EFM-C mxstep=2000 nstep=4 iprnt=3
+EFM-C mxstep=2000 nstep=5 iprnt=3
+EFM-C mxstep=2000 nstep=6 iprnt=3
+EFM-C mxstep=2000 nstep=7 iprnt=3
+EFM-C mxstep=2000 nstep=8 iprnt=3
+ Job: c12_default
+Final heat of formation =       1253.64188 kcal/mol
+GRADIENT NORM           =       5596.16991
+
+
+MOPAC Job: "c12_default.mop" ended normally on Mon Oct 26 01:41:39 2026

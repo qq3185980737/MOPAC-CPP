@@ -1,0 +1,317 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:24:05 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7
+ H2O (singlet)
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.75700000  *   0.58600000  *
+     3       H          0.00000000  *  -0.75700000  *   0.58600000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.7570    0.5860
+     3         H        0.0000   -0.7570    0.5860
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 4
+
+EFDBG mxstep=2000 keywrd=[ PM7 ] find=-1
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+PM7
+ H2O (singlet)
+ 
+
+  O     0.00000000 +1   0.00000000 +1   0.00000000 +1
+  H     0.00000000 +1   0.75700000 +1   0.58600000 +1
+  H     0.00000000 +1  -0.75700000 +1   0.58600000 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2    0.0000
+  1  3    0.0000
+  2  1    0.0000
+  2  2    0.7570
+  2  3    0.5860
+  3  1    0.0000
+  3  2   -0.7570
+  3  3    0.5860
+ grad
+    0.00000   -0.00000   -2.27345    0.00000   -0.29472    1.12111    0.00000    0.29472    1.15234
+ CYCLE:     1 TIME:   0.002 TIME LEFT:  2.00D  GRAD.:     2.816 HEAT:     -57.79103
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+      0.0      0.0      0.0      0.0      0.0      0.0    200.0    395.8
+  1   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2   0.0000  -0.9606  -0.0587  -0.0000   0.0001   0.0277  -0.0000   0.2702
+  3   0.0000  -0.0601   0.9349  -0.0000  -0.0001  -0.1019  -0.3345  -0.0000
+  4   0.0000  -0.0000   0.0000   1.0000  -0.0000  -0.0000   0.0000   0.0000
+  5   0.0000  -0.1603  -0.0567  -0.0000  -0.0005  -0.4258   0.0000  -0.5383
+  6   0.0000  -0.1195   0.2889  -0.0000   0.0006   0.5334   0.6664  -0.4167
+  7   0.0000   0.0000   0.0000   0.0000   1.0000  -0.0011  -0.0000   0.0000
+  8   0.0000  -0.1603  -0.0567  -0.0000  -0.0005  -0.4258   0.0000  -0.5383
+  9   0.0000   0.0893   0.1804  -0.0000  -0.0007  -0.5846   0.6664   0.4167
+
+        9
+    500.0
+  1   0.0000
+  2   0.0000
+  3  -0.0000
+  4   0.0000
+  5   0.7071
+  6  -0.0000
+  7  -0.0000
+  8  -0.7071
+  9   0.0000
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.01141
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -57.7880390           0.0029958   -0.0131181     -0.2284
+UNACCEPTABLE RATIO, REJECTING STEP, REDUCING DMAX TO 0.0057
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.01141
+ LAMDA THAT MINIMIZES ALONG ALL MODES =       -0.026232880
+ P-RFO-STEP   HAS LENGTH   0.01141
+ LAMDA THAT MINIMIZES ALONG ALL MODES =     -201.116435321
+ QA/TRIM-STEP HAS LENGTH   0.00570
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -57.7970572          -0.0060223   -0.0098497      0.6114
+ STEPSIZE USED IS  0.00570
+ CALCULATED STEP
+  0.000000 -0.000006  0.001898  0.000000  0.000432 -0.003771  0.000000 -0.000409 -0.003789
+ NEW TRUST RADIUS =  0.10000
+
+ HESSIAN IS BEING UPDATED USING THE BFGS UPDATE
+PM7
+ H2O (singlet)
+ 
+
+  O     0.00000000 +1  -0.00000589 +1   0.00189759 +1
+  H     0.00000000 +1   0.75743210 +1   0.58222889 +1
+  H     0.00000000 +1  -0.75740862 +1   0.58221072 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2   -0.0000
+  1  3    0.0019
+  2  1    0.0000
+  2  2    0.7574
+  2  3    0.5822
+  3  1    0.0000
+  3  2   -0.7574
+  3  3    0.5822
+ grad
+    0.00000   -0.01917    0.23125    0.00000   -1.16865   -0.12398    0.00000    1.18782   -0.10727
+ CYCLE:     2 TIME:   0.001 TIME LEFT:  2.00D  GRAD.:     1.690 HEAT:     -57.79706
+
+ 
+              HESSIAN EIGENVALUES AND -VECTORS
+
+        1        2        3        4        5        6        7        8
+      0.0      0.0      0.0      0.0      0.0      0.0    246.2    395.8
+  1   1.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000   0.0000
+  2   0.0000  -0.9603  -0.0589  -0.0000  -0.0000  -0.0278  -0.0009   0.2712
+  3   0.0000  -0.0603   0.9349  -0.0000  -0.0001   0.1022  -0.2618   0.0008
+  4   0.0000   0.0000  -0.0000  -1.0000   0.0000   0.0000   0.0000   0.0000
+  5   0.0000  -0.1613  -0.0566  -0.0000  -0.0004   0.4230  -0.4384  -0.5461
+  6   0.0000  -0.1192   0.2893  -0.0000   0.0006  -0.5355   0.5229  -0.4155
+  7   0.0000  -0.0000  -0.0000   0.0000   1.0000   0.0010  -0.0000  -0.0000
+  8   0.0000  -0.1613  -0.0566  -0.0000  -0.0004   0.4229   0.4420  -0.5344
+  9   0.0000   0.0889   0.1800  -0.0000  -0.0006   0.5867   0.5202   0.4123
+
+        9
+    827.9
+  1   0.0000
+  2   0.0022
+  3  -0.2082
+  4   0.0000
+  5   0.5491
+  6   0.4115
+  7   0.0000
+  8  -0.5577
+  9   0.4181
+
+ HESSIAN HAS  0 NEGATIVE EIGENVALUE(S)
+
+ MIN SEARCH, CORRECT HESSIAN, TRYING PURE NR STEP
+ LAMDA THAT MINIMIZES ALONG ALL MODES =        0.000000000
+ PURE NR-STEP HAS LENGTH   0.00389
+       HoF         ACTUAL,  PREDICTED ENERGY CHANGE, RATIO
+    -57.7996545          -0.0025973   -0.0027552      0.9427
+ STEPSIZE USED IS  0.00389
+ CALCULATED STEP
+  0.000000  0.000003  0.000546  0.000000  0.002493 -0.001092  0.000000 -0.002505 -0.001083
+ NEW TRUST RADIUS =  0.10000
+PM7
+ H2O (singlet)
+ 
+
+  O     0.00000000 +1  -0.00000291 +1   0.00244372 +1
+  H     0.00000000 +1   0.75992485 +1   0.58113644 +1
+  H     0.00000000 +1  -0.75991325 +1   0.58112725 +1
+ 
+ XPARAM 
+  1  1    0.0000
+  1  2   -0.0000
+  1  3    0.0024
+  2  1    0.0000
+  2  2    0.7599
+  2  3    0.5811
+  3  1    0.0000
+  3  2   -0.7599
+  3  3    0.5811
+ grad
+    0.00000   -0.00859    0.15590    0.00000   -0.02840   -0.09014    0.00000    0.03699   -0.06576
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.197 HEAT:     -57.79965
+
+ GRADIENT =  0.19749  IS LESS THAN CUTOFF =  1.00000
+
+
+ -------------------------------------------------------------------------------
+PM7
+ H2O (singlet)
+ 
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).
+     SCF FIELD WAS ACHIEVED
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 10:24:05 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -57.79966 KCAL/MOL =    -241.83376 KJ/MOL
+
+
+          TOTAL ENERGY            =       -322.67921 EV
+          ELECTRONIC ENERGY       =       -469.20446 EV  POINT GROUP:     C2v 
+          CORE-CORE REPULSION     =        146.52525 EV
+          COSMO AREA              =         42.43 SQUARE ANGSTROMS
+          COSMO VOLUME            =         25.17 CUBIC ANGSTROMS
+          GRADIENT NORM           =          0.19749
+
+          IONIZATION POTENTIAL    =         12.116513 EV
+          HOMO LUMO ENERGIES (EV) =        -12.117  4.049
+          NO. OF FILLED LEVELS    =          4
+          MOLECULAR WEIGHT        =         18.0152
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     3    H     2     1.51984
+            O     1    H     2     0.57869
+            H     3    H     2     0.00000
+
+
+          SCF CALCULATIONS        =          5
+ 
+          WALL-CLOCK TIME         =          0.010 SECONDS
+          COMPUTATION TIME        =          0.010 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *  -0.00000291  *   0.00244372  *
+     2       H          0.00000000  *   0.75992485  *   0.58113644  *
+     3       H          0.00000000  *  -0.75991325  *   0.58112725  *
+
+                             CARTESIAN COORDINATES
+
+   1    O        0.000000000    -0.000002912     0.002443718
+   2    H        0.000000000     0.759924847     0.581136439
+   3    H        0.000000000    -0.759913246     0.581127253
+
+
+           Empirical Formula: H2 O  =     3 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   C2v 
+
+
+                  EIGENVALUES
+ -29.61626 -17.84322 -14.21446 -12.11651   4.04908   6.35306
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.649557        6.6496     1.81310     4.83645
+    2          H           0.324780        0.6752     0.67522
+    3          H           0.324777        0.6752     0.67522
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000     0.000     1.805     1.805
+ HYBRID        -0.000    -0.000     0.323     0.323
+ SUM           -0.000     0.000     2.129     2.129
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.81310   2.00000   1.35052   1.48593
+    2  H   0.67522
+    3  H   0.67522
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

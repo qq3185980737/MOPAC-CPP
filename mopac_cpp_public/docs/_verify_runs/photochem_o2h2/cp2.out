@@ -1,0 +1,98 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 08:34:34 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 UHF MS=3
+ o2 triplet
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.20800000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         O        0.0000    0.0000    1.2080
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: O2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    9
+                           NO. OF BETA  ELECTRONS =    3
+EFDBG mxstep=2000 keywrd=[ PM7 UHF MS=3 ] find=-1
+
+ -------------------------------------------------------------------------------
+PM7 UHF MS=3
+ o2 triplet
+ 
+
+
+     THIS MESSAGE SHOULD NEVER APPEAR, THERE IS A BUG IN MOPAC
+     ++++----**** FAILED TO ACHIEVE SCF. ****----++++
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013W)
+                                                       Mon Oct 26 08:34:34 2026
+ 
+ 
+ FOR SOME REASON THE SCF CALCULATION FAILED.
+ 
+ THE RESULTS WOULD BE MEANINGLESS, SO WILL NOT BE PRINTED.
+ TRY TO FIND THE REASON FOR THE FAILURE BY USING 'PL'.
+ 
+ CHECK YOUR GEOMETRY AND ALSO TRY USING SHIFT OR PULAY. 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.20800000  *
+
+          UNABLE TO ACHIEVE SELF-CONSISTENCE
+
+ ******************************************************************************
+ *                                                                            *
+ *     Error and normal termination messages reported in this calculation     *
+ *                                                                            *
+ * UNABLE TO ACHIEVE SELF-CONSISTENCE                                         *
+ * JOB ENDED NORMALLY                                                         *
+ *                                                                            *
+ ******************************************************************************
+
+
+
+ TOTAL JOB TIME:             0.18 SECONDS
+
+ == MOPAC DONE ==

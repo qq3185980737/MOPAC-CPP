@@ -1,0 +1,108 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only     Version 16.013  64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013 , James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:20:13 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  GEO-OK     - OVERRIDE INTERATOMIC DISTANCE AND OTHER SAFETY CHECKS
+ *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
+ *  PRECISE    - CRITERIA TO BE INCREASED BY 100 TIMES
+ *  TS         - USE EF ROUTINE FOR TS SEARCH
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 TS UHF PRECISE GEO-OK
+ OH + H2 -> H2O + H saddle (bent guess)
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.00000000  *   1.34500000  *
+     3       H          0.14300000  *   0.00000000  *   2.15800000  *
+     4       H          0.94100000  *   0.00000000  *  -0.16600000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.0000    1.3450
+     3         H        0.1430    0.0000    2.1580
+     4         H        0.9410    0.0000   -0.1660
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H3 O  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    5
+                           NO. OF BETA  ELECTRONS =    4
+      Transition state refinement using EF
+
+          HESSIAN CALCULATED NUMERICALLY
+
+ CYCLE:     1 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    42.774 HEAT: -21.91195
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    17.510 HEAT: -21.67072
+ CYCLE:     3 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    29.744 HEAT: -19.92959
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    22.286 HEAT: -20.90577
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    19.497 HEAT: -21.31388
+ CYCLE:     3 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    18.315 HEAT: -21.50043
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    17.812 HEAT: -21.58871
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    17.615 HEAT: -21.63092
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    17.803 HEAT: -21.60095
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    17.902 HEAT: -21.56428
+ CYCLE:     6 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    17.970 HEAT: -21.56139
+ CYCLE:     7 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    18.320 HEAT: -21.50815
+ CYCLE:     8 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    19.055 HEAT: -21.44094
+ CYCLE:     8 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    18.851 HEAT: -21.45910
+ CYCLE:     9 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    18.873 HEAT: -21.46724
+ CYCLE:    10 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    18.945 HEAT: -21.45945
+ CYCLE:    11 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    18.892 HEAT: -21.47298
+ CYCLE:    12 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    19.095 HEAT: -21.47280
+ CYCLE:    13 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    18.944 HEAT: -21.48059
+ CYCLE:    14 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    19.243 HEAT: -21.42970
+ CYCLE:    15 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    19.870 HEAT: -21.44267
+ NUMERICAL PROBLEMS IN BRACKETING LAMDA  -149261533.771558     
+  -149261533771.558       -149261533.771707        110100450525.772     
+   149088038.326940     
+  GOING FOR FIXED STEP SIZE....
+ CYCLE:    16 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    21.734 HEAT: -21.47026
+ CALCULATION IS TERMINATED TO AVOID ZERO DIVIDE
+
+          in FORMD
+
+ ******************************************************************************
+ *                                                                            *
+ *     Error and normal termination messages reported in this calculation     *
+ *                                                                            *
+ * in FORMD                                                                   *
+ * JOB ENDED NORMALLY                                                         *
+ *                                                                            *
+ ******************************************************************************
+
+
+
+ TOTAL JOB TIME:             0.03 SECONDS
+
+ == MOPAC DONE ==

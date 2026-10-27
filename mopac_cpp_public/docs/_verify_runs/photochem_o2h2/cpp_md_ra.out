@@ -1,0 +1,281 @@
+ *******************************************************************************
+ ** Site#:  999         For non-commercial use only     Version 16.013W 64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013W, James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 14:54:14 2026  *
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+﻿PM7 C.I.=2 ROOT=2 MOLDYN TEMP=1500 DT=0.5 MDSTEPS=12 BOX=9
+ H2/O2 root-lock test
+ 
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+
+     1       O          3.00000000  *   4.00000000  *   4.00000000  *
+     2       O          3.00000000  *   4.00000000  *   5.21000000  *
+     3       H          5.50000000  *   4.00000000  *   4.00000000  *
+     4       H          5.50000000  *   4.00000000  *   4.74000000  *
+     5       H          3.00000000  *   6.50000000  *   4.00000000  *
+     6       H          3.00000000  *   6.50000000  *   4.74000000  *
+
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        3.0000    4.0000    4.0000
+     2         O        3.0000    4.0000    5.2100
+     3         H        5.5000    4.0000    4.0000
+     4         H        5.5000    4.0000    4.7400
+     5         H        3.0000    6.5000    4.0000
+     6         H        3.0000    6.5000    4.7400
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H4 O2  =     6 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+
+
+      RHF CALCULATION, NO. OF DOUBLY OCCUPIED LEVELS = 8
+
+ 初始坐标
+ Atom       X(au)            Y(au)            Z(au)
+   1     5.669178E+00     7.558904E+00     7.558904E+00
+   2     5.669178E+00     7.558904E+00     9.845473E+00
+   3     1.039349E+01     7.558904E+00     7.558904E+00
+   4     1.039349E+01     7.558904E+00     8.957302E+00
+   5     5.669178E+00     1.228322E+01     7.558904E+00
+   6     5.669178E+00     1.228322E+01     8.957302E+00
+===============================================
+
+==== 温度信息 ====
+目标温度 T_target =  1500.0000
+计算温度 T_calc   =   804.3942
+速度缩放因子 =     1.3656
+最终温度 T_final =  1500.0000
+>>>>> END INIT md_vel <<<<<
+
+==================== MD SIMULATION START ====================
+ Total MD steps      =     12
+ Timestep DT         =  20.6707 au_times
+ Target temperature  =  1500.00 K
+ Simulation Box      = [0.0, 9.0] (Elastic Wall)
+============================================================
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =  -4.60470085E+01
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.00154060E+00       4.00678986E+00       4.01815741E+00
+   2       3.00622904E+00       4.00439213E+00       5.20206548E+00
+   3       5.46973842E+00       3.98903336E+00       3.98866834E+00
+   4       5.51355481E+00       4.01429638E+00       4.72904068E+00
+   5       3.02411721E+00       6.49715332E+00       3.98257938E+00
+   6       2.99482369E+00       6.51221680E+00       4.75372210E+00
+
+ ---- MD Step      1 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.6061
+ Total Energy (Potential + Kinetic)原子单位能量 =     -23.4219
+ Instant Temperature =    6460.58 K
+ Total Kinetic Energy =     0.184135
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =  -4.68016736E+01
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.00225766E+00       4.01297385E+00       4.05961135E+00
+   2       3.01150226E+00       4.00814316E+00       5.17272448E+00
+   3       5.43949256E+00       3.97797727E+00       3.97479586E+00
+   4       5.52741490E+00       4.02867701E+00       4.72059453E+00
+   5       3.04817109E+00       6.49448604E+00       3.96677582E+00
+   6       2.98970681E+00       6.52455088E+00       4.76580876E+00
+
+ ---- MD Step      2 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.6073
+ Total Energy (Potential + Kinetic)原子单位能量 =     -23.0435
+ Instant Temperature =   19781.76 K
+ Total Kinetic Energy =     0.563806
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =  -2.55529429E+01
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.00216609E+00       4.01845243E+00       4.12401546E+00
+   2       3.01565182E+00       4.01126114E+00       5.12244755E+00
+   3       5.40932345E+00       3.96685102E+00       3.95993429E+00
+   4       5.54155146E+00       4.04312185E+00       4.71310149E+00
+   5       3.07184574E+00       6.49216534E+00       3.95613697E+00
+   6       2.98496623E+00       6.53684096E+00       4.77271187E+00
+
+ ---- MD Step      3 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.5734
+ Total Energy (Potential + Kinetic)原子单位能量 =     -22.4275
+ Instant Temperature =   40207.59 K
+ Total Kinetic Energy =     1.145969
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   9.37883327E+01
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.00121877E+00       4.02305569E+00       4.20949411E+00
+   2       3.01846104E+00       4.01365030E+00       5.05296545E+00
+   3       5.37958153E+00       3.95583737E+00       3.94621007E+00
+   4       5.55565264E+00       4.05744718E+00       4.70442540E+00
+   5       3.09474589E+00       6.49040017E+00       3.95276972E+00
+   6       2.98099847E+00       6.54888911E+00       4.77232095E+00
+
+ ---- MD Step      4 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.3832
+ Total Energy (Potential + Kinetic)原子单位能量 =     -21.6291
+ Instant Temperature =   61546.16 K
+ Total Kinetic Energy =     1.754146
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   9.09371711E+02
+ Atom       X(A)            Y(A)            Z(A)
+   1       2.99925177E+00       4.02648318E+00       4.30813888E+00
+   2       3.01979841E+00       4.01483024E+00       4.97082290E+00
+   3       5.35082983E+00       3.94524031E+00       3.93559968E+00
+   4       5.56919432E+00       4.07134808E+00       4.69258043E+00
+   5       3.11654888E+00       6.48936596E+00       3.95730784E+00
+   6       2.97812799E+00       6.56053833E+00       4.76399249E+00
+
+ ---- MD Step      5 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -22.0835
+ Total Energy (Potential + Kinetic)原子单位能量 =     -21.1186
+ Instant Temperature =   33853.38 K
+ Total Kinetic Energy =     0.964865
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   2.34058371E+03
+ Atom       X(A)            Y(A)            Z(A)
+   1       2.99593099E+00       4.02791491E+00       4.35076910E+00
+   2       3.02190134E+00       4.00761713E+00       4.94790144E+00
+   3       5.32364939E+00       3.93539605E+00       3.92944387E+00
+   4       5.58158825E+00       4.08448980E+00       4.67624510E+00
+   5       3.13713340E+00       6.48916564E+00       3.96899136E+00
+   6       2.97648039E+00       6.57172924E+00       4.74843237E+00
+
+ ---- MD Step      6 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -19.8026
+ Total Energy (Potential + Kinetic)原子单位能量 =     -14.3545
+ Instant Temperature =  191154.80 K
+ Total Kinetic Energy =     5.448161
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =  -3.56875005E+01
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.02464466E+00       3.95779112E+00       4.27866458E+00
+   2       3.08021345E+00       3.79416604E+00       5.29343760E+00
+   3       5.29677798E+00       3.92676080E+00       3.92763699E+00
+   4       5.59229621E+00       4.09649116E+00       4.65668171E+00
+   5       3.15675370E+00       6.49067170E+00       3.98636968E+00
+   6       2.97585354E+00       6.58209296E+00       4.72580857E+00
+
+ ---- MD Step      7 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.5896
+ Total Energy (Potential + Kinetic)原子单位能量 =      -2.8146
+ Instant Temperature =  728913.97 K
+ Total Kinetic Energy =    20.774999
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =  -4.82150192E-01
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.05354402E+00       3.88264969E+00       4.22784510E+00
+   2       3.13636239E+00       3.58226782E+00       5.61694547E+00
+   3       5.27227497E+00       3.91929217E+00       3.93075684E+00
+   4       5.60115288E+00       4.10732840E+00       4.63214863E+00
+   5       3.17614828E+00       6.49233191E+00       4.00465350E+00
+   6       2.97544657E+00       6.59236648E+00       4.70223373E+00
+
+ ---- MD Step      8 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.5334
+ Total Energy (Potential + Kinetic)原子单位能量 =      -3.1400
+ Instant Temperature =  715525.31 K
+ Total Kinetic Energy =    20.393404
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   1.05598597E+02
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.08128759E+00       3.81078851E+00       4.18048413E+00
+   2       3.19295590E+00       3.37053744E+00       5.95592401E+00
+   3       5.24776232E+00       3.91277569E+00       3.93710938E+00
+   4       5.60765629E+00       4.11748288E+00       4.60281796E+00
+   5       3.19657498E+00       6.49430260E+00       4.01942713E+00
+   6       2.97403302E+00       6.60380309E+00       4.68240917E+00
+
+ ---- MD Step      9 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.3643
+ Total Energy (Potential + Kinetic)原子单位能量 =      -2.6390
+ Instant Temperature =  727171.82 K
+ Total Kinetic Energy =    20.725345
+
+          JOB STOPPED. TO CONTINUE, SPECIFY GEO-OK.
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   1.05560790E+02
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.10925979E+00       3.73674051E+00       4.14398989E+00
+   2       3.24872509E+00       3.16092965E+00       6.28782581E+00
+   3       5.22175363E+00       3.90665850E+00       3.94497255E+00
+   4       5.61217373E+00       4.12719818E+00       4.57120402E+00
+   5       3.21953248E+00       6.49543192E+00       4.02668336E+00
+   6       2.97009634E+00       6.61680448E+00       4.67015250E+00
+
+ ---- MD Step     10 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.2503
+ Total Energy (Potential + Kinetic)原子单位能量 =      -3.7383
+ Instant Temperature =  684601.71 K
+ Total Kinetic Energy =    19.512042
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   1.05560790E+02
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.13763556E+00       3.65910679E+00       4.12162199E+00
+   2       3.30335070E+00       2.95430688E+00       6.60752556E+00
+   3       5.19589356E+00       3.90114703E+00       3.95488803E+00
+   4       5.61505206E+00       4.13628325E+00       4.53720468E+00
+   5       3.24504167E+00       6.49549263E+00       4.02634197E+00
+   6       2.96360886E+00       6.63121387E+00       4.66550583E+00
+
+ ---- MD Step     11 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.2503
+ Total Energy (Potential + Kinetic)原子单位能量 =      -4.8588
+ Instant Temperature =  645288.57 K
+ Total Kinetic Energy =    18.391566
+ 新坐标重新计算受力
+ FUNCTION (Heat of formation, kcal/mol) =   1.05560790E+02
+ Atom       X(A)            Y(A)            Z(A)
+   1       3.16641492E+00       3.57788737E+00       4.11338041E+00
+   2       3.35683274E+00       2.75066913E+00       6.91502328E+00
+   3       5.17018211E+00       3.89624127E+00       3.96685581E+00
+   4       5.61629129E+00       4.14473808E+00       4.50081995E+00
+   5       3.27310254E+00       6.49448473E+00       4.01840295E+00
+   6       2.95457058E+00       6.64703126E+00       4.66846916E+00
+
+ ---- MD Step     12 ----
+ Potential Energy (MD mechanical energy, Hartree) =     -23.2503
+ Total Energy (Potential + Kinetic)原子单位能量 =      -5.8864
+ Instant Temperature =  609232.39 K
+ Total Kinetic Energy =    17.363918
+
+==================== MD SIMULATION FINISHED ====================
+
+ ******************************************************************************
+ *                                                                            *
+ *     Error and normal termination messages reported in this calculation     *
+ *                                                                            *
+ * JOB STOPPED. TO CONTINUE, SPECIFY GEO-OK.                                  *
+ * JOB ENDED NORMALLY                                                         *
+ *                                                                            *
+ ******************************************************************************
+
+
+
+ TOTAL JOB TIME:             0.76 SECONDS
+
+ == MOPAC DONE ==

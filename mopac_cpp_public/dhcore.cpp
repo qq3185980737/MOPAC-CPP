@@ -13,6 +13,8 @@
 // output layout); di/ddi 0-based column-major 9x9.
 #include "dhcore.h"
 #include <cmath>
+#include <cstdio>
+#include <numeric>
 #include <vector>
 #include "common_arrays_C.h"
 #include "molkst_C.h"
@@ -45,8 +47,9 @@ void dhcore(double* coord, double* h, double* ww, double& enuclr,
             for (int i1 = ia; i1 <= ib; ++i1) {
                 int ij = (i1 * (i1 - 1)) / 2 + ja - 1;
                 i2++;
-                for (int m = 0; m < jb - ja + 1; ++m)
+                for (int m = 0; m < jb - ja + 1; ++m) {
                     h[ij + 1 + m] += di[(i2 - 1) + m * 9] - ddi[(i2 - 1) + m * 9];
+                }
             }
         } else {
             for (int i1 = ja; i1 <= jb; ++i1) {
@@ -55,8 +58,9 @@ void dhcore(double* coord, double* h, double* ww, double& enuclr,
                 // F90: h(ij+1:...) += di(1:ib-ia+1, i2) - ddi(1:ib-ia+1, i2)
                 // di is column-major: di(row, col) physical = (col-1)*9 + (row-1)
                 // row = O AO (m+1), col = H AO (i2)  =>  physical = (i2-1)*9 + m
-                for (int m = 0; m < ib - ia + 1; ++m)
+                for (int m = 0; m < ib - ia + 1; ++m) {
                     h[ij + 1 + m] += di[(i2 - 1) * 9 + m] - ddi[(i2 - 1) * 9 + m];
+                }
             }
         }
         int kro = kr;
@@ -69,14 +73,9 @@ void dhcore(double* coord, double* h, double* ww, double& enuclr,
         c[(nati - 1) * 3 + (natx - 1)] = csave - step;
         rotate(ni, nj, &c[(nati - 1) * 3], &c[(j - 1) * 3], dwjd, kr, de1b, de2a, denuc);
         int k = kr - kro;
-        if (nati == 1 && j == 2) {  }
         if (kr > 0) {
             for (int i = 0; i <= k; ++i) wjd[i] -= dwjd[i];   // F90 wjd(1:k+1): 0-based physical
             for (int j = 0; j < k; ++j) ww[kro + j] = wjd[j];  // F90 do i=0,k-1: ww(i+kro)=wjd(i+1)
-            if (nati == 1 && natx == 1 && j == 2) {
-            }
-            if (nati == 1 && natx == 1 && j == 2) {
-            }
         }
         c[(nati - 1) * 3 + (natx - 1)] = csave;
         enuclr += enuc - denuc;
@@ -85,16 +84,18 @@ void dhcore(double* coord, double* h, double* ww, double& enuclr,
         for (int i1 = ia; i1 <= ib; ++i1) {
             int ii = (i1 * (i1 - 1)) / 2 + ia - 1;
             int cnt = i1 - ia + 1;
-            for (int m = 0; m < cnt; ++m)
+            for (int m = 0; m < cnt; ++m) {
                 h[ii + 1 + m] += e1b[i2 + m] - de1b[i2 + m];
+            }
             i2 += cnt;
         }
         i2 = 0;
         for (int i1 = ja; i1 <= jb; ++i1) {
             int ii = (i1 * (i1 - 1)) / 2 + ja - 1;
             int cnt = i1 - ja + 1;
-            for (int m = 0; m < cnt; ++m)
+            for (int m = 0; m < cnt; ++m) {
                 h[ii + 1 + m] += e2a[i2 + m] - de2a[i2 + m];
+            }
             i2 += cnt;
         }
     }

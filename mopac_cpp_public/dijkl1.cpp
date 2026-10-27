@@ -54,8 +54,9 @@ void dijkl1(const std::vector<std::vector<double>>& cv, int n, int nati,
                     ipq+=m;
                 }
             }
-            // wcij is 1-based semantic; clear physical [0..ipq-1] (F90 wcij(:ipq)=0).
-            for (int q=0;q<ipq;++q) wcij[q]=0;
+            // wcij is 1-based-padding (element n at physical n, like hmat);
+            // clear Fortran-equivalent wcij(1:ipq) => physical [1..ipq].
+            for (int q = 1; q <= ipq; ++q) wcij[q] = 0;
             int kr=1, js=1;
             int nbj=nlast[nati]-nfirst[nati];
             if (nbj>=0) {
@@ -70,13 +71,13 @@ void dijkl1(const std::vector<std::vector<double>>& cv, int n, int nati,
                     std::vector<double> cb(cij.begin()+js-1, cij.begin()+js-1+nb[nbi]+1);
                     std::vector<double> wca(nb[nbj]+1, 0.0);
                     std::vector<double> wcb(nb[nbi]+1, 0.0);
-                    for (int t=1;t<=nb[nbj];++t) wca[t]=wcij[i77-1+t-1];
-                    for (int t=1;t<=nb[nbi];++t) wcb[t]=wcij[js-1+t-1];
+                    for (int t=1;t<=nb[nbj];++t) wca[t]=wcij[i77-1+t];
+                    for (int t=1;t<=nb[nbi];++t) wcb[t]=wcij[js-1+t];
                     int kr2 = kr;
                     formxy(wv, kr2, wca, wcb, ca, cb, nb[nbj], nb[nbi]);
                     // formxy outputs are 1-based vectors (element 0 padding).
-                    for (int t=1;t<=nb[nbj];++t) wcij[i77-1+(t-1)]=wca[t];
-                    for (int t=1;t<=nb[nbi];++t) wcij[js-1+(t-1)]=wcb[t];
+                    for (int t=1;t<=nb[nbj];++t) wcij[i77-1+t]=wca[t];
+                    for (int t=1;t<=nb[nbi];++t) wcij[js-1+t]=wcb[t];
                     kr = kr2;
                     js += nb[nbi];
                 }
@@ -109,8 +110,8 @@ void dijkl1(const std::vector<std::vector<double>>& cv, int n, int nati,
                         }
                     }
                     double sum=0;
-                    // ckl built 1-based physical (ckl[1]=first); wcij 1-based semantic (physical [0] = slot 1).
-                    for (int q=1;q<=ipq;++q) sum+=ckl[q]*wcij[q-1];
+                    // ckl built 1-based physical (ckl[1]=first); wcij 1-based-padding.
+                    for (int q=1;q<=ipq;++q) sum+=ckl[q]*wcij[q];
                     // xy(nmos^4) col-major
                     auto xyidx=[&](int a,int b,int c,int d){
                         return ((d-1)*nmos*nmos*nmos+(c-1)*nmos*nmos+(b-1)*nmos+(a-1));

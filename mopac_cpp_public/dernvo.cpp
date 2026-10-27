@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -159,4 +160,13 @@ void dernvo() {
     for (i = 1; i <= nvax; ++i) dxyz[i] = dxyz[i] + dxyzr[i];
     if (relaxd) std::fill(dxyzr.begin(), dxyzr.end(), 0.0);
     (void)eigbb;
+
+    // DEBUG (temporary): dump raw dernvo Cartesian gradient to stderr.
+    if (debug) {
+        std::fprintf(stderr, "DERNVO_DUMP nvax=%d numat=%d\n", nvax, numat);
+        for (int kk = 1; kk <= nvax; ++kk)
+            std::fprintf(stderr, "  DXYZ [%3d] = %12.4f\n", kk, dxyz[kk]);
+        for (int kk = 1; kk <= nvax; ++kk)
+            std::fprintf(stderr, "  DXYZR[%3d] = %12.4f\n", kk, dxyzr[kk]);
+    }
 }

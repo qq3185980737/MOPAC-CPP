@@ -1,0 +1,185 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only     Version 16.013  64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013 , James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:24:04 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
+ *  MS=        - IN MECI, MAGNETIC COMPONENT OF SPIN =  1
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 UHF MS=1
+ O2 (triplet)
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       O          0.00000000  *   0.00000000  *   1.20800000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         O        0.0000    0.0000    1.2080
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: O2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    7
+                           NO. OF BETA  ELECTRONS =    5
+      Geometry optimization using EF
+
+          DIAGONAL MATRIX USED AS START HESSIAN
+
+ CYCLE:     1 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:   157.130 HEAT: -4.594249
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:   187.776 HEAT: -5.137546
+ CYCLE:     3 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    30.471 HEAT: -9.033338
+ CYCLE:     4 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:     4.821 HEAT: -9.168084
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:     0.130 HEAT: -9.171450
+
+     GRADIENT =  0.13041  IS LESS THAN CUTOFF =  1.00000
+
+
+
+ -------------------------------------------------------------------------------
+PM7 UHF MS=1
+ O2 (triplet)
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (EF).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013 )
+                                                       Mon Oct 26 10:24:04 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =         -9.17145 KCAL/MOL =     -38.37335 KJ/MOL
+
+
+          TOTAL ENERGY            =       -587.42567 EV
+          ELECTRONIC ENERGY       =       -951.59519 EV  POINT GROUP:     D*h 
+          CORE-CORE REPULSION     =        364.16952 EV
+          COSMO AREA              =         49.05 SQUARE ANGSTROMS
+          COSMO VOLUME            =         31.34 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =          0.13041
+          IONIZATION POTENTIAL    =         10.667023 EV
+          ALPHA SOMO LUMO (EV)    =        -10.667  2.452
+          BETA  SOMO LUMO (EV)    =        -15.304  0.615
+          NO. OF ALPHA ELECTRONS  =          7
+          NO. OF BETA  ELECTRONS  =          5
+          MOLECULAR WEIGHT        =         31.9988
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            O     2    O     1     1.13080
+            O     2    O     1     0.00000
+            O     1    O     2     0.00000
+
+
+          SCF CALCULATIONS        =          7
+ 
+          WALL-CLOCK TIME         =          0.008 SECONDS
+          COMPUTATION TIME        =          0.016 SECONDS
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O         -0.00000000  *  -0.00000000  *   0.03859892  *
+     2       O         -0.00000000  *  -0.00000000  *   1.16940108  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -0.000000000    -0.000000000     0.038598924
+   2    O       -0.000000000    -0.000000000     1.169401080
+
+
+           Empirical Formula: O2  =     2 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   D*h 
+
+
+          ALPHA EIGENVALUES  
+ -34.83921 -30.83489 -17.99838 -17.48147 -17.48147 -10.66702 -10.66702   2.45218
+
+
+           BETA EIGENVALUES 
+ -31.03283 -26.06049 -16.17558 -15.30374 -15.30374   0.61487   0.61487   4.07495
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.000000        6.0000     1.94846     4.05154
+    2          O           0.000000        6.0000     1.94846     4.05154
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     0.000    -0.000     0.000     0.000
+ HYBRID        -0.000    -0.000    -0.000     0.000
+ SUM           -0.000    -0.000     0.000     0.000
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.94846   1.50000   1.50000   1.05154
+    2  O   1.94846   1.50000   1.50000   1.05154
+
+
+                    (SZ)    =    1.000000
+                    (S**2)  =    2.003406
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+    Atom   Total    s     px     py     pz   
+         Atomic
+    1  O  1.0000  0.013  0.500  0.500 -0.013
+    2  O  1.0000  0.013  0.500  0.500 -0.013
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.01 SECONDS
+
+ == MOPAC DONE ==

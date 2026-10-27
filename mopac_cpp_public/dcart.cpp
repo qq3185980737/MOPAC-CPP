@@ -175,8 +175,8 @@ void dcart(std::vector<std::vector<double>>& coord,
                         for (int j = 1; j <= i; ++j) {
                             ij_ = ij_ + 1;
                             k = k + 1;
-                            padi[ij_] = p[k] * 0.5;
-                            pdi[ij_] = p[k];
+                            padi[ij_ - 1] = p[k] * 0.5;
+                            pdi[ij_ - 1] = p[k];
                         }
                     if (ii == jj) {
                         int ij2 = iorbs[jj];
@@ -185,8 +185,8 @@ void dcart(std::vector<std::vector<double>>& coord,
                             int l = (ij2 * (ij2 - 1)) / 2;
                             for (int j = 1; j <= iorbs[jj]; ++j) {
                                 l = l + 1;
-                                padi[l] = 0.0;
-                                pdi[l] = 0.0;
+                                padi[l - 1] = 0.0;
+                                pdi[l - 1] = 0.0;
                             }
                         }
                     } else {
@@ -198,8 +198,8 @@ void dcart(std::vector<std::vector<double>>& coord,
                             for (int j = 1; j <= iorbs[jj]; ++j) {
                                 l = l + 1;
                                 k = k + 1;
-                                padi[l] = p[k] * 0.5;
-                                pdi[l] = p[k];
+                                padi[l - 1] = p[k] * 0.5;
+                                pdi[l - 1] = p[k];
                             }
                         }
                     }
@@ -211,8 +211,8 @@ void dcart(std::vector<std::vector<double>>& coord,
                         for (int j = 1; j <= i; ++j) {
                             k = k + 1;
                             l = l + 1;
-                            padi[l] = p[k] * 0.5;
-                            pdi[l] = p[k];
+                            padi[l - 1] = p[k] * 0.5;
+                            pdi[l - 1] = p[k];
                         }
                     }
                     for (int l = 0; l < 171; ++l) pbdi[l] = padi[l];

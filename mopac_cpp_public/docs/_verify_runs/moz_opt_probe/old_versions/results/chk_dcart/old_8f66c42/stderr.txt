@@ -1,0 +1,24 @@
+********************************************************************************
+**                          MOPAC (16.013)        Days remaining 123         **
+********************************************************************************
+Preparing to read the following MOPAC file: 
+chk_dcart.mop
+EFG-C1 funct=C04CE515B0411E00
+EFG-C1 g1=4070A8847897E579
+EFG-C1 g2=C07818D9095F5EF9
+EFG-C1 g3=C06F81AE2A73C5A0
+EFG-C1 g4=C06104FFCD662BF1
+EFG-C1 g5=4079ADD22A74CDC0
+EFG-C1 g6=405BEB7090FF124A
+EFG-C1 g7=C0604C0923924BD6
+EFG-C1 g8=C0394F9219C19D8D
+EFG-C1 g9=40618BF5E1685C99
+EFM-C mxstep=2000 nstep=1 iprnt=3
+EFM-C mxstep=2000 nstep=2 iprnt=3
+EFM-C mxstep=2000 nstep=3 iprnt=3
+ Job: chk_dcart
+Final heat of formation =        -57.79108 kcal/mol
+GRADIENT NORM           =        722.55752
+
+
+MOPAC Job: "chk_dcart.mop" ended normally on Mon Oct 26 01:31:37 2026

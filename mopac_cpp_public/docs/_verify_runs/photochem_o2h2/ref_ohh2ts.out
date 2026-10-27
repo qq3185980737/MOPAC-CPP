@@ -1,0 +1,245 @@
+ *******************************************************************************
+ ** Site#:    0         For non-commercial use only     Version 16.013  64BITS**
+ *******************************************************************************
+ ** Cite this program as: MOPAC2016, Version: 16.013 , James J. P. Stewart,   **
+ ** Stewart Computational Chemistry, web-site: HTTP://OpenMOPAC.net.          **
+ *******************************************************************************
+ **                                                                           **
+ **                                MOPAC2016                                  **
+ **                                                                           **
+ *******************************************************************************
+
+                              PM7 CALCULATION RESULTS
+
+
+ *******************************************************************************
+ *  CALCULATION DONE:                                Mon Oct 26 10:19:13 2026  *
+ *  PM7        - The PM7 Hamiltonian to be used
+ *  UHF        - UNRESTRICTED HARTREE-FOCK CALCULATION
+ *  PRECISE    - CRITERIA TO BE INCREASED BY 100 TIMES
+ *  TS         - USE EF ROUTINE FOR TS SEARCH
+ *  T=         - A TIME OF 172800.0 SECONDS REQUESTED
+ *  DUMP=N     - RESTART FILE WRITTEN EVERY  7200.000 SECONDS
+ *******************************************************************************
+PM7 TS UHF PRECISE
+ OH + H2 -> H2O + H saddle point (linear guess)
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O          0.00000000  *   0.00000000  *   0.00000000  *
+     2       H          0.00000000  *   0.00000000  *   1.35000000  *
+     3       H          0.00000000  *   0.00000000  *   2.18000000  *
+     4       H          0.94100000  *   0.00000000  *  -0.23500000  *
+ 
+
+
+          CARTESIAN COORDINATES 
+
+    NO.       ATOM         X         Y         Z
+
+     1         O        0.0000    0.0000    0.0000
+     2         H        0.0000    0.0000    1.3500
+     3         H        0.0000    0.0000    2.1800
+     4         H        0.9410    0.0000   -0.2350
+
+ General Reference for PM7:
+ "Optimization of Parameters for Semiempirical Methods VI: More Modifications to the 
+ NDDO Approximations and Re-optimization of Parameters", J. J. P. Stewart, J. Mol. Mod., 1:32, 19 (2013)
+ http://www.springerlink.com/openurl.asp?genre=article&id=doi:10.1007/s00894-012-1667-x
+
+           Empirical Formula: H3 O  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+
+
+          UHF CALCULATION, NO. OF ALPHA ELECTRONS =    5
+                           NO. OF BETA  ELECTRONS =    4
+      Transition state refinement using EF
+
+          HESSIAN CALCULATED NUMERICALLY
+
+ CYCLE:     1 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    49.992 HEAT: -21.73043
+ CYCLE:     2 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    15.334 HEAT: -21.75081
+ CYCLE:     3 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:    23.212 HEAT: -20.28589
+ CYCLE:     4 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:    47.296 HEAT: -16.91449
+ CYCLE:     5 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:   115.406 HEAT: -7.558680
+ CYCLE:     6 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:   380.173 HEAT:  29.54747
+ CYCLE:     7 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:  5433.585 HEAT:  332.7748
+ CYCLE:     8 TIME:   0.004 TIME LEFT:  2.00D  GRAD.: 13795.899 HEAT:  588.5300
+ CYCLE:     9 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:  8020.144 HEAT:  449.0225
+ CYCLE:    10 TIME:   0.000 TIME LEFT:  2.00D  GRAD.:  3115.526 HEAT:  337.5241
+ NUMERICAL PROBLEMS IN BRACKETING LAMDA  -11915454678.1268     
+  -11915454678126.8       -11915454678.1387        7048682498262.12     
+   11839220313.5382     
+  GOING FOR FIXED STEP SIZE....
+ NUMERICAL PROBLEMS IN BRACKETING LAMDA  -11915454678.1268     
+  -11915454678126.8       -11915454678.1387        7048682498262.12     
+   11839220313.5382     
+  GOING FOR FIXED STEP SIZE....
+ CYCLE:    11 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:  2069.754 HEAT:  329.9031
+ NUMERICAL PROBLEMS IN BRACKETING LAMDA  -38259782056320.6     
+ -3.825978205632058E+016  -38259782056358.8       2.705985754627930E+016
+   38259782051789.3     
+  GOING FOR FIXED STEP SIZE....
+ CYCLE:    12 TIME:   0.004 TIME LEFT:  2.00D  GRAD.:  2090.928 HEAT:  329.0667
+ NUMERICAL PROBLEMS IN BRACKETING LAMDA  -421.852544801326     
+  -1000000.00000000       -421.852544801747       1.584308631084137E-007
+  6.902844155423588E+022
+  GOING FOR FIXED LEVEL SHIFTED NR STEP...
+ NUMERICAL PROBLEMS IN BRACKETING LAMDA  -421.852544801326     
+  -1000000.00000000       -421.852544801747       1.302839974125812E-006
+  6.902844155423588E+022
+  GOING FOR FIXED LEVEL SHIFTED NR STEP...
+
+     TRUST RADIUS NOW LESS THAN  0.00010 OPTIMIZATION TERMINATING
+      THE GEOMETRY MAY NOT BE COMPLETELY OPTIMIZED
+      (TO CONTINUE, ADD 'LET DDMIN=0.0' TO THE KEYWORD LINE)
+
+ -------------------------------------------------------------------------------
+PM7 TS UHF PRECISE
+ OH + H2 -> H2O + H saddle point (linear guess)
+
+
+
+     GEOMETRY OPTIMISED USING EIGENVECTOR FOLLOWING (TS).     
+     SCF FIELD WAS ACHIEVED                                   
+
+
+                              PM7 CALCULATION
+                                                       MOPAC2016 (Version: 16.013 )
+                                                       Mon Oct 26 10:19:13 2026
+
+
+
+
+          FINAL HEAT OF FORMATION =        -21.75081 KCAL/MOL =     -91.00539 KJ/MOL
+
+
+          TOTAL ENERGY            =       -334.44525 EV
+          ELECTRONIC ENERGY       =       -522.80029 EV  POINT GROUP:     Cs  
+          CORE-CORE REPULSION     =        188.35503 EV
+          COSMO AREA              =         51.88 SQUARE ANGSTROMS
+          COSMO VOLUME            =         31.53 CUBIC ANGSTROMS
+
+          GRADIENT NORM           =         15.33423
+          IONIZATION POTENTIAL    =         10.886735 EV
+          ALPHA SOMO LUMO (EV)    =        -11.319  4.872
+          BETA  SOMO LUMO (EV)    =        -10.887 -0.867
+          NO. OF ALPHA ELECTRONS  =          5
+          NO. OF BETA  ELECTRONS  =          4
+          MOLECULAR WEIGHT        =         19.0231
+
+          MOLECULAR DIMENSIONS (Angstroms)
+
+            Atom       Atom       Distance
+            H     4    H     3     2.47724
+            O     1    H     3     0.79279
+            H     2    H     4     0.00437
+
+
+          SCF CALCULATIONS        =         32
+ 
+          WALL-CLOCK TIME         =          0.027 SECONDS
+          COMPUTATION TIME        =          0.031 SECONDS
+
+
+
+       FINAL  POINT  AND  DERIVATIVES
+
+   PARAMETER     ATOM    TYPE            VALUE       GRADIENT
+      1          1  O    CARTESIAN X    -0.004518    -0.103424  KCAL/ANGSTROM
+      2          1  O    CARTESIAN Y     0.000294    -0.052589  KCAL/ANGSTROM
+      3          1  O    CARTESIAN Z     0.018227    11.780947  KCAL/ANGSTROM
+      4          2  H    CARTESIAN X     0.016269     0.427474  KCAL/ANGSTROM
+      5          2  H    CARTESIAN Y    -0.003079     0.124236  KCAL/ANGSTROM
+      6          2  H    CARTESIAN Z     1.305495    -8.897992  KCAL/ANGSTROM
+      7          3  H    CARTESIAN X     0.008445     0.066589  KCAL/ANGSTROM
+      8          3  H    CARTESIAN Y     0.001907    -0.067624  KCAL/ANGSTROM
+      9          3  H    CARTESIAN Z     2.107302    -3.955896  KCAL/ANGSTROM
+     10          4  H    CARTESIAN X     0.934288    -0.390640  KCAL/ANGSTROM
+     11          4  H    CARTESIAN Y     0.000000    -0.004021  KCAL/ANGSTROM
+     12          4  H    CARTESIAN Z    -0.190419     1.072940  KCAL/ANGSTROM
+
+
+
+
+   ATOM   CHEMICAL          X               Y               Z
+  NUMBER   SYMBOL      (ANGSTROMS)     (ANGSTROMS)     (ANGSTROMS)
+ 
+     1       O         -0.00451833  *   0.00029424  *   0.01822744  *
+     2       H          0.01626862  *  -0.00307912  *   1.30549540  *
+     3       H          0.00844517  *   0.00190679  *   2.10730190  *
+     4       H          0.93428824  *   0.00000000  *  -0.19041938  *
+
+                             CARTESIAN COORDINATES
+
+   1    O       -0.004518335     0.000294242     0.018227435
+   2    H        0.016268622    -0.003079119     1.305495396
+   3    H        0.008445167     0.001906794     2.107301901
+   4    H        0.934288244     0.000000000    -0.190419378
+
+
+           Empirical Formula: H3 O  =     4 atoms
+
+
+
+      MOLECULAR POINT GROUP   :   Cs  
+
+
+          ALPHA EIGENVALUES  
+ -29.61767 -17.83994 -15.42873 -11.68321 -11.31866   4.87185   6.47940
+
+
+           BETA EIGENVALUES 
+ -26.44561 -16.31509 -14.30501 -10.88673  -0.86735   5.53193   7.04342
+
+
+              NET ATOMIC CHARGES AND DIPOLE CONTRIBUTIONS
+
+  ATOM NO.   TYPE          CHARGE      No. of ELECS.   s-Pop       p-Pop       
+    1          O          -0.461857        6.4619     1.91336     4.54850
+    2          H           0.111398        0.8886     0.88860
+    3          H           0.084400        0.9156     0.91560
+    4          H           0.266058        0.7339     0.73394
+ DIPOLE           X         Y         Z       TOTAL
+ POINT-CHG.     1.216    -0.002     1.269     1.758
+ HYBRID         0.234    -0.000     0.042     0.238
+ SUM            1.451    -0.002     1.311     1.955
+
+
+          ATOMIC ORBITAL ELECTRON POPULATIONS
+
+     Atom    s        px        py        pz   
+    1  O   1.91336   1.35140   2.00000   1.19710
+    2  H   0.88860
+    3  H   0.91560
+    4  H   0.73394
+
+
+                    (SZ)    =    0.500000
+                    (S**2)  =    0.762341
+
+
+          ATOMIC ORBITAL SPIN POPULATIONS
+
+    Atom   Total    s     px     py     pz   
+         Atomic
+    1  O  0.7636  0.017  0.058  0.000  0.688
+    2  H -0.0624 -0.062
+    3  H  0.3305  0.331
+    4  H -0.0317 -0.032
+
+ **********************
+ *                    *
+ * JOB ENDED NORMALLY *
+ *                    *
+ **********************
+
+
+
+ TOTAL JOB TIME:             0.03 SECONDS
+
+ == MOPAC DONE ==

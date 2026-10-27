@@ -390,12 +390,10 @@ void hcore_for_MOZYME() {
     refnuc = -enuclr;
   }
   if (useps) {
-    // In the original code the dielectric correction to the core-core
-    // interaction is added to ENUCLR via addnucz(phinet, qscnet, qdenet)
-    // (linear_cosmo module, closed source).  Stub: no-op placeholder.
-    (void)phinet;
-    (void)qscnet;
-    (void)qdenet;
+    // F90: call addnucz(phinet, qscnet, qdenet) -- adds the nuclear charges to
+    // qdenet(:,1) (and zeroes the channel-1 phi/qscnet), needed by diegrd for
+    // the COSMO contribution to the Cartesian gradient.
+    linear_cosmo::addnucz(phinet, qscnet, qdenet);
   }
   kr = kr - 1;
   {
