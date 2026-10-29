@@ -110,7 +110,7 @@ void getgeo(int iread, std::vector<int>& labels,
     bool saddle = (keywrd.find("SADDLE") != std::string::npos);
     bool lxyz = (keywrd.find(" XYZ") != std::string::npos || saddle);
     int_ = (keywrd.find(" INT ") != std::string::npos);
-    bool velo = (keywrd.find(" VELO") != std::string::npos);
+    bool velo = (keywrd.find("VELO") != std::string::npos);
     bool lmop = (keywrd.find(" MOPAC") != std::string::npos);
     int max_atoms = (int)txtatm.size();
     maxtxt = 0;

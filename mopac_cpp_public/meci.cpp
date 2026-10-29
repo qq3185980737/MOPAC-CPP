@@ -40,6 +40,7 @@ using mndod_C::fx;
 #include "perm.h"
 #include "reada.h"
 #include "rsp.h"
+#include "surface_hopping_C.h"
 #include "symmetry_C.h"
 
 using namespace common_arrays_C;
@@ -59,6 +60,20 @@ static inline int xyidx(int a, int b, int c, int d, int nmos) {
     return (d - 1) * nmos * nmos * nmos + (c - 1) * nmos * nmos +
            (b - 1) * nmos + (a - 1);
 }
+
+// ---------------------------------------------------------------------------
+// ROOTFOL (adiabatic root following) state. Enabled only by the ROOTFOL
+// keyword. When active, the CI root is not chosen purely by energy ordering
+// (which flips electronic character at a state crossing and makes the
+// excited-state PES / MD energy discontinuous); instead the state whose CI
+// vector lies in the previous meci() call's state-averaged subspace is
+// followed (max subspace projection). prev_ci_basis stores that subspace.
+// ---------------------------------------------------------------------------
+namespace {
+bool root_following = false;
+std::vector<double> prev_ci_basis;   // previous SA basis, column-major, len prev_ci_nstate*lab
+int prev_ci_nstate = 0;
+}  // namespace
 
 // meci(): 主入口，返回 CI 修正能量（加到 SCF 能量上）。
 
@@ -110,6 +125,9 @@ double meci() {
         cis = keywrd.find(" CIS ") != std::string::npos;
         cisd = keywrd.find(" CISD ") != std::string::npos;
         cisdt = keywrd.find(" CISDT ") != std::string::npos;
+        root_following = keywrd.find("ROOTFOL") != std::string::npos;
+        if (!root_following) { prev_ci_nstate = 0; prev_ci_basis.clear(); }
+        sh_C::sh_setup(keywrd);
         root_ir = "XXXX";
         ndoubl = 99;
         size_t i0 = keywrd.find("C.I.=(");
@@ -559,6 +577,104 @@ double meci() {
             jroot = iroot;
         }
     }
+
+    // ROOTFOL: adiabatic root following across a state crossing. Instead of
+    // always taking the energy-ordered root (which flips electronic character
+    // at a crossing and makes the excited-state PES/MD energy discontinuous),
+    // pick the state whose CI vector lies in the previous meci() call's
+    // state-averaged subspace (max subspace projection), and restrict the SA
+    // averaging to same-character near-degenerate partners. Without ROOTFOL
+    // this block is skipped and behavior is unchanged. (Skipped under SURF,
+    // which does its own state tracking below.)
+    if (!sh_C::surf_active && root_following && prev_ci_nstate > 0 &&
+        (int)prev_ci_basis.size() == prev_ci_nstate * lab) {
+        auto proj = [&](int ist) {
+            double p = 0.0;
+            for (int a = 0; a < prev_ci_nstate; ++a) {
+                double ov = 0.0;
+                for (int q = 0; q < lab; ++q)
+                    ov += conf[(ist - 1) * lab + q] *
+                          prev_ci_basis[a * lab + q];
+                p += ov * ov;
+            }
+            return p;
+        };
+        int best_i = root_requested;
+        double best_p = 0.0;
+        for (int ist = 1; ist <= labsiz; ++ist) {
+            if (smult > 0 && ispin[ist] != smult) continue;
+            if (root_ir != "XXXX" && namo[ist] != root_ir) continue;
+            double p = proj(ist);
+            if (p > best_p) { best_p = p; best_i = ist; }
+        }
+        // Only follow when the new geometry still resembles the tracked
+        // state; otherwise fall back to the energy-ordered root.
+        if (best_p > 0.25) root_requested = best_i;
+        // Refill vectci / nstate with near-degenerate same-character partners
+        // (excludes a crossing partner of different character).
+        int mcnt = 0;
+        int kk = root_requested;
+        for (; kk <= std::min(lab, root_requested + 22); ++kk) {
+            if (std::fabs(eig[kk - 1] - eig[root_requested - 1]) > 1e-2) break;
+            if (proj(kk) < 0.9) continue;
+            for (int p = 0; p < lab; ++p)
+                vectci[mcnt + p + 1] = conf[lab * (kk - 1) + p];
+            mcnt += lab;
+        }
+        if (mcnt == 0) {
+            for (int p = 0; p < lab; ++p)
+                vectci[p + 1] = conf[lab * (root_requested - 1) + p];
+            mcnt = lab;
+        }
+        nstate = mcnt / lab;
+    }
+
+    // SURF: Tully fewest-switches non-adiabatic MD. The occupied (propagated)
+    // state is tracked across geometries by max |overlap| with the previous
+    // step's occupied-state C.I. vector (cur_state_vec), which both selects
+    // the root for the gradient/energy here and keeps the electronic state
+    // continuous. The active-state eigenvectors/energies are stored for
+    // md_driver to compute the non-adiabatic coupling and decide hops.
+    if (sh_C::surf_active) {
+        // Active set: matching-spin states in energy order, up to HOP=n.
+        std::vector<int> active_idx;
+        for (int s = 1; s <= labsiz && (int)active_idx.size() < sh_C::n_act;
+             ++s) {
+            if (smult > 0 && ispin[s] != smult) continue;
+            active_idx.push_back(s);
+        }
+        if (!active_idx.empty()) {
+            sh_C::lab_hop = lab;
+            const int na = (int)active_idx.size();
+            // Track the occupied state by overlap with the committed vector.
+            if ((int)sh_C::cur_state_vec.size() == lab) {
+                int bestk = 0;
+                double best = -1.0;
+                for (int k = 0; k < na; ++k) {
+                    const int s = active_idx[k];
+                    double ov = 0.0;
+                    for (int q = 0; q < lab; ++q)
+                        ov += conf[(s - 1) * lab + q] *
+                              sh_C::cur_state_vec[q];
+                    double a = std::fabs(ov);
+                    if (a > best) { best = a; bestk = k; }
+                }
+                root_requested = active_idx[bestk];
+            } else {
+                // First call: keep the keyword-selected root and commit it.
+                sh_C::cur_state_vec.assign(lab, 0.0);
+                for (int q = 0; q < lab; ++q)
+                    sh_C::cur_state_vec[q] = conf[(root_requested - 1) * lab + q];
+            }
+            // Single-state gradient for the occupied state.
+            for (int p = 0; p < lab; ++p)
+                vectci[p + 1] = conf[(root_requested - 1) * lab + p];
+            nstate = 1;
+            // Fill the active-state data for the hopping routine.
+            sh_C::sh_store_full(conf, eig, active_idx, root_requested);
+        }
+    }
+
     if (root_requested < 1) {
         mopend("ROOT REQUESTED DOES NOT EXIST IN C.I.");
         return 0.0;
@@ -566,6 +682,20 @@ double meci() {
     state_Irred_Rep = namo[root_requested];
     state_spin = tspin_tbl[ispin[root_requested] - 1];
     state_QN = jndex[root_requested];
+    // TEMP-DIAG: print the selected root state (energy + multiplicity)
+    std::fprintf(stdout, " TMPDIAG-ROOT root=%d ispin=%d E=%.6f eV spin=%s irr=%s\n",
+                 root_requested, ispin[root_requested], eig[root_requested - 1],
+                 state_spin.c_str(), namo[root_requested].c_str());
+
+    // Store the tracked state-averaged basis for the next meci() call
+    // (continuous adiabatic following across MD steps / geometries).
+    if (!sh_C::surf_active && root_following && nstate > 0) {
+        prev_ci_nstate = nstate;
+        prev_ci_basis.assign(nstate * lab, 0.0);
+        for (int a = 0; a < nstate; ++a)
+            for (int p = 0; p < lab; ++p)
+                prev_ci_basis[a * lab + p] = vectci[a * lab + p + 1];
+    }
 
     first1 = false;
     return eig[root_requested - 1];

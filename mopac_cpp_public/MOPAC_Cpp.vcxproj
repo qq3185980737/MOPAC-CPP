@@ -524,6 +524,7 @@
     <ClCompile Include="static_polarizability.cpp" />
     <ClCompile Include="supdot.cpp" />
     <ClCompile Include="superd.cpp" />
+    <ClCompile Include="surface_hopping_C.cpp" />
     <ClCompile Include="swap.cpp" />
     <ClCompile Include="switch.cpp" />
     <ClCompile Include="symh.cpp" />

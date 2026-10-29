@@ -14,7 +14,7 @@
 namespace md_C {
 // Defaults (Fortran parameter constants)
 constexpr int DEF_MDSTEP = 1000;
-constexpr double DEF_DTMD = 0.2;
+constexpr double DEF_DTMD = 0.3;
 constexpr double DEF_TTARGET = 16000.0;
 constexpr double KB = 3.166811563e-6;
 
