@@ -1,4 +1,4 @@
-﻿// compfg.cpp 鈥?C++ translation of MOPAC 2016 "compfg.F90".
+// compfg.cpp 鈥?C++ translation of MOPAC 2016 "compfg.F90".
 // Main energy+gradient driver: builds geometry from internal variables,
 // runs the SCF (hcore/iter), assembles the heat of formation, and computes
 // gradients (deriv). Routines not yet ported (cosmo surface builders, MOZYME
@@ -339,6 +339,14 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
   // Reform the density matrix if a CI was done and either the last SCF or a
   // force calculation is in progress.
   if (usedci && force) mecip();
+
+  // Phase-3 profiling (opt-in): where does one compfg go?
+  if (std::getenv("MOPAC_CFGPROF") != nullptr) {
+    long long _ttot = std::chrono::duration_cast<std::chrono::microseconds>(
+        std::chrono::steady_clock::now() - _t0).count();
+    std::fprintf(stderr, "CFGPROF hcore=%lld iter=%lld deriv=%lld total=%lld\n",
+                 _th, _ti, _td, _ttot);
+  }
 }
 
 // Core-core repulsion used by the XFAC keyword (same file in the Fortran).

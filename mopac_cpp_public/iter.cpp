@@ -33,6 +33,7 @@
 
 #include "iter.h"
 #include "iter_C.h"
+#include "md_C.h"
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -75,7 +76,7 @@ extern void phase_lock(std::vector<double>&,int);
 extern void delete_iter_arrays();
 extern void den_in_out(int);
 
-static void md_stop_set() {}
+static void md_stop_set() { md_C::md_stop = true; }
 
 // globals from common_arrays_C / molkst_C (via using)
 namespace common_arrays_C {
@@ -150,6 +151,52 @@ static bool diis_solve(double* c, const std::vector<std::vector<double>>& E, int
     return true;
 }
 
+// Coupled DIIS for UHF: one set of coefficients for both spin channels,
+// B_ij = <e_alpha_i,e_alpha_j> + <e_beta_i,e_beta_j> (standard Pulay UHF DIIS).
+static bool diis_solve_coupled(double* c,
+                               const std::vector<std::vector<double>>& Ea,
+                               const std::vector<std::vector<double>>& Eb,
+                               int m, int mpack) {
+    double B[7][7];
+    for (int i = 0; i < m; ++i)
+        for (int j = 0; j < m; ++j) {
+            double s = 0.0;
+            for (int k = 1; k <= mpack; ++k) s += Ea[i][k] * Ea[j][k];
+            for (int k = 1; k <= mpack; ++k) s += Eb[i][k] * Eb[j][k];
+            B[i][j] = s;
+        }
+    double A[8][8] = {};
+    double rhs[8] = {};
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < m; ++j) A[i][j] = B[i][j];
+        A[i][m] = 1.0;
+        A[m][i] = 1.0;
+    }
+    rhs[m] = 1.0;
+    int n = m + 1;
+    for (int col = 0; col < n; ++col) {
+        int piv = col;
+        for (int r = col + 1; r < n; ++r)
+            if (std::fabs(A[r][col]) > std::fabs(A[piv][col])) piv = r;
+        if (std::fabs(A[piv][col]) < 1e-12) return false;
+        if (piv != col) {
+            for (int j2 = col; j2 < n; ++j2) std::swap(A[col][j2], A[piv][j2]);
+            std::swap(rhs[col], rhs[piv]);
+        }
+        for (int r = col + 1; r < n; ++r) {
+            double t = A[r][col] / A[col][col];
+            for (int j2 = col; j2 < n; ++j2) A[r][j2] -= t * A[col][j2];
+            rhs[r] -= t * rhs[col];
+        }
+    }
+    for (int r = n - 1; r >= 0; --r) {
+        double s = rhs[r];
+        for (int j2 = r + 1; j2 < n; ++j2) s -= A[r][j2] * c[j2];
+        c[r] = s / A[r][r];
+    }
+    return true;
+}
+
 static void diis_residual(std::vector<double>& e, const std::vector<double>& f,
                           const std::vector<double>& p, int mpack, int norbs) {
 #pragma omp parallel for schedule(static)
@@ -177,17 +224,42 @@ static void diis_extrapolate(std::vector<double>& f,
     }
 }
 
+// Phase-1: SCF-restart flag.  iter() sets this when it has to restart the SCF
+// after hitting itrmax (the md_test fallback path).  The MD driver rejects such
+// a step and retries with a smaller dt instead of accepting an inconsistent
+// energy/force pair (measured: 20-130 kcal/mol jumps at those steps).
+bool md_scf_restart = false;
+
 // iter(): 求解一次 SCF。fulscf=false 时只构建一次 Fock（用于单点/调试）；
 // rand 控制首轮密度是否加随机扰动以打破对称性（默认 1.0 表示不加）。
 
 void iter(double& ee, bool fulscf, bool rand){
     auto _t0 = std::chrono::steady_clock::now();
+    md_scf_restart = false;
     long long _tf2 = 0, _tdiag = 0, _tdens = 0, _tpseudo = 0, _tfull = 0;
     int _n_pseudo = 0, _n_full = 0;
     bool diis_on = getenv("MOPAC_FAST") != nullptr;
     std::vector<std::vector<double>> diis_F, diis_E;  // DIIS window (Fock, residual)
     double diis_prev_norm = 1e30;
     int diis_bad = 0;
+    // Phase-1: separate DIIS window for the beta (UHF) Fock matrix.
+    std::vector<std::vector<double>> diis_Fb, diis_Eb;
+    double diis_prev_norm_b = 1e30;
+    int diis_bad_b = 0;
+
+    // ---- Phase-1: MD warm start -------------------------------------------
+    // In MOLDYN each geometry is a separate "calculation", so the density was
+    // re-initialised from pdiag at every step (no density inheritance for UHF
+    // either: the nscf>0 branch below is RHF-only).  Warm-starting from the
+    // previous step's converged density removes ~2-4x of the SCF iterations in
+    // hot MD runs and keeps the electronic state continuous across steps.
+    // Enabled only when the keyword MOLDYN is present (1SCF/OPT paths are
+    // byte-identical); MOPAC_NOWARM=1 disables it for debugging.
+    static thread_local std::vector<double> warm_pa, warm_pb;
+    static thread_local bool warm_ready = false;
+    static thread_local bool md_warm = false;
+    md_warm = keywrd.find("MOLDYN") != std::string::npos &&
+              getenv("MOPAC_NOWARM") == nullptr;
     static thread_local double selcon;
     static thread_local int l=0, icalcn=0, itrmax=2000, na2el=0, na1el=0, nb1el=0, ifill=0,
          irrr=5, jalp=0, ialp=0, jbet=0, ibet=0, ihomo=1, ihomob=1, i=0, j=0,
@@ -206,6 +278,9 @@ void iter(double& ee, bool fulscf, bool rand){
     static thread_local std::string abprt[4]={"","","ALPHA"," BETA"};
     static thread_local int iopc_calcp=3;
     md_test=true; is_PARAM=false; ifill=0;
+    // Phase-3 XL-BOMD-lite: relaxed SCF energy tolerance for (most) MD steps;
+    // set per call from MOPAC_SCF_ETOL, reset every MOPAC_SCF_REFRESH steps.
+    double md_esellim = 0.0;
     ihomo=std::max(1,nclose+nalpha); ihomob=std::max(1,nclose+nbeta);
     
     if ((int)cflat.size() <= norbs * norbs) { cflat.assign(norbs * norbs + 1, 0.0); cbflat.assign(norbs * norbs + 1, 0.0); }
@@ -224,8 +299,10 @@ void iter(double& ee, bool fulscf, bool rand){
         prtvec = (keywrd.find(" VEC")!=std::string::npos || keywrd.find(" ALLVEC")!=std::string::npos) && debug;
         debug = keywrd.find(" ITER")!=std::string::npos;
         newdg=false; camkin=false; plchek=0.005; pl=1.0; plb=0; bshift=-80.0; shift=1.0;  // F90 iter.F90:97 shift=0 then :121 shift=1 -> final 1.0
-        if (diis_on) shift = 0.0;  // DIIS needs the pure Fock (no level shift) for extrapolation
-        shfto=0; shftbo=0; itrmax=2000; na2el=nclose; na1el=nalpha+nopen; nb1el=nbeta+nopen;
+        // NOTE: the level shift is zeroed later, after diis_on has been resolved
+        // for UHF/halfe/CI (a MOPAC_FAST+UHF run used to lose BOTH DIIS and the
+        // level shift, which made it ~10x slower and divergent).
+        shfto=0; shftbo=0; itrmax=(md_test ? 300 : 2000); na2el=nclose; na1el=nalpha+nopen; nb1el=nbeta+nopen;
         if(keywrd.find(" FILL")!=std::string::npos) ifill=-(int)reada(keywrd,(int)keywrd.find(" FILL"));
         if(keywrd.find(" SHIFT")!=std::string::npos) bshift=-reada(keywrd,(int)keywrd.find(" SHIFT"));
         if(std::abs(bshift)>1e-20) ten=bshift;
@@ -246,7 +323,15 @@ void iter(double& ee, bool fulscf, bool rand){
             if(uhf){ for(int ii=1;ii<=mpack;++ii) pold[ii]=pa[ii]; for(int ii=1;ii<=mpack;++ii) pbold[ii]=pb[ii]; }
             else { for(int ii=1;ii<=mpack;++ii) pold[ii]=pa[ii]*2.0; }
         } else {
-            if(!is_PARAM){
+            if (md_warm && warm_ready &&
+                (int)warm_pa.size() > mpack && (int)warm_pb.size() > mpack) {
+                // Phase-1 warm start: inherit the previous MD step's density.
+                for (int ii = 1; ii <= mpack; ++ii) {
+                    pa[ii] = warm_pa[ii];
+                    pb[ii] = warm_pb[ii];
+                    p[ii] = pa[ii] + pb[ii];
+                }
+            } else if(!is_PARAM){
                 for(int ii=1;ii<=mpack;++ii){ p[ii]=0; pa[ii]=0; pb[ii]=0; }
                 w1=na1el/(na1el+1e-6+nb1el); w2=1.0-w1;
                 if(w1<1e-6) w1=0.5; if(w2<1e-6) w2=0.5;
@@ -264,7 +349,8 @@ void iter(double& ee, bool fulscf, bool rand){
             for(int ii=1;ii<=norbs;++ii) pold2[ii]=pold[(ii*(ii+1))/2];
         }
         halfe = (nopen!=nclose && std::abs(fract-2.0)>1e-20 && std::abs(fract)>1e-20);
-        if (diis_on && (uhf || halfe || ci)) diis_on = false;  // DIIS: RHF non-CI only
+        if (diis_on && (halfe || ci)) diis_on = false;  // coupled alpha/beta DIIS supports UHF
+        if (diis_on) shift = 0.0;  // DIIS needs the pure Fock (no level shift) for extrapolation
         if(halfe){ iopc_calcp=3; if(lgpu) iopc_calcp=2; }
         else { iopc_calcp=5; if(lgpu) iopc_calcp=4; }
         if(gs) gs = !halfe && !ci;
@@ -299,6 +385,30 @@ void iter(double& ee, bool fulscf, bool rand){
     if(gs) selcon=std::min(std::min(scfcrt*100.0,0.1),std::max(scfcrt*std::pow(gnorm,3)*std::pow(10.0,-id*3),scfcrt));
     pltest=0.05*std::sqrt(std::abs(selcon));
     if(nalpha!=nbeta && uhf) pltest=0.001;
+
+    // Phase-3 XL-BOMD-lite: on MD steps (except the periodic full-tolerance
+    // refresh) relax the SCF convergence criteria so that warm-started SCF stops
+    // after a few iterations.  The MD driver's energy-jump rejection +
+    // compensation absorbs the resulting small force/energy errors, so this is a
+    // controlled stand-in for a full extended-Lagrangian propagation while the
+    // real XL-BOMD is being prototyped.
+    //   MOPAC_SCF_RELAX=<factor>   multiplies pltest (e.g. 20 -> 2e-2 for UHF)
+    //   MOPAC_SCF_ETOL=<Hartree>   floors the energy-difference tolerance sellim
+    //   MOPAC_SCF_REFRESH=<k>      every k-th MD step is solved at full tolerance
+    if (md_warm) {
+        const char* env_relax = std::getenv("MOPAC_SCF_RELAX");
+        if (env_relax != nullptr) {
+            const double factor = std::atof(env_relax);
+            const char* env_ref = std::getenv("MOPAC_SCF_REFRESH");
+            const int refresh = env_ref ? std::atoi(env_ref) : 10;
+            const bool refresh_step = (refresh > 0) && ((nscf % refresh) == 0);
+            if (factor > 0.0 && !refresh_step) {
+                pltest *= factor;
+                if (const char* env_etol = std::getenv("MOPAC_SCF_ETOL"))
+                    md_esellim = std::atof(env_etol);
+            }
+        }
+    }
     if(prt1el) vecprt(h,norbs);
     iredy=1;
 
@@ -306,7 +416,8 @@ void iter(double& ee, bool fulscf, bool rand){
 
 L180:
     niter=0; frst=true;
-    if (diis_on) { diis_F.clear(); diis_E.clear(); diis_prev_norm = 1e30; diis_bad = 0; }
+    if (diis_on) { diis_F.clear(); diis_E.clear(); diis_prev_norm = 1e30; diis_bad = 0;
+                   diis_Fb.clear(); diis_Eb.clear(); diis_prev_norm_b = 1e30; diis_bad_b = 0; }
     modea = camkin?1:0; modeb = camkin?1:0;
     bfrst=true;
 
@@ -370,7 +481,8 @@ L320:
         // DIIS residual uses the OLD density (the one F_n was built from):
         //   e_n = F_n*P_{n-1} - P_{n-1}*F_n   (P_n would make e ~ 0 by construction)
         std::vector<double> e(mpack + 1, 0.0);
-        diis_residual(e, f, p, mpack, norbs);
+        const std::vector<double>& pd = uhf ? pa : p;
+        diis_residual(e, f, pd, mpack, norbs);
         double norm = 0.0;
         for (int k = 1; k <= mpack; ++k) norm += e[k] * e[k];
         norm = std::sqrt(norm);
@@ -388,7 +500,9 @@ L320:
         // Delayed start (niter>=5) and |c_i|<=2 guard against wild early extrapolation.
         // Fortran only extrapolates when the Pulay/Camp-King converger is on
         // (PULAY/forced ALLCON); by default no DIIS extrapolation is applied.
-        if ((okpuly || allcon || camkin) && diis_F.size() >= 2 && niter >= 5) {
+        if (!uhf && (okpuly || allcon || camkin || diis_on) && diis_F.size() >= 2 && niter >= 5) {
+            // RHF extrapolation here; for UHF it is done jointly after the beta
+            // Fock is built (see the coupled-DIIS block below).
             double c[8];
             int m = (int)diis_F.size();
             bool ok = diis_solve(c, diis_E, m, mpack);
@@ -424,6 +538,43 @@ L320:
         else      fock2(fb,p,pb,w,w,w,numat,nfirst,nlast,2);
         _tf2 += std::chrono::duration_cast<std::chrono::microseconds>(
                     std::chrono::steady_clock::now() - _b1).count();
+        // Phase-1: beta (UHF) DIIS, mirrors the alpha block.
+        if (diis_on && uhf && !getout) {
+            std::vector<double> eb(mpack + 1, 0.0);
+            diis_residual(eb, fb, pb, mpack, norbs);
+            double normb = 0.0;
+            for (int k = 1; k <= mpack; ++k) normb += eb[k] * eb[k];
+            normb = std::sqrt(normb);
+            if (normb > diis_prev_norm_b * 1.2) ++diis_bad_b; else diis_bad_b = 0;
+            if (diis_bad_b >= 3) { diis_Fb.clear(); diis_Eb.clear(); diis_bad_b = 0; }
+            diis_prev_norm_b = normb;
+            if (diis_Fb.size() >= 6) { diis_Fb.erase(diis_Fb.begin()); diis_Eb.erase(diis_Eb.begin()); }
+            diis_Fb.push_back(fb);
+            diis_Eb.push_back(eb);
+            if (diis_Fb.size() >= 2 && niter >= 5 &&
+                diis_F.size() == diis_Fb.size()) {
+                double cc[8];
+                int mb = (int)diis_Fb.size();
+                bool okb = diis_solve_coupled(cc, diis_E, diis_Eb, mb, mpack);
+                if (okb) for (int i = 0; i < mb; ++i) if (std::fabs(cc[i]) > 2.0) okb = false;
+                if (!okb && mb > 2) {
+                    diis_F.erase(diis_F.begin());  diis_E.erase(diis_E.begin());
+                    diis_Fb.erase(diis_Fb.begin()); diis_Eb.erase(diis_Eb.begin());
+                    mb = (int)diis_Fb.size();
+                    okb = (mb >= 2) && diis_solve_coupled(cc, diis_E, diis_Eb, mb, mpack);
+                    if (okb) for (int i = 0; i < mb; ++i) if (std::fabs(cc[i]) > 2.0) okb = false;
+                }
+                if (okb && mb >= 2) {
+                    std::vector<double> fsa(mpack + 1), fsb(mpack + 1);
+                    diis_extrapolate(fsa, diis_F, cc, mb, mpack);
+                    diis_extrapolate(fsb, diis_Fb, cc, mb, mpack);
+                    for (int k = 1; k <= mpack; ++k) {
+                        f[k]  = 0.7 * fsa[k] + 0.3 * f[k];
+                        fb[k] = 0.7 * fsb[k] + 0.3 * fb[k];
+                    }
+                }
+            }
+        }
         if(prtfok) vecprt(fb,norbs);
     }
     if(!fulscf) goto L600;
@@ -433,9 +584,16 @@ L320:
         if(diff<1e-3 && pl<1e-4 && !force){ incitr=true; getout=true; goto L410; }
         if(md_test){
             okpuly=true; camkin=!halfe; allcon=true; bshift=4.44;
-            iredy=-4; eold=100.0; newdg=false; md_test=false; goto L180;
+            iredy=-4; eold=100.0; newdg=false; md_test=false;
+            md_scf_restart = true;   // MD driver will reject/retry this step
+            goto L180;
         }
-        iscf=2; md_stop_set();
+        iscf=2;
+        if (md_warm) {            // MD: let the driver reject/retry this step
+            md_scf_restart = true;
+            return;
+        }
+        md_stop_set();
         writmo(); mopend("UNABLE TO ACHIEVE SELF-CONSISTENCE"); return;
     }
     ee=helect(norbs,pa,h,f);
@@ -449,6 +607,21 @@ L320:
     } else if(bshift!=0.0) scorr=shift*(nopen-nclose)*enrgy_*0.25*fract*(2.0-fract);
     escf=(ee+enuclr)*enrgy_+atheat+scorr;
 	std::fprintf(stderr, "CXXIT %d %.16f %.16f %.16f\n", niter, escf, pl, shift);
+	// Divergence guard: a non-finite energy (atoms collapsed/flew apart) cannot
+	// recover; abort immediately. A runaway magnitude is only trusted after the
+	// early iterations (which legitimately oscillate) have settled.
+	if (!std::isfinite(escf)) {
+	  iscf = 2;
+	  if (md_warm) { md_scf_restart = true; return; }   // MD: reject + retry smaller dt
+	  md_stop_set();
+	  writmo(); mopend("SCF DIVERGED (NON-FINITE ENERGY)"); return;
+	}
+	if (niter > 15 && std::abs(escf) > 1.0e6) {
+	  iscf = 2;
+	  if (md_warm) { md_scf_restart = true; return; }   // MD: reject + retry smaller dt
+	  md_stop_set();
+	  writmo(); mopend("SCF DIVERGED (RUNAWAY ENERGY)"); return;
+	}
     getout=false;
 
     // L410: 收敛判断：escf 与 eold 的差 diff、level-shift 步长 ten 的更新，
@@ -460,6 +633,7 @@ L410:
         diff=escf-eold;
         if(diff>0) ten-=1.0; else ten=ten*0.975+0.05;
         sellim=std::max(selcon,1e-15*std::max(std::abs(ee),1.0));
+    if (md_esellim > sellim) sellim = md_esellim;   // XL-BOMD-lite relaxed step
         bool conv_nw = (niter>4 && (pl==0.0 || (pl<pltest && std::abs(diff)<sellim)) && ready);
         if(conv_nw){ goto L470; }
         goto L490;
@@ -637,6 +811,11 @@ L600:
             }
         }
     }
+    if (md_warm) {
+        warm_pa.assign(pa.begin(), pa.end());
+        warm_pb.assign(pb.begin(), pb.end());
+        warm_ready = true;
+    }
     ++nscf;
     if(allcon && std::abs(bshift-4.44)<1e-7){
         camkin=false; allcon=false; newdg=false; bshift=-10; okpuly=false;
@@ -644,6 +823,17 @@ L600:
     shift=1.0;
     escf=(ee+enuclr)*enrgy_+atheat;
     if(emin==0.0) emin=escf; else emin=std::min(emin,escf);
+
+    // Phase-3: per-SCF-call profiling (opt-in, stderr).  Shows where the time
+    // goes between the Fock builds, (pseudo-)diagonalisations and density
+    // assemblies, which is what decides whether XL-BOMD or SCF tuning matters.
+    if (getenv("MOPAC_ITERPROF") != nullptr) {
+        std::fprintf(stderr,
+                     "ITPROF niter=%d fock2=%lld diag=%lld dens=%lld pseudo=%lld full=%lld"
+                     " n_pseudo=%d n_full=%d norbs=%d\n",
+                     niter, _tf2, _tdiag, _tdens, _tpseudo, _tfull,
+                     _n_pseudo, _n_full, norbs);
+    }
 }
 
 // delete_iter_arrays: F90 deallocates scratch arrays; C++ RAII makes this a no-op.

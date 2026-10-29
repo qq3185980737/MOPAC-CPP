@@ -1,24 +1,16 @@
-// fock2.cpp — C++ translation of MOPAC 2016 "fock2.F90".
+// fock2.cpp 鈥?C++ translation of MOPAC 2016 "fock2.F90".
 // Forms the two-electron two-center repulsion part of the Fock matrix.
 // 1-based packing convention: f/ptot/p/w/wj/wk all 1-based (index 0 padding).
 
 //
 // ============================================================================
-// 【中文导读】fock2() —— 用密度矩阵 P 构建 Fock 矩阵的双电子部分
+// 銆愪腑鏂囧璇汇€慺ock2() 鈥斺€?鐢ㄥ瘑搴︾煩闃?P 鏋勫缓 Fock 鐭╅樀鐨勫弻鐢靛瓙閮ㄥ垎
 // ----------------------------------------------------------------------------
-// 对应 fock2.F90。iter() 每轮 SCF 都会调用：F = H + 双电子贡献(P)。
-// 文件内结构：
-//   - fockdorbs(): d 轨道（或大轨道块）的双中心积分贡献 (ij|kl)；
-//   - fock1dorbs(): 一中心 d 轨道块；
-//   - addfck(): COSMO 修正（已接线 cosmo.cpp 真实实现）；
-//   - fock2(): 主入口——按原子对 (i,j) 遍历，用 W 的当前游标 kk 取积分，
-//     把库仑/交换项累加进 F。分支按轻/重原子: hh（jab+kab，100 项块）、
-//     hl、ll，以及周期性体系（id!=0）的四重循环。
-// 数组约定：F/P/W 均为 1-based 打包下三角，索引 j*(j-1)/2+i；w 游标 kk 的
-// 推进顺序必须与 Fortran 完全一致，否则 W 会错位。
-// 线程模型：默认串行以保逐位一致；只有导数路径（dcart）和 OpenMP/确定性
-// 并行（MOPAC_DSPAR）才使用线程私有 Fock 累加器，见文件后半说明。
-// ============================================================================
+// 瀵瑰簲 fock2.F90銆俰ter() 姣忚疆 SCF 閮戒細璋冪敤锛欶 = H + 鍙岀數瀛愯础鐚?P)銆?// 鏂囦欢鍐呯粨鏋勶細
+//   - fockdorbs(): d 杞ㄩ亾锛堟垨澶ц建閬撳潡锛夌殑鍙屼腑蹇冪Н鍒嗚础鐚?(ij|kl)锛?//   - fock1dorbs(): 涓€涓績 d 杞ㄩ亾鍧楋紱
+//   - addfck(): COSMO 淇锛堝凡鎺ョ嚎 cosmo.cpp 鐪熷疄瀹炵幇锛夛紱
+//   - fock2(): 涓诲叆鍙ｂ€斺€旀寜鍘熷瓙瀵?(i,j) 閬嶅巻锛岀敤 W 鐨勫綋鍓嶆父鏍?kk 鍙栫Н鍒嗭紝
+//     鎶婂簱浠?浜ゆ崲椤圭疮鍔犺繘 F銆傚垎鏀寜杞?閲嶅師瀛? hh锛坖ab+kab锛?00 椤瑰潡锛夈€?//     hl銆乴l锛屼互鍙婂懆鏈熸€т綋绯伙紙id!=0锛夌殑鍥涢噸寰幆銆?// 鏁扮粍绾﹀畾锛欶/P/W 鍧囦负 1-based 鎵撳寘涓嬩笁瑙掞紝绱㈠紩 j*(j-1)/2+i锛泈 娓告爣 kk 鐨?// 鎺ㄨ繘椤哄簭蹇呴』涓?Fortran 瀹屽叏涓€鑷达紝鍚﹀垯 W 浼氶敊浣嶃€?// 绾跨▼妯″瀷锛氶粯璁や覆琛屼互淇濋€愪綅涓€鑷达紱鍙湁瀵兼暟璺緞锛坉cart锛夊拰 OpenMP/纭畾鎬?// 骞惰锛圡OPAC_DSPAR锛夋墠浣跨敤绾跨▼绉佹湁 Fock 绱姞鍣紝瑙佹枃浠跺悗鍗婅鏄庛€?// ============================================================================
 
 #include "fock2.h"
 #include <algorithm>
@@ -50,9 +42,8 @@ thread_local std::vector<double> ptot2buf;
 thread_local int ptot2_rows = 0;
 
 // fockdorbs: general d-orbital (or large) two-center block.
-// 中文：d 轨道（或大块）双中心贡献。ia>ja 与 ia<=ja 两种存储/遍历顺序对应
-// F90 的两个分支，aa/bb 是对角块 1、非对角块 2 的权重。
-
+// 涓枃锛歞 杞ㄩ亾锛堟垨澶у潡锛夊弻涓績璐＄尞銆俰a>ja 涓?ia<=ja 涓ょ瀛樺偍/閬嶅巻椤哄簭瀵瑰簲
+// F90 鐨勪袱涓垎鏀紝aa/bb 鏄瑙掑潡 1銆侀潪瀵硅鍧?2 鐨勬潈閲嶃€?
 void fockdorbs(int ia, int ib, int ja, int jb, std::vector<double>& f,
                const std::vector<double>& p, const std::vector<double>& ptot,
                const std::vector<double>& w, int& kr, const std::vector<int>& fact) {
@@ -128,9 +119,8 @@ void fockdorbs(int ia, int ib, int ja, int jb, std::vector<double>& f,
     }
 }
 
-// 2026-10 修复：删除遮蔽 cosmo.cpp 真实实现的空 addfck；调用点改为
-// addfck(density, fock)（C++ 实现的参数顺序为 (pin=density, fin=Fock)）。
-
+// 2026-10 淇锛氬垹闄ら伄钄?cosmo.cpp 鐪熷疄瀹炵幇鐨勭┖ addfck锛涜皟鐢ㄧ偣鏀逛负
+// addfck(density, fock)锛圕++ 瀹炵幇鐨勫弬鏁伴『搴忎负 (pin=density, fin=Fock)锛夈€?
 } // namespace
 
 void fock1dorbs(std::vector<double>& f, const std::vector<double>& ptot,
@@ -169,9 +159,7 @@ void fock1dorbs(std::vector<double>& f, const std::vector<double>& ptot,
     kr += ilim * ilim;
 }
 
-// fock2 主入口：f 是累加器，ptot 是总密度（UHF 时为 alpha+beta）；mpack 为
-// 打包长度。函数先把 ptot 复制成按原子分块的 ptot2 缓存，然后遍历原子对。
-
+// fock2 涓诲叆鍙ｏ細f 鏄疮鍔犲櫒锛宲tot 鏄€诲瘑搴︼紙UHF 鏃朵负 alpha+beta锛夛紱mpack 涓?// 鎵撳寘闀垮害銆傚嚱鏁板厛鎶?ptot 澶嶅埗鎴愭寜鍘熷瓙鍒嗗潡鐨?ptot2 缂撳瓨锛岀劧鍚庨亶鍘嗗師瀛愬銆?
 void fock2(std::vector<double>& f, const std::vector<double>& ptot,
            std::vector<double>& p, const std::vector<double>& w,
            const std::vector<double>& wj, const std::vector<double>& wk,
@@ -232,11 +220,53 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
             }
     }
     int kk = 0;
+
+    // Phase-3: per-thread initialisation of the thread_local scratch buffers
+    // (ifact, i1fact, jindex, ptot2buf).  OpenMP worker threads start with
+    // default-constructed thread_local objects, so they must be filled inside
+    // the parallel region -- otherwise fockdorbs/jab/kab read out of bounds
+    // (this was the NB>1 access violation).
+    auto init_thread_scratch = [&]() {
+        const int norb = molkst_C::norbs;
+        ifact.assign((size_t)norb + 4, 0);
+        i1fact.assign((size_t)norb + 4, 0);
+        for (int i = 1; i <= norb; ++i) {
+            ifact[i] = (i * (i - 1)) / 2;
+            i1fact[i] = ifact[i] + i;
+        }
+        int m = 0;
+        for (int i = 1; i <= 4; ++i)
+            for (int j = 1; j <= 4; ++j) {
+                int ij = std::min(i, j);
+                int ji = i + j - ij;
+                for (int k = 1; k <= 4; ++k) {
+                    for (int l = 1; l <= 4; ++l) {
+                        ++m;
+                        int kl = std::min(k, l);
+                        int lk = k + l - kl;
+                        jindex[m] = (ifact[ji] + ij) * 10 + ifact[lk] + kl - 10;
+                    }
+                }
+            }
+        ptot2buf.assign((size_t)(numat + 1) * 82, 0.0);
+        for (int i = 1; i <= numat; ++i) {
+            int ia = nfirst[i];
+            int ib = nlast[i];
+            int mm = 0;
+            for (int j = ia; j <= ib; ++j)
+                for (int k = ia; k <= ib; ++k) {
+                    ++mm;
+                    int jk = std::min(j, k);
+                    int kj = k + j - jk;
+                    jk = jk + (kj * (kj - 1)) / 2;
+                    ptot2buf[(size_t)i * 82 + mm] = ptot[jk];
+                }
+        }
+    };
+
     // ---- atom-pair body shared by the serial and OpenMP paths ----
 
-    // 以下原子对循环体在串行、OpenMP、确定性并行（MOPAC_DSPAR 分桶）三条
-    // 路径间共享；kk（W 游标）随每个原子对按固定顺序推进。
-
+    // 浠ヤ笅鍘熷瓙瀵瑰惊鐜綋鍦ㄤ覆琛屻€丱penMP銆佺‘瀹氭€у苟琛岋紙MOPAC_DSPAR 鍒嗘《锛変笁鏉?    // 璺緞闂村叡浜紱kk锛圵 娓告爣锛夐殢姣忎釜鍘熷瓙瀵规寜鍥哄畾椤哄簭鎺ㄨ繘銆?
     // kk (w cursor) is advanced inside; f_out is the Fock accumulator (f in
     // serial, a per-thread private copy under OpenMP).
     auto work_pair = [&](int ii, int jj, int& kk, std::vector<double>& f_out) {
@@ -255,8 +285,7 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
                 auto b0 = std::chrono::steady_clock::now();
                 // heavy-atom - heavy-atom: jab + kab, w block 100
 
-                // 中文：重原子-重原子对，库仑项用 jab、交换项用 kab，W 每对推进 100。
-
+                // 涓枃锛氶噸鍘熷瓙-閲嶅師瀛愬锛屽簱浠戦」鐢?jab銆佷氦鎹㈤」鐢?kab锛學 姣忓鎺ㄨ繘 100銆?
                 double pja[17] = {}, pjb[17] = {}, pk[17] = {};
                 for (int mm = 1; mm <= 16; ++mm) {
                     pja[mm] = ptot2buf[(size_t)ii * 82 + mm];
@@ -406,10 +435,7 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
     };
 #ifdef _OPENMP
 
-    // 并行策略：普通分子/非导数路径可选 OpenMP；论文用的确定性路径
-    // （MOPAC_DSPAR）把原子对按固定顺序分到 NB 个桶、各桶私有 Fock，
-    // 最后按桶序归约，保证与线程数无关。默认（无环境变量）走串行。
-
+    // 骞惰绛栫暐锛氭櫘閫氬垎瀛?闈炲鏁拌矾寰勫彲閫?OpenMP锛涜鏂囩敤鐨勭‘瀹氭€ц矾寰?    // 锛圡OPAC_DSPAR锛夋妸鍘熷瓙瀵规寜鍥哄畾椤哄簭鍒嗗埌 NB 涓《銆佸悇妗剁鏈?Fock锛?    // 鏈€鍚庢寜妗跺簭褰掔害锛屼繚璇佷笌绾跨▼鏁版棤鍏炽€傞粯璁わ紙鏃犵幆澧冨彉閲忥級璧颁覆琛屻€?
     // OpenMP parallel atom-pair loop (molecular, non-derivative, non-periodic,
     // mode != 2 and large enough). Each thread accumulates into a private Fock
 #endif
@@ -420,9 +446,16 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
     // number of buckets (NB=8, independent of the OpenMP thread count); each
     // bucket accumulates a private Fock in the serial sub-order; buckets are
     // merged in fixed order 0..NB-1.  Result is therefore independent of thread
-    // count / scheduling — deterministic parallel SCF.  The default serial path
+    // count / scheduling 鈥?deterministic parallel SCF.  The default serial path
     // (DSPAR unset) stays bit-identical to the official exe.
-    if (!deriv && mode == 0 && std::getenv("MOPAC_DSPAR")) {
+    // Phase-3: DSPAR for the SCF path (mode==2) is experimental.  The one-centre
+    // block cursor (kkend) reproduces the serial result exactly for NB=1, but
+    // NB>1 currently hits an access violation because some scratch buffers used
+    // by work_pair are not thread-safe; it is therefore gated behind
+    // MOPAC_DSPAR_SCF and kept off by default until that audit is done.
+    const bool dspar_scf = (mode == 2) &&
+                           std::getenv("MOPAC_DSPAR_SCF") != nullptr;
+    if (!deriv && (mode == 0 || dspar_scf) && std::getenv("MOPAC_DSPAR")) {
         int NB = 8;
         if (std::getenv("MOPAC_DSPAR_NB"))
             NB = std::max(1, std::min(64, std::atoi(std::getenv("MOPAC_DSPAR_NB"))));
@@ -442,6 +475,7 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
         // 1) scan: per-pair kk offset + kind in serial order
         std::vector<long long> kkoff, incv;
         std::vector<int> kkind, pii, pjj;
+        std::vector<long long> kkend(numat + 1, 0);   // kk cursor at the end of atom ii
         long long kkcur = 0;
         for (int ii = 1; ii <= numat; ++ii) {
             int iminus = deriv ? ii - 1 : ii - ione;
@@ -451,6 +485,14 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
                 kkoff.push_back(kkcur); incv.push_back(inc);
                 kkind.push_back(kd); pii.push_back(ii); pjj.push_back(jj);
                 kkcur += inc;
+            }
+            kkend[ii] = kkcur;
+            if (mode == 2) {
+                // In the serial cursor each atom's one-centre block follows that
+                // atom's pair integrals, so advance the cursor by ilim^2.
+                int ia2 = nfirst[ii], ib2 = nlast[ii];
+                int ilim2 = ((ib2 - ia2 + 1) * (ib2 - ia2 + 2)) / 2;
+                kkcur += (long long)ilim2 * ilim2;
             }
         }
         const size_t np = kkoff.size();
@@ -469,16 +511,20 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
         std::vector<std::vector<double>> fbk(NB, std::vector<double>(fsz, 0.0));
         for (size_t i = 0; i < fsz; ++i) fbk[0][i] = f[i];
         // 3) process buckets in parallel.  Bucket contents depend only on the
-        //    pair set inside the bucket (serial sub-order) — never on how the
-        //    OpenMP runtime distributes buckets across threads — and the merge
+        //    pair set inside the bucket (serial sub-order) 鈥?never on how the
+        //    OpenMP runtime distributes buckets across threads 鈥?and the merge
         //    order 0..NB-1 is fixed, so the final Fock is bit-identical for
         //    ANY thread count / scheduling (deterministic parallel SCF).
-#pragma omp parallel for schedule(static)
-        for (int b = 0; b < NB; ++b) {
-            auto& fb = fbk[b];
-            for (int idx : bidx[b]) {
-                int kkt = (int)kkoff[idx];
-                work_pair(pii[idx], pjj[idx], kkt, fb);
+#pragma omp parallel
+        {
+            init_thread_scratch();
+#pragma omp for schedule(static)
+            for (int b = 0; b < NB; ++b) {
+                auto& fb = fbk[b];
+                for (int idx : bidx[b]) {
+                    int kkt = (int)kkoff[idx];
+                    work_pair(pii[idx], pjj[idx], kkt, fb);
+                }
             }
         }
         // 4) fixed-order merge 0..NB-1
@@ -486,6 +532,30 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
             double s = 0.0;
             for (int b = 0; b < NB; ++b) s += fbk[b][i];
             f[i] = s;
+        }
+        // 5) mode==2 (SCF path): apply the one-centre d-orbital blocks that the
+        // serial loop applies per atom.  The scan above already advanced the
+        // cursor by each atom's ilim^2 block, so kkend[ii] is the base offset of
+        // atom ii's block (same value the serial loop passes as kr).  Applying
+        // them after the pair merge changes only the floating-point accumulation
+        // order (deterministic, not bit-identical to serial); DSPAR is opt-in
+        // and used for MD only.
+        if (mode == 2) {
+            static thread_local std::vector<double> wsub2;
+            for (int ii = 1; ii <= numat; ++ii) {
+                int ia = nfirst[ii];
+                int ib = nlast[ii];
+                int ilim = ((ib - ia + 1) * (ib - ia + 2)) / 2;
+                if (wsub2.size() < static_cast<size_t>(ilim) * ilim + 1)
+                    wsub2.assign(static_cast<size_t>(ilim) * ilim + 1, 0.0);
+                long long base = kkend[ii];
+                for (int b = 1; b <= ilim; ++b)
+                    for (int a = 1; a <= ilim; ++a)
+                        wsub2[a + (b - 1) * ilim] = w[base + (a - 1) + (b - 1) * ilim + 1];
+                    int kr3 = (int)base;
+                fock1dorbs(f, ptot, p, molkst_C::mpack, wsub2, kr3, ia, ib, ilim);
+
+            }
         }
         if (cosmo_C::useps) addfck(const_cast<double*>(ptot.data()), f.data());
         return;
@@ -511,3 +581,7 @@ void fock2(std::vector<double>& f, const std::vector<double>& ptot,
     }
     if (cosmo_C::useps) addfck(const_cast<double*>(ptot.data()), f.data());
 }
+
+
+
+
