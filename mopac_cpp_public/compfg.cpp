@@ -293,6 +293,10 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
       buildf(f, MOZYME_C::partf, 0);
       moz_cphf_selftest(f);
     }
+    if (mozyme && std::getenv("MOPAC_MOZ_CPHF") != nullptr) {
+      buildf(f, MOZYME_C::partf, 0);
+      moz_cphf_run();
+    }
     stress *= density;
     atheat += stress;
     if (moperr) return;
