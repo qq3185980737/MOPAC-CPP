@@ -26,6 +26,8 @@
 #include "molkst_C.h"
 #include "ijbo.h"
 #include "buildf.h"
+#include "gmetry.h"
+#include "hcore_for_MOZYME.h"
 #include <chrono>
 
 namespace MOZYME_C {
@@ -376,4 +378,67 @@ void moz_cphf_run() {
                "resid=%.3e |z|=%.3e time=%.0f ms\n",
                nocc, nvir, fov_rms, bnorm, it, std::sqrt(rsold),
                std::sqrt(dot(x, x)), elapsed);
+  // ---- optional: response term dE_resp_k = z . dF_ov/dR_k ----------------
+  if (std::getenv("MOPAC_MOZ_CPHF_GRAD") != nullptr) {
+    const int nvar_c = molkst_C::nvar;
+    int ncoord = 12;
+    if (const char* e = std::getenv("MOPAC_MOZ_CPHF_GRAD_NVAR"))
+      ncoord = std::atoi(e);
+    if (ncoord > nvar_c) ncoord = nvar_c;
+    const std::vector<std::vector<double>> geo_save = common_arrays_C::geo;
+    const std::vector<std::vector<double>> coord_save = common_arrays_C::coord;
+    const double hresp = 0.001;
+    auto proj_ov = [&](const std::vector<double>& F, std::vector<double>& M) {
+      std::vector<double> FC((size_t)nr * nvir, 0.0);
+      for (int mu = 0; mu < nr; ++mu)
+        for (int j = 0; j < nvir; ++j) {
+          double sum = 0.0;
+          for (int nu = 0; nu < nr; ++nu)
+            sum += F[(size_t)mu * nr + nu] * Cvir[(size_t)nu * nvir + j];
+          FC[(size_t)mu * nvir + j] = sum;
+        }
+      M.assign(n, 0.0);
+      for (int i = 0; i < nocc; ++i)
+        for (int j = 0; j < nvir; ++j) {
+          double sum = 0.0;
+          for (int mu = 0; mu < nr; ++mu)
+            sum += Cocc[(size_t)mu * nocc + i] * FC[(size_t)mu * nvir + j];
+          M[(size_t)i * nvir + j] = sum;
+        }
+    };
+    const std::vector<double> psave2 = common_arrays_C::p;
+    for (int kk = 1; kk <= ncoord; ++kk) {
+      const int comp = common_arrays_C::loc[2][kk];
+      const int atom = common_arrays_C::loc[1][kk];
+      double resp = 0.0;
+      double fmax = 0.0;
+      for (int sgn = -1; sgn <= 1; sgn += 2) {
+        common_arrays_C::geo = geo_save;
+        common_arrays_C::geo[comp][atom] += sgn * hresp;
+        gmetry(common_arrays_C::geo, common_arrays_C::coord);
+        if (molkst_C::moperr) break;
+        hcore_for_MOZYME();
+        if (molkst_C::moperr) break;
+        common_arrays_C::p = psave2;
+        std::vector<double> f3(common_arrays_C::p.size(), 0.0);
+        buildf(f3, MOZYME_C::partf, 0);
+        std::vector<double> F3d;
+        dense_from_packed(f3, F3d);
+        std::vector<double> F3ov;
+        proj_ov(F3d, F3ov);
+        double sresp = 0.0;
+        for (size_t k = 0; k < n; ++k) sresp += x[k] * F3ov[k];
+        resp += (sgn > 0 ? sresp : -sresp) / (2.0 * hresp);
+        for (double v : F3ov) fmax = std::max(fmax, std::fabs(v));
+      }
+      common_arrays_C::geo = geo_save;
+      gmetry(common_arrays_C::geo, common_arrays_C::coord);
+      common_arrays_C::p = psave2;
+      if (molkst_C::moperr) break;
+      std::fprintf(stderr, "CPHF_RESP %d %.8f maxFov=%.3e\n", kk, resp, fmax);
+    }
+    common_arrays_C::geo = geo_save;
+    gmetry(common_arrays_C::geo, common_arrays_C::coord);
+    common_arrays_C::p = psave2;
+  }
 }
