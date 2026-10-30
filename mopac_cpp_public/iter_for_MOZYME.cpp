@@ -586,6 +586,17 @@ void iter_for_MOZYME(double& ee) {
         }
         p_prev = p;
     }
+    if (std::getenv("MOPAC_MOZ_DENSDUMP") != nullptr) {
+        static int dump_id = 0;
+        char fname[64];
+        std::snprintf(fname, sizeof(fname), "moz_pdens_%d.dat", dump_id++);
+        if (FILE* fp = std::fopen(fname, "w")) {
+            std::fprintf(fp, "%zu\n", p.size());
+            for (std::size_t i = 1; i < p.size(); ++i)
+                std::fprintf(fp, "%.16e\n", p[i]);
+            std::fclose(fp);
+        }
+    }
     if (moz_lambda != 0.0) moz_p_ref = p;
     nmol = numcal;
     return;
