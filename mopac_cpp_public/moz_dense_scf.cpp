@@ -198,6 +198,9 @@ bool moz_dense_scf(double& ee_out) {
 
   const bool dense_dbg = (std::getenv("MOPAC_MOZ_DENSE_DBG") != nullptr);
   const bool dense_cg = (std::getenv("MOPAC_MOZ_DENSE_CG") == nullptr);
+  // opt-in: the preconditioner based on the truncated-Fock eigenvalues
+  // did not accelerate convergence (see the design notes)
+  const bool dense_prec = (std::getenv("MOPAC_MOZ_DENSE_PREC") != nullptr);
   std::vector<double> Pd, Fd((size_t)nr * nr, 0.0), FC((size_t)nr * nocc, 0.0),
       R((size_t)nr * nocc, 0.0), Ct((size_t)nr * nocc, 0.0);
   std::vector<double> Pdir((size_t)nr * nocc, 0.0), Rprev((size_t)nr * nocc, 0.0);
@@ -263,6 +266,25 @@ bool moz_dense_scf(double& ee_out) {
     }
     rr_prev = rr;
     have_dir = true;
+    if (dense_prec) {
+      std::vector<double> Aeig = Fd;
+      std::vector<double> Veig;
+      jacobi_eig(Aeig, Veig, nr);
+      std::vector<double> eig(nr);
+      for (int i = 0; i < nr; ++i) eig[i] = Aeig[(size_t)i * nr + i];
+      std::sort(eig.begin(), eig.end());
+      double ev_sum = 0.0;
+      int nvir = nr - nocc;
+      for (int i = nocc; i < nr; ++i) ev_sum += eig[i];
+      const double ev_eff = (nvir > 0) ? ev_sum / nvir : eig[nr - 1];
+      for (int i = 0; i < nocc; ++i) {
+        const double eo = Foo[(size_t)i * nocc + i];
+        double denom = 2.0 * (ev_eff - eo);
+        if (denom < 0.1) denom = 0.1;
+        if (denom > 200.0) denom = 200.0;
+        for (int mu = 0; mu < nr; ++mu) Pdir[(size_t)mu * nocc + i] /= denom;
+      }
+    }
     // backtracking line search on the energy
     double alpha = 1.0;
     bool improved = false;
