@@ -13,3 +13,9 @@ void moz_cphf_selftest(const std::vector<double>& packed_fock);
 // buildf on the perturbed density) and solves A z = -2 F_ov by conjugate
 // gradients.  Opt-in via MOPAC_MOZ_CPHF=1; prints CPHF diagnostics.
 void moz_cphf_run();
+
+// Dense occupied-LMO block from the MOZYME sparse storage (stage-1 builder).
+void moz_dense_lmo_occupied(std::vector<double>& C, int& nocc);
+// Packed MOZYME layout <-> dense (norbs x norbs) conversion.
+void moz_pack_dense(const std::vector<double>& dense, std::vector<double>& packed);
+void moz_unpack_dense(const std::vector<double>& packed, std::vector<double>& dense);

@@ -505,3 +505,17 @@ void moz_cphf_run() {
     common_arrays_C::p = psave2;
   }
 }
+
+void moz_dense_lmo_occupied(std::vector<double>& C, int& nocc) {
+  using namespace MOZYME_C;
+  nocc = MOZYME_C::noccupied;
+  build_dense_lmo(icocc, ncf, ncocc, cocc, nncf, ncf, nocc, C);
+}
+
+void moz_pack_dense(const std::vector<double>& dense, std::vector<double>& packed) {
+  packed_from_dense(dense, packed);
+}
+
+void moz_unpack_dense(const std::vector<double>& packed, std::vector<double>& dense) {
+  dense_from_packed(packed, dense);
+}

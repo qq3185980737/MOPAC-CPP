@@ -407,6 +407,7 @@
     <ClCompile Include="md_C.cpp" />
     <ClCompile Include="md_driver.cpp" />
     <ClCompile Include="moz_cphf.cpp" />
+    <ClCompile Include="moz_dense_scf.cpp" />
     <ClCompile Include="meci.cpp" />
     <ClCompile Include="meci_C.cpp" />
     <ClCompile Include="mecid.cpp" />

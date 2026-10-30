@@ -59,6 +59,7 @@
 #include "vecprt_for_MOZYME.h"
 #include "reada.h"
 #include "ijbo.h"
+#include "moz_dense_scf.h"
 #include "to_screen.h"
 
 using namespace MOZYME_C;
@@ -84,6 +85,13 @@ int Nint(double x) { return static_cast<int>(std::lround(x)); }
 }  // namespace
 
 void iter_for_MOZYME(double& ee) {
+    if (std::getenv("MOPAC_MOZ_DENSE_SCF") != nullptr) {
+        double ee_dense = 0.0;
+        if (moz_dense_scf(ee_dense)) {
+            ee = ee_dense;
+            return;
+        }
+    }
     // State tracking (opt-in): density restraint towards the previous solution.
     double moz_lambda = 0.0;
     int moz_polish = 0;
