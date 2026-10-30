@@ -319,8 +319,14 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       std::getenv("MOPAC_ALLOW_MOZYME_MD") == nullptr) {
     std::fprintf(stdout,
                  " [MD] ERROR: MOZYME is not supported for molecular dynamics in this "
-                 "build (energy/force inconsistency); aborting instead of producing "
-                 "an unconserved trajectory.\n");
+                 "build.\n"
+                 " [MD] Measured drift: -0.4..-0.6 kcal/mol/fs even with the "
+                 "consistent energy accounting, tight SCF (SCFCRT=1e-8) and "
+                 "MOPAC_JUMP_KCAL=3 (conventional path: ~0.02 kcal/mol/fs), i.e. "
+                 "-80..-120 kcal over 200 fs.  The MOZYME per-step energy/force "
+                 "inconsistency must be fixed before NVE statistics can be trusted "
+                 "(see Phase6_MOZYME验证_报告.md).  Set MOPAC_ALLOW_MOZYME_MD=1 to "
+                 "override for non-quantitative exploration.\n");
     md_stop = true;
     return;
   }
