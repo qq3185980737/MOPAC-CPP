@@ -239,6 +239,31 @@ static void gen_md_vel(const std::string& keywrd, int iw) {
 // ---------------------------------------------------------------------------
 // run_md_velocity_verlet: velocity-Verlet MD with elastic-wall box.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// MOZYME exact (numerical) gradient.
+// The factory MOZYME dcart gradient is an approximate gradient: FD checks show
+// dE/dx disagreements up to a sign flip (Phase6_MOZYME验证_报告.md, sec. 15).
+// This helper evaluates the exact derivative of the MOZYME energy by central
+// differences; used for MOZYME MD when MOPAC_MOZ_NUMGRAD=1.
+// grad is in kcal/mol/A (the same convention as compfg/deriv).
+// ---------------------------------------------------------------------------
+static void moz_numeric_gradient(const std::vector<double>& x0, double& escf,
+                                 std::vector<double>& grad, int nvar_n,
+                                 double h_ang) {
+  std::vector<double> gdum(grad.size(), 0.0);
+  std::vector<double> xp = x0;
+  std::vector<double> xm = x0;
+  double ep = 0.0, em = 0.0;
+  for (int i = 1; i <= nvar_n; ++i) {
+    xp[i] = x0[i] + h_ang;
+    xm[i] = x0[i] - h_ang;
+    compfg(xp, true, ep, true, gdum, false);
+    compfg(xm, true, em, true, gdum, false);
+    grad[i] = (ep - em) / (2.0 * h_ang);
+  }
+  compfg(x0, true, escf, true, gdum, false);   // restore state at x0
+}
+
 void run_md_velocity_verlet(const std::string& keywrd, int iw) {
   // ---- parse control keywords ----
   // T_target (K), default DEF_TTARGET
@@ -316,7 +341,8 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
   // produced; the full MOZYME gradient audit is tracked in
   // Phase6_MOZYME验证_报告.md.
   if (keywrd.find(" MOZ") != std::string::npos &&
-      std::getenv("MOPAC_ALLOW_MOZYME_MD") == nullptr) {
+      std::getenv("MOPAC_ALLOW_MOZYME_MD") == nullptr &&
+      std::getenv("MOPAC_MOZ_NUMGRAD") == nullptr) {
     std::fprintf(stdout,
                  " [MD] ERROR: MOZYME is not supported for molecular dynamics in this "
                  "build.\n"
@@ -325,8 +351,11 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
                  "MOPAC_JUMP_KCAL=3 (conventional path: ~0.02 kcal/mol/fs), i.e. "
                  "-80..-120 kcal over 200 fs.  The MOZYME per-step energy/force "
                  "inconsistency must be fixed before NVE statistics can be trusted "
-                 "(see Phase6_MOZYME验证_报告.md).  Set MOPAC_ALLOW_MOZYME_MD=1 to "
-                 "override for non-quantitative exploration.\n");
+                 "(see Phase6_MOZYME验证_报告.md).  The factory MOZYME gradient is "
+                 "an approximate gradient (FD check), so NVE MD requires either "
+                 "MOPAC_MOZ_NUMGRAD=1 (exact numerical gradient, 6N+1 SCF/step, "
+                 "energy conserving) or the MOPAC_ALLOW_MOZYME_MD=1 override for "
+                 "non-quantitative exploration.\n");
     md_stop = true;
     return;
   }
@@ -458,7 +487,11 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     if (have_force_cache && getenv("MOPAC_NOCACHE") == nullptr) {
       grad = grad_cache;
     } else {
-      compfg(x_new, true, escf, true, grad, true);
+      if (std::getenv("MOPAC_MOZ_NUMGRAD") != nullptr) {
+        moz_numeric_gradient(x_new, escf, grad, nvar, 0.001);
+      } else {
+        compfg(x_new, true, escf, true, grad, true);
+      }
       if (md_stop) break;
       grad_cache = grad;
     }
@@ -536,7 +569,11 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
 
     // ---- forces at time t+dt ----
     md_scf_restart = false;
-    compfg(x_new, true, escf, true, grad, true);
+    if (std::getenv("MOPAC_MOZ_NUMGRAD") != nullptr) {
+        moz_numeric_gradient(x_new, escf, grad, nvar, 0.001);
+      } else {
+        compfg(x_new, true, escf, true, grad, true);
+      }
     if (md_scf_restart) {
       // The SCF hit itrmax and had to restart; accepting this step injects a
       // spurious 20-130 kcal/mol energy jump.  Reject the step, restore the
