@@ -262,6 +262,10 @@ static void moz_numeric_gradient(const std::vector<double>& x0, double& escf,
     grad[i] = (ep - em) / (2.0 * h_ang);
   }
   compfg(x0, true, escf, true, gdum, false);   // restore state at x0
+  if (std::getenv("MOPAC_MOZ_NUMGRAD_DUMP") != nullptr) {
+    for (int gi = 1; gi <= 12 && gi <= nvar_n; ++gi)
+      std::fprintf(stderr, "NGNUM %d %.6f\n", gi, grad[gi]);
+  }
 }
 
 void run_md_velocity_verlet(const std::string& keywrd, int iw) {
