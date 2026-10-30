@@ -88,6 +88,10 @@ void iter_for_MOZYME(double& ee) {
     double moz_lambda = 0.0;
     int moz_polish = 0;
     if (const char* pn = std::getenv("MOPAC_MOZ_POLISH")) moz_polish = std::atoi(pn);
+    double moz_dentol = 0.0;
+    if (const char* dt = std::getenv("MOPAC_MOZ_DENTOL")) moz_dentol = std::atof(dt);
+    double moz_dpmax = 1.0e30;
+    static std::vector<double> moz_p_iter;
     int moz_okscf_niter = -1;
     static std::vector<double> moz_p_ref;
     {
@@ -426,6 +430,14 @@ void iter_for_MOZYME(double& ee) {
         }
         if (use_three_point_extrap)
             cnvgz(p, pold, p1, p2, p3, niter, idiag);
+        if (moz_dentol > 0.0) {
+            moz_dpmax = 0.0;
+            if (moz_p_iter.size() == p.size()) {
+                for (std::size_t idx = 1; idx < p.size(); ++idx)
+                    moz_dpmax = std::max(moz_dpmax, std::fabs(p[idx] - moz_p_iter[idx]));
+            }
+            moz_p_iter = p;
+        }
         if (times) timer(" After CNVG");
         if (prtden) {
             std::printf(" DENSITY MATRIX ON ITERATION%4d\n", niter);
@@ -499,7 +511,12 @@ void iter_for_MOZYME(double& ee) {
             break;
         } else if (okscf && niter > 1 && (emin != 0.0 || niter > 3)) {
             if (moz_okscf_niter < 0) moz_okscf_niter = niter;
-            if (moz_polish == 0 || niter >= moz_okscf_niter + moz_polish) break;
+            const bool dens_ok = (moz_dentol <= 0.0 || moz_dpmax <= moz_dentol);
+            const bool dens_giveup =
+                (moz_dentol > 0.0 && niter >= moz_okscf_niter + 100);
+            const bool polish_ok =
+                (moz_polish == 0 || niter >= moz_okscf_niter + moz_polish);
+            if (polish_ok && (dens_ok || dens_giveup)) break;
         }
         if (use_three_point_extrap) {
             if (niter % 3 == 2 && std::abs(energy_diff) < 0.1) {
