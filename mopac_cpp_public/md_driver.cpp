@@ -625,9 +625,14 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       for (int ia = 1; ia <= numat; ++ia)
         for (int c = 1; c <= 3; ++c) power += md_force[c][ia] * md_vel[c][ia];
       const double HA_PER_AUTIME_TO_KCAL_PER_FS = 627.5095 / 0.024188843265;
-      std::fprintf(stderr, "MDDBG %d %.10f %.10f %.10f\n", istep,
+      double power_end = 0.0;
+      for (int ia = 1; ia <= numat; ++ia)
+        for (int c = 1; c <= 3; ++c) power_end += f_atom[c][ia] * md_vel[c][ia];
+      std::fprintf(stderr, "MDDBG %d %.10f %.10f %.10f %.10f %.10f\n", istep,
                    e_pot_ha,
-                   power * HA_PER_AUTIME_TO_KCAL_PER_FS, escf);
+                   power * HA_PER_AUTIME_TO_KCAL_PER_FS,
+                   power_end * HA_PER_AUTIME_TO_KCAL_PER_FS, escf,
+                   e_pot_ha);
     }
 
     // ---- energy-jump guard (Phase 2) -------------------------------------

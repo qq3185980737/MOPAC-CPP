@@ -323,7 +323,9 @@ void iter_for_MOZYME(double& ee) {
         //   REMOVE ELECTRON DENSITY DUE TO LMO'S INVOLVED IN SCF FROM
         //   THE DENSITY MATRIX
         //
-        if (imol != numcal || (icalcn != step_num && numat > numred + 1)) {
+        if (imol != numcal || (icalcn != step_num &&
+                                   (numat > numred + 1 ||
+                                    std::getenv("MOPAC_MOZ_FRESH") != nullptr))) {
             //---------------------------------------------------------
             //
             //   THIS PART IS ONLY RUN WHEN ICALCN IS INCREMENTED
