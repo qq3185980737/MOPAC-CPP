@@ -92,6 +92,10 @@ void iter_for_MOZYME(double& ee) {
     if (const char* dt = std::getenv("MOPAC_MOZ_DENTOL")) moz_dentol = std::atof(dt);
     double moz_dpmax = 1.0e30;
     static std::vector<double> moz_p_iter;
+    bool moz_fixed = (std::getenv("MOPAC_MOZ_FIXED") != nullptr);
+    double moz_alpha = 0.5;
+    if (const char* al = std::getenv("MOPAC_MOZ_MIX")) moz_alpha = std::atof(al);
+    if (moz_fixed && moz_dentol <= 0.0) moz_dentol = 1.0e-5;
     int moz_okscf_niter = -1;
     static std::vector<double> moz_p_ref;
     {
@@ -256,7 +260,7 @@ void iter_for_MOZYME(double& ee) {
     iemax = 0;
     niter = 0;
     shift = 0.0;
-    use_three_point_extrap = true;
+    use_three_point_extrap = !moz_fixed;
     if (times) timer(" At start of ITER");
 
     //***********************************************************
@@ -407,12 +411,17 @@ void iter_for_MOZYME(double& ee) {
             indi = 0;
         }
 
+        const std::vector<double> moz_p_mix = p;
         if (bigscf || numcal != 1) {
             diagg(f, nocc1, nvir1, idiagg, partp, indi);
             idiagg = idiagg + 1;
         } else {
             density_for_MOZYME(p, mode, nocc1, partp);
             bigscf = true;
+        }
+        if (moz_fixed && moz_alpha > 0.0 && moz_alpha < 1.0) {
+            for (std::size_t idx = 1; idx < p.size(); ++idx)
+                p[idx] = (1.0 - moz_alpha) * moz_p_mix[idx] + moz_alpha * p[idx];
         }
         niter = niter + 1;
         if (niter % 3 == 0 && nhb < 4) {
@@ -526,7 +535,9 @@ void iter_for_MOZYME(double& ee) {
                 (moz_polish == 0 || niter >= moz_okscf_niter + moz_polish);
             if (polish_ok && (dens_ok || dens_giveup)) break;
         }
-        if (use_three_point_extrap) {
+        if (moz_fixed) {
+            // deterministic fixed-point iteration: no DIIS, no level shifting
+        } else if (use_three_point_extrap) {
             if (niter % 3 == 2 && std::abs(energy_diff) < 0.1) {
                 use_three_point_extrap = false;
                 lstart = niter;
