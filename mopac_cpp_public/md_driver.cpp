@@ -309,6 +309,21 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     return std::vector<double>{x, y, z};
   };
 
+  // MOZYME guard: the MOZYME (localised-MO) SCF path currently does not provide
+  // forces consistent with its energy (measured 200-fs drift -167..-416 kcal vs
+  // -2..-10 kcal for the conventional path, dt-independent => force error, not
+  // integration error).  Refuse MD so that silently wrong trajectories cannot be
+  // produced; the full MOZYME gradient audit is tracked in
+  // Phase6_MOZYME验证_报告.md.
+  if (keywrd.find(" MOZ") != std::string::npos &&
+      std::getenv("MOPAC_ALLOW_MOZYME_MD") == nullptr) {
+    std::fprintf(stdout,
+                 " [MD] ERROR: MOZYME is not supported for molecular dynamics in this "
+                 "build (energy/force inconsistency); aborting instead of producing "
+                 "an unconserved trajectory.\n");
+    md_stop = true;
+    return;
+  }
   // ---- Phase-4 PM7-COMB-lite: H-H / O-O pair corrections (opt-in) ----------
   // Fitted delta-ML v0 corrections (see Phase4_deltaML_v0_闁硅翰鍎遍幉?md):
   //   dE(R) = E_high_level - E_PM7 for H-H (deg-4, 0.5-3.0 A) and O-O (deg-2,
@@ -585,6 +600,29 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
                           md_vel[3][ia] * md_vel[3][ia]);
     }
     double T_inst = 2.0 * Ek / (f_vib * KB_AU);
+    // Phase-6: MD potential-energy accounting.
+    // The forces (deriv) include the PM7 post-SCF (dispersion/H-bond) gradients,
+    // so the consistent potential is the full compfg energy escf.  For backward
+    // compatibility with the validated Phase 2-4 datasets the default keeps the
+    // historical (elect+enuclr) accounting; MOPAC_MD_ESCF=1 selects the
+    // consistent escf accounting (see Phase6_MOZYME验证_报告.md).
+    // Default: the forces include the PM7 post-SCF (dispersion/H-bond) gradients,
+    // so the consistent potential energy is the full compfg energy escf.
+    // MOPAC_MD_EPOT_OLD=1 restores the historical (elect+enuclr) accounting so
+    // that the pre-fix Phase 2-4 datasets can still be reproduced.
+    double e_pot_ha = escf / (fpc_9 * HARTREE_TO_EV) + e_pm7comb * EV_TO_HARTREE;
+    if (std::getenv("MOPAC_MD_EPOT_OLD") != nullptr)
+      e_pot_ha = (elect + enuclr + solv_energy + e_pm7comb) * EV_TO_HARTREE;
+    if (std::getenv("MOPAC_MDDBG") != nullptr) {
+      // power = sum_i F_i . v_i   [Ha / au_time]
+      double power = 0.0;
+      for (int ia = 1; ia <= numat; ++ia)
+        for (int c = 1; c <= 3; ++c) power += md_force[c][ia] * md_vel[c][ia];
+      const double HA_PER_AUTIME_TO_KCAL_PER_FS = 627.5095 / 0.024188843265;
+      std::fprintf(stderr, "MDDBG %d %.10f %.10f %.10f\n", istep,
+                   e_pot_ha,
+                   power * HA_PER_AUTIME_TO_KCAL_PER_FS, escf);
+    }
 
     // ---- energy-jump guard (Phase 2) -------------------------------------
     // A single-determinant SCF can switch to a different electronic solution
@@ -593,7 +631,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     // and retried with half the timestep (max 3 retries, then accepted with a
     // warning so the trajectory is not lost).
     {
-      double etot_now = (elect + enuclr + solv_energy + e_pm7comb) * EV_TO_HARTREE + Ek;
+      double etot_now = e_pot_ha + Ek;
       if (etot_prev_valid) {
         double dE_kcal = 627.5095 * (etot_now - etot_prev);
         // Threshold is configurable: the corrected potential (MOPAC_PM7COMB) releases
@@ -633,7 +671,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
               for (int c = 1; c <= 3; ++c) md_vel[c][ia] *= lam;
             Ek = Ek_target;
             T_inst = 2.0 * Ek / (f_vib * KB_AU);
-            etot_now = (elect + enuclr + solv_energy + e_pm7comb) * EV_TO_HARTREE + Ek;
+            etot_now = e_pot_ha + Ek;
             std::fprintf(stdout, "velocities rescaled (lambda=%.4f), energy compensated.\n", lam);
           } else {
             std::fprintf(stdout, "compensation not possible (Ek too small); accepted as-is.\n");
@@ -649,9 +687,9 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
 
     std::fprintf(stdout, "\n ---- MD Step %6d ----\n", istep);
     std::fprintf(stdout, " Potential Energy (MD mechanical energy, Hartree) = %12.4f\n",
-                 (elect + enuclr + solv_energy + e_pm7comb) * EV_TO_HARTREE);
+                 e_pot_ha);
     std::fprintf(stdout, " Total Energy (Potential + Kinetic) = %12.4f\n",
-                 (elect + enuclr + solv_energy + e_pm7comb) * EV_TO_HARTREE + Ek);
+                 e_pot_ha + Ek);
     std::fprintf(stdout, " Instant Temperature = %10.2f K\n", T_inst);
     std::fprintf(stdout, " Total Kinetic Energy = %12.6f\n", Ek);
 
@@ -667,6 +705,8 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
                t_sim_fs, dt_nominal * AU_TIME_FS, n_scf_reject, n_jump_reject);
   std::fprintf(stdout, "\n==================== MD SIMULATION FINISHED ====================\n");
 }
+
+
 
 
 

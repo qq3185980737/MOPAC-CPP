@@ -312,6 +312,10 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
     auto _b2 = std::chrono::steady_clock::now();
     std::fprintf(stderr, "CXXCFG iscf last lgrad %d %d %d\n", iscf, last, (int)lgrad);
     if (nelecs > 0) deriv(geo, grad);
+    if (std::getenv("MOPAC_GRADDBG") != nullptr) {
+      for (int gi = 1; gi <= nvar; ++gi)
+        std::fprintf(stderr, "GRADDBG %d %.12f\n", gi, grad[gi]);
+    }
     if (std::getenv("P_DEBUG")) {
         double sump = 0.0;
         for (int j = 1; j <= norbs; ++j) sump += common_arrays_C::p[j];
