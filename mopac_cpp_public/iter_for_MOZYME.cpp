@@ -162,7 +162,19 @@ void iter_for_MOZYME(double& ee) {
             partp = p;
         } else {
             useps = false;
-            if (Index(keywrd, "OLD_SCF") == 0) makvec();
+            if (Index(keywrd, "OLD_SCF") == 0) {
+                // MOZYME-MD warm start (opt-in): rebuild the initial MO/density
+                // guess only on the first SCF call, then reuse the previous
+                // (converged) density and LMO state as the starting point.  This
+                // is the SCF-warm-start half of the MOZYME-MD fix plan; the
+                // gradient is still the full O(N^2) one (mode 0) because the
+                // incremental mode=1 bookkeeping of the optimiser is not valid
+                // for an MD trajectory.
+                static bool moz_warm_done = false;
+                const bool moz_warm = (std::getenv("MOPAC_MOZ_WARM") != nullptr);
+                if (!(moz_warm && moz_warm_done)) makvec();
+                if (moz_warm) moz_warm_done = true;
+            }
         }
         if (moperr) return;
         //
