@@ -60,6 +60,7 @@ extern void to_point(double, double&, double&);
 #include "iter_for_MOZYME.h"
 #include "timer.h"
 #include "buildf.h"
+#include "moz_cphf.h"
 #include "helecz.h"
 #include "set_up_dentate.h"
 
@@ -287,6 +288,10 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
         buildf(f, MOZYME_C::partf, 0);
         elect = helecz();
       }
+    }
+    if (mozyme && std::getenv("MOPAC_MOZ_WDBG") != nullptr) {
+      buildf(f, MOZYME_C::partf, 0);
+      moz_cphf_selftest(f);
     }
     stress *= density;
     atheat += stress;
