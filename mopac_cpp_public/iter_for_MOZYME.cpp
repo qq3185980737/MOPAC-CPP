@@ -547,6 +547,25 @@ void iter_for_MOZYME(double& ee) {
                     " ESCF AFTER RE-ORTHOGONALIZING LMOs", escf,
                     " KCAL/MOL");
     }
+    // ------------------------------------------------------------------
+    // Branch-switch detector (research): compare the converged density with
+    // the previous SCF call.  A jump in dP indicates a solution-branch switch.
+    // ------------------------------------------------------------------
+    if (std::getenv("MOPAC_MOZ_STATE_DBG") != nullptr) {
+        static std::vector<double> p_prev;
+        double d2 = 0.0, mx = 0.0, sum = 0.0;
+        if (!p_prev.empty() && p_prev.size() == p.size()) {
+            for (std::size_t i = 1; i < p.size(); ++i) {
+                const double d = p[i] - p_prev[i];
+                d2 += d * d;
+                mx = std::max(mx, std::fabs(d));
+                sum += std::fabs(p[i]);
+            }
+            std::fprintf(stderr, "MOZSTATE dP=%.6e maxdP=%.6e |P|=%.3f escf=%.6f\n",
+                         std::sqrt(d2), mx, sum, escf);
+        }
+        p_prev = p;
+    }
     nmol = numcal;
     return;
 }
