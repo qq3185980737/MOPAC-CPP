@@ -474,6 +474,80 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
                        : "Elastic Wall");
   std::fprintf(stdout, "============================================================\n");
 
+  // ================= Yoshida 4th-order symplectic integrator ==============
+  // Opt-in (MOPAC_MD_ORDER4=1): a separate compact path used to verify the
+  // dt^4 scaling of the energy drift.  3 force evaluations per MD step.
+  // Elastic-wall box only; no PBC, no SURF, no PM7COMB, no jump retry.
+  if (std::getenv("MOPAC_MD_ORDER4") != nullptr) {
+    const double cbrt2 = std::cbrt(2.0);
+    const double w1 = 1.0 / (2.0 - cbrt2);
+    const double w0 = -cbrt2 / (2.0 - cbrt2);
+    const double wsub[3] = {w1, w0, w1};
+    const double f_to_ha = BOHR_TO_ANG / (HARTREE_TO_EV * fpc_9);
+    if (std::getenv("MOPAC_PM7COMB") != nullptr)
+      std::fprintf(stdout, " [MD] WARNING: PM7COMB is ignored by the 4th-order path.\n");
+    std::fprintf(stdout, "\n============ MD (Yoshida 4th-order symplectic) ============\n");
+    std::fprintf(stdout, " Total MD steps = %6d, nominal dt = %.4f fs, box = [%.1f, %.1f] A\n",
+                 md_step_max, dt_nominal * AU_TIME_FS, box_min_a, box_max_a);
+    std::vector<double> grad4(nvar + 1, 0.0);
+    std::vector<std::vector<double>> f4(4, std::vector<double>(numat + 1, 0.0));
+    compfg(x_new, true, escf, true, grad4, true);
+    auto force_from_grad = [&]() {
+      for (int i = 1; i <= nvar; ++i)
+        f4[loc[2][i]][loc[1][i]] = -grad4[i] * f_to_ha;
+    };
+    force_from_grad();
+    const double f_vib4 = 3.0 * numat;
+    for (int istep = 1; istep <= md_step_max; ++istep) {
+      for (int si = 0; si < 3; ++si) {
+        const double dts = dt_nominal * wsub[si];
+        for (int ia = 1; ia <= numat; ++ia) {
+          const double m = ams[nat[ia]] * U_TO_ME;
+          for (int c = 1; c <= 3; ++c) md_vel[c][ia] += f4[c][ia] / m * dts * 0.5;
+        }
+        for (int i = 1; i <= nvar; ++i)
+          x_new[i] += md_vel[loc[2][i]][loc[1][i]] * dts * BOHR_TO_ANG;
+        if (!use_pbc) {
+          for (int i = 1; i <= nvar; ++i) {
+            const int c = loc[2][i];
+            if (x_new[i] > box_max_a) {
+              x_new[i] = 2.0 * box_max_a - x_new[i];
+              md_vel[c][loc[1][i]] = -md_vel[c][loc[1][i]];
+            } else if (x_new[i] < box_min_a) {
+              x_new[i] = 2.0 * box_min_a - x_new[i];
+              md_vel[c][loc[1][i]] = -md_vel[c][loc[1][i]];
+            }
+          }
+        }
+        compfg(x_new, true, escf, true, grad4, true);
+        force_from_grad();
+        for (int ia = 1; ia <= numat; ++ia) {
+          const double m = ams[nat[ia]] * U_TO_ME;
+          for (int c = 1; c <= 3; ++c) md_vel[c][ia] += f4[c][ia] / m * dts * 0.5;
+        }
+      }
+      double Ek4 = 0.0;
+      for (int ia = 1; ia <= numat; ++ia) {
+        const double m = ams[nat[ia]] * U_TO_ME;
+        for (int c = 1; c <= 3; ++c)
+          Ek4 += 0.5 * m * md_vel[c][ia] * md_vel[c][ia];
+      }
+      const double e_pot_ha = escf / (fpc_9 * HARTREE_TO_EV);
+      const double T4 = 2.0 * Ek4 / (f_vib4 * KB_AU);
+      std::fprintf(stdout, "\n ---- MD Step %6d ----\n", istep);
+      std::fprintf(stdout,
+                   " Potential Energy (MD mechanical energy, Hartree) = %12.4f\n", e_pot_ha);
+      std::fprintf(stdout, " Total Energy (Potential + Kinetic) = %12.4f\n",
+                   e_pot_ha + Ek4);
+      std::fprintf(stdout, " Instant Temperature = %10.2f K\n", T4);
+      std::fprintf(stdout, " Total Kinetic Energy = %12.6f\n", Ek4);
+    }
+    std::fprintf(stdout, "\n Actual simulated time = %.3f fs (Yoshida 4th order)\n",
+                 md_step_max * dt_nominal * AU_TIME_FS);
+    xparam = x_new;
+    return;
+  }
+
   // velocity Verlet main loop
   // Force caching: the force at the end of a step (R_{t+dt}) is the force at the
   // start of the next step (same R), so it is reused instead of recomputing
