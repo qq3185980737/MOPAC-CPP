@@ -593,6 +593,9 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       const double e_pot_ha = escf / (fpc_9 * HARTREE_TO_EV);
       const double T4 = 2.0 * Ek4 / (f_vib4 * KB_AU);
       std::fprintf(stdout, "\n ---- MD Step %6d ----\n", istep);
+    if (std::getenv("MOPAC_MD_HP") != nullptr)
+      std::fprintf(stderr, "MDHP %d %.12f %.12f %.12f\n", istep, e_pot_ha, Ek4,
+                   e_pot_ha + Ek4);
       std::fprintf(stdout,
                    " Potential Energy (MD mechanical energy, Hartree) = %12.4f\n", e_pot_ha);
       std::fprintf(stdout, " Total Energy (Potential + Kinetic) = %12.4f\n",
@@ -663,6 +666,13 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
         compfg(x_new, true, escf, true, grad, true);
       }
       if (md_stop) break;
+      if (std::getenv("MOPAC_GRADDUMP") != nullptr) {
+        static long gradump_count = 0;
+        if (gradump_count++ == 0) {
+          for (int gi = 1; gi <= nvar; ++gi)
+            std::fprintf(stderr, "GRADDMP %d %.12f\n", gi, grad[gi]);
+        }
+      }
       grad_cache = grad;
     }
 
@@ -904,6 +914,9 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     }
 
     std::fprintf(stdout, "\n ---- MD Step %6d ----\n", istep);
+    if (std::getenv("MOPAC_MD_HP") != nullptr)
+      std::fprintf(stderr, "MDHP %d %.12f %.12f %.12f\n", istep, e_pot_ha, Ek,
+                   e_pot_ha + Ek);
     std::fprintf(stdout, " Potential Energy (MD mechanical energy, Hartree) = %12.4f\n",
                  e_pot_ha);
     std::fprintf(stdout, " Total Energy (Potential + Kinetic) = %12.4f\n",
