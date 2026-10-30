@@ -258,6 +258,9 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
       double sum = 0.0;
       post_scf_corrections(sum, false);
       if (moperr) return;
+      if (std::getenv("MOPAC_DHDBG") != nullptr)
+        std::fprintf(stderr, "DHDBG moz=%d sum=%.10f atheat=%.10f\n",
+                     (int)mozyme, sum, atheat);
       atheat = sum + atheat;
     }
     if (times) timer("BEFORE ITER");
