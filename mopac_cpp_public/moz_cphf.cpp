@@ -300,6 +300,8 @@ void moz_cphf_run() {
 
   const auto t0 = std::chrono::steady_clock::now();
   double cphf_ascale = 1.0;
+  const bool cphf_partial =
+      (std::getenv("MOPAC_MOZ_CPHF_PARTIAL") != nullptr);
   if (const char* as = std::getenv("MOPAC_MOZ_CPHF_ASCALE"))
     cphf_ascale = std::atof(as);
   const std::vector<double> psave = common_arrays_C::p;
@@ -327,7 +329,7 @@ void moz_cphf_run() {
     for (size_t idx = 1; idx < dPpacked.size(); ++idx)
       common_arrays_C::p[idx] += epsP * dPpacked[idx];
     std::vector<double> f2(psave.size(), 0.0);
-    buildf(f2, MOZYME_C::partf, 0);
+    buildf(f2, MOZYME_C::partf, cphf_partial ? -1 : 0);
     common_arrays_C::p = psave;
     std::vector<double> F2d;
     dense_from_packed(f2, F2d);
@@ -353,7 +355,19 @@ void moz_cphf_run() {
   if (const char* ls = std::getenv("MOPAC_MOZ_CPHF_LSCALE"))
     cphf_lscale = std::atof(ls);
   for (size_t k = 0; k < n; ++k) b[k] = -cphf_lscale * Fov[k];
-  r = b;
+  // indefinite operators (partial-Fock variant): normal-equation form A^2 x = A b
+  std::vector<double> b_eff = b;
+  if (cphf_partial) apply_A(b, b_eff);
+  auto apply_op = [&](const std::vector<double>& xx, std::vector<double>& out) {
+    if (!cphf_partial) {
+      apply_A(xx, out);
+    } else {
+      std::vector<double> tmp;
+      apply_A(xx, tmp);
+      apply_A(tmp, out);
+    }
+  };
+  r = b_eff;
   pvec = r;
   const double bnorm = std::sqrt(dot(b, b));
   double rsold = dot(r, r);
@@ -362,7 +376,7 @@ void moz_cphf_run() {
       std::atoi(std::getenv("MOPAC_MOZ_CPHF_MAXIT")) : 100;
   const double tol = bnorm > 0.0 ? 1.0e-6 * bnorm : 0.0;
   for (it = 1; it <= maxit; ++it) {
-    apply_A(pvec, Ax);
+    apply_op(pvec, Ax);
     const double denom = dot(pvec, Ax);
     if (std::fabs(denom) < 1.0e-30) break;
     const double alpha = rsold / denom;
@@ -465,7 +479,7 @@ void moz_cphf_run() {
         if (molkst_C::moperr) break;
         common_arrays_C::p = psave2;
         std::vector<double> f3(common_arrays_C::p.size(), 0.0);
-        buildf(f3, MOZYME_C::partf, 0);
+        buildf(f3, MOZYME_C::partf, cphf_partial ? -1 : 0);
         std::vector<double> F3d;
         dense_from_packed(f3, F3d);
         std::vector<double> F3ov;
