@@ -152,6 +152,45 @@ bool moz_dense_scf(double& ee_out) {
     orthonormalise(C, nr, nocc);
   }
 
+  // ------------------------------------------------------------------
+  //  Dense Roothaan iteration (fast path): F -> Jacobi diagonalisation ->
+  //  nocc lowest eigenvectors -> new density; iterate on the density change.
+  // ------------------------------------------------------------------
+  if (std::getenv("MOPAC_MOZ_DENSE_ROOTH") != nullptr) {
+    int rmaxit = 300;
+    if (const char* mi = std::getenv("MOPAC_MOZ_DENSE_MAXIT")) rmaxit = std::atoi(mi);
+    double rtol = 1.0e-7;
+    if (const char* tl = std::getenv("MOPAC_MOZ_DENSE_TOL")) rtol = std::atof(tl);
+    std::vector<double> Pd, Fd, V, Pnew;
+    double ee = 0.0, escf = 0.0, dpmax = 1.0e30;
+    int it = 0;
+    for (it = 1; it <= rmaxit; ++it) {
+      density_from_c(C, nr, nocc, Pd);
+      escf = fock_and_energy(Pd, Fd, ee);
+      std::vector<double> A = Fd;
+      jacobi_eig(A, V, nr);
+      std::vector<std::pair<double, int>> ev(nr);
+      for (int i = 0; i < nr; ++i) ev[i] = {A[(size_t)i * nr + i], i};
+      std::sort(ev.begin(), ev.end(),
+                [](const auto& a, const auto& b) { return a.first < b.first; });
+      for (int j = 0; j < nocc; ++j) {
+        const int col = ev[j].second;
+        for (int mu = 0; mu < nr; ++mu)
+          C[(size_t)mu * nocc + j] = V[(size_t)mu * nr + col];
+      }
+      density_from_c(C, nr, nocc, Pnew);
+      dpmax = 0.0;
+      for (size_t k = 0; k < Pnew.size(); ++k)
+        dpmax = std::max(dpmax, std::fabs(Pnew[k] - Pd[k]));
+      if (dpmax < rtol) break;
+    }
+    density_from_c(C, nr, nocc, Pd);
+    escf = fock_and_energy(Pd, Fd, ee);
+    ee_out = ee;
+    std::fprintf(stderr, "DENSE_ROOTH iters=%d dPmax=%.3e escf=%.6f\n", it, dpmax, escf);
+    return true;
+  }
+
   int maxit = 200;
   if (const char* mi = std::getenv("MOPAC_MOZ_DENSE_MAXIT")) maxit = std::atoi(mi);
   double tol = 1.0e-6;
