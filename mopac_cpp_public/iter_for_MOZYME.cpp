@@ -189,6 +189,14 @@ void iter_for_MOZYME(double& ee) {
                 const bool moz_warm = (std::getenv("MOPAC_MOZ_WARM") != nullptr);
                 if (!(moz_warm && moz_warm_done)) makvec();
                 if (moz_warm) moz_warm_done = true;
+                static bool moz_cold_first = true;
+                if (std::getenv("MOPAC_MOZ_COLD_RESET") != nullptr && !moz_cold_first) {
+                    std::fill(p.begin(), p.end(), 0.0);
+                    density_for_MOZYME(p, 0, noccupied, partp);
+                    partp = p;
+                    std::printf(" MOZCOLD density reset from atomic guess\n");
+                }
+                moz_cold_first = false;
             }
         }
         if (moperr) return;
