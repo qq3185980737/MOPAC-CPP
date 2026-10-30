@@ -302,6 +302,9 @@ void moz_cphf_run() {
   double cphf_ascale = 1.0;
   const bool cphf_partial =
       (std::getenv("MOPAC_MOZ_CPHF_PARTIAL") != nullptr);
+  double cphf_lambda = 0.0;
+  if (const char* lm = std::getenv("MOPAC_MOZ_CPHF_LAMBDA"))
+    cphf_lambda = std::atof(lm);
   if (const char* as = std::getenv("MOPAC_MOZ_CPHF_ASCALE"))
     cphf_ascale = std::atof(as);
   const std::vector<double> psave = common_arrays_C::p;
@@ -339,7 +342,8 @@ void moz_cphf_run() {
     for (int i = 0; i < nocc; ++i)
       for (int j = 0; j < nvir; ++j) {
         const size_t k = (size_t)i * nvir + j;
-        Ax[k] = (ev[j] - eo[i]) * x[k] + cphf_ascale * (F2ov[k] - Fov[k]) / epsP;
+        Ax[k] = (ev[j] - eo[i]) * x[k] + cphf_ascale * (F2ov[k] - Fov[k]) / epsP +
+                cphf_lambda * x[k];
       }
   };
 
@@ -357,9 +361,10 @@ void moz_cphf_run() {
   for (size_t k = 0; k < n; ++k) b[k] = -cphf_lscale * Fov[k];
   // indefinite operators (partial-Fock variant): normal-equation form A^2 x = A b
   std::vector<double> b_eff = b;
-  if (cphf_partial) apply_A(b, b_eff);
+  const bool normal_eq = cphf_partial && cphf_lambda == 0.0;
+  if (normal_eq) apply_A(b, b_eff);
   auto apply_op = [&](const std::vector<double>& xx, std::vector<double>& out) {
-    if (!cphf_partial) {
+    if (!normal_eq) {
       apply_A(xx, out);
     } else {
       std::vector<double> tmp;
