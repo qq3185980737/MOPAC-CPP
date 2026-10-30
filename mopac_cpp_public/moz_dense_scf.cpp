@@ -158,8 +158,12 @@ bool moz_dense_scf(double& ee_out) {
   if (const char* tl = std::getenv("MOPAC_MOZ_DENSE_TOL")) tol = std::atof(tl);
 
   const bool dense_dbg = (std::getenv("MOPAC_MOZ_DENSE_DBG") != nullptr);
+  const bool dense_cg = (std::getenv("MOPAC_MOZ_DENSE_CG") == nullptr);
   std::vector<double> Pd, Fd((size_t)nr * nr, 0.0), FC((size_t)nr * nocc, 0.0),
       R((size_t)nr * nocc, 0.0), Ct((size_t)nr * nocc, 0.0);
+  std::vector<double> Pdir((size_t)nr * nocc, 0.0), Rprev((size_t)nr * nocc, 0.0);
+  double rr_prev = 0.0;
+  bool have_dir = false;
   if (dense_dbg) {
     const std::vector<double> p_saved = common_arrays_C::p;
     std::vector<double> Pd_old;
@@ -209,11 +213,22 @@ bool moz_dense_scf(double& ee_out) {
         rmax = std::max(rmax, std::fabs(s));
       }
     if (rmax < tol) break;
-    // backtracking gradient step
-    double alpha = 0.5;
+    // search direction: conjugate gradient (projected) or steepest descent
+    double rr = 0.0;
+    for (double v : R) rr += v * v;
+    if (dense_cg && have_dir && rr_prev > 0.0) {
+      const double beta = rr / rr_prev;
+      for (size_t k = 0; k < C.size(); ++k) Pdir[k] = R[k] + beta * Pdir[k];
+    } else {
+      Pdir = R;
+    }
+    rr_prev = rr;
+    have_dir = true;
+    // backtracking line search on the energy
+    double alpha = 1.0;
     bool improved = false;
-    for (int ls = 0; ls < 8; ++ls) {
-      for (size_t k = 0; k < C.size(); ++k) Ct[k] = C[k] - alpha * R[k];
+    for (int ls = 0; ls < 12; ++ls) {
+      for (size_t k = 0; k < C.size(); ++k) Ct[k] = C[k] - alpha * Pdir[k];
       orthonormalise(Ct, nr, nocc);
       std::vector<double> Pd_t, Fd_t, R_t;
       double ee_t = 0.0;
@@ -226,7 +241,14 @@ bool moz_dense_scf(double& ee_out) {
       }
       alpha *= 0.5;
     }
-    if (!improved) break;
+    if (!improved) {
+      if (dense_cg && have_dir) {
+        have_dir = false;
+        rr_prev = 0.0;
+        continue;  // retry with a steepest-descent step
+      }
+      break;
+    }
   }
 
   // leave the module state consistent with the final C
