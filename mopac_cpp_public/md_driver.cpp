@@ -260,8 +260,12 @@ static void moz_numeric_gradient(const std::vector<double>& x0, double& escf,
     compfg(xp, true, ep, true, gdum, false);
     compfg(xm, true, em, true, gdum, false);
     grad[i] = (ep - em) / (2.0 * h_ang);
+    if (i == 1 && std::getenv("MOPAC_MOZ_EPDBG") != nullptr)
+      std::fprintf(stderr, "EPDBG i=1 ep=%.10f em=%.10f h=%.6f\n", ep, em, h_ang);
   }
   compfg(x0, true, escf, true, gdum, false);   // restore state at x0
+  if (std::getenv("MOPAC_MOZ_EPDBG") != nullptr)
+    std::fprintf(stderr, "EPDBG e0=%.10f\n", escf);
   if (std::getenv("MOPAC_MOZ_NUMGRAD_DUMP") != nullptr) {
     for (int gi = 1; gi <= 12 && gi <= nvar_n; ++gi)
       std::fprintf(stderr, "NGNUM %d %.6f\n", gi, grad[gi]);
