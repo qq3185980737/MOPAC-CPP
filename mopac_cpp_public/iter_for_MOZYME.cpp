@@ -83,7 +83,15 @@ int Nint(double x) { return static_cast<int>(std::lround(x)); }
 
 }  // namespace
 
-void iter_for_MOZYME(double& ee) {
+void iter_for_MOZYME(double& ee) {
+    // State tracking (opt-in): density restraint towards the previous solution.
+    double moz_lambda = 0.0;
+    static std::vector<double> moz_p_ref;
+    {
+        const char* rl = std::getenv("MOPAC_MOZ_RESTRAINT");
+        if (rl != nullptr) moz_lambda = std::atof(rl);
+    }
+
     static char xchar = ' ';
     static bool prtpls = false, orthog = false, times = false, scf1 = false,
                 bigscf = false, debug = false, prtden = false, prtfok = false,
@@ -425,6 +433,10 @@ void iter_for_MOZYME(double& ee) {
         } else {
             buildf(f, partf, 0);
         }
+        if (moz_lambda != 0.0 && moz_p_ref.size() == p.size()) {
+            for (std::size_t idx = 1; idx < p.size(); ++idx)
+                f[idx] += moz_lambda * (p[idx] - moz_p_ref[idx]);
+        }
         if (itrmax < 3) return;
         if (times) timer(" After BUILDF");
         if (prtfok) {
@@ -433,6 +445,14 @@ void iter_for_MOZYME(double& ee) {
         }
         ee = helecz();
         escf = (ee + enuclr) * fpc_9 + atheat;
+        if (moz_lambda != 0.0 && moz_p_ref.size() == p.size()) {
+            double pen = 0.0;
+            for (std::size_t idx = 1; idx < p.size(); ++idx) {
+                const double d = p[idx] - moz_p_ref[idx];
+                pen += d * d;
+            }
+            escf += 0.5 * moz_lambda * pen * fpc_9;
+        }
         if (times) timer(" After HELEC");
         if (times) timer(" After HELEC");
         if (useps) escf = escf + solv_energy * fpc_9;
@@ -566,6 +586,7 @@ void iter_for_MOZYME(double& ee) {
         }
         p_prev = p;
     }
+    if (moz_lambda != 0.0) moz_p_ref = p;
     nmol = numcal;
     return;
 }
