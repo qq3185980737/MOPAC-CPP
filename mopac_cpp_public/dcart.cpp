@@ -115,6 +115,13 @@ void dcart(std::vector<std::vector<double>>& coord,
            std::vector<std::vector<double>>& dxyz) {
     static int icalcn = 0;
     static double chnge = 1.0e-4;
+// Optional override of the finite-difference step (Bohr) for diagnostics:
+// MOPAC_DCART_STEP=1e-5 etc.  Default unchanged.
+static const bool chnge_env_init = [] {
+  if (const char* e = std::getenv("MOPAC_DCART_STEP")) chnge = std::atof(e);
+  return true;
+}();
+(void)chnge_env_init;
     static bool debug = false, force = false, large = false;
     static int ione = 1;
     static double const_ = 0.0;
