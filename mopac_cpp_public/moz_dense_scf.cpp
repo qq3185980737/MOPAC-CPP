@@ -65,12 +65,13 @@ double fock_and_energy(const std::vector<double>& Pd, std::vector<double>& Fd, d
   std::vector<double> packed;
   moz_pack_dense(Pd, packed);
   common_arrays_C::p = packed;
-  std::vector<double> f(packed.size(), 0.0);
-  buildf(f, MOZYME_C::partf, 0);
+  // helecz() reads the GLOBAL f, so the Fock must be built there
+  common_arrays_C::f.assign(packed.size(), 0.0);
+  buildf(common_arrays_C::f, MOZYME_C::partf, 0);
   ee = helecz();
   double escf = (ee + molkst_C::enuclr) * funcon_C::fpc_9 + molkst_C::atheat;
   if (cosmo_C::useps) escf += cosmo_C::solv_energy * funcon_C::fpc_9;
-  moz_unpack_dense(f, Fd);
+  moz_unpack_dense(common_arrays_C::f, Fd);
   return escf;
 }
 
@@ -173,8 +174,10 @@ bool moz_dense_scf(double& ee_out) {
     if (p_ours.size() == p_saved.size())
       for (std::size_t i = 1; i < p_ours.size(); ++i)
         dmax = std::max(dmax, std::fabs(p_ours[i] - p_saved[i]));
-    std::fprintf(stderr, "DENSE_DBG p_from_C_vs_p maxdiff=%.3e escf_old=%.6f trP=%.3f\n",
-                 dmax, escf_old, 0.0);
+    std::fprintf(stderr, "DENSE_DBG p_from_C_vs_p maxdiff=%.3e ee=%.6f enuclr=%.6f "
+                 "atheat=%.6f fpc9=%.6f escf_old=%.6f\n",
+                 dmax, ee_old, molkst_C::enuclr, molkst_C::atheat,
+                 funcon_C::fpc_9, escf_old);
   }
   double ee = 0.0, rmax = 1.0e30;
   int it = 0;

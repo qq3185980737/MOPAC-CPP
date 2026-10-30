@@ -293,6 +293,12 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
       buildf(f, MOZYME_C::partf, 0);
       moz_cphf_selftest(f);
     }
+    if (mozyme && std::getenv("MOPAC_MOZ_WDBG") != nullptr) {
+      buildf(f, MOZYME_C::partf, 0);
+      const double ee_s = helecz();
+      std::fprintf(stderr, "WDBG_ENERGY ee=%.6f enuclr=%.6f atheat=%.6f fpc9=%.6f\n",
+                   ee_s, molkst_C::enuclr, molkst_C::atheat, funcon_C::fpc_9);
+    }
     if (mozyme && std::getenv("MOPAC_MOZ_CPHF") != nullptr) {
       buildf(f, MOZYME_C::partf, 0);
       moz_cphf_run();
