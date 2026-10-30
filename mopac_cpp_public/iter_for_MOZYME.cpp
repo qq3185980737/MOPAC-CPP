@@ -83,14 +83,17 @@ int Nint(double x) { return static_cast<int>(std::lround(x)); }
 
 }  // namespace
 
-void iter_for_MOZYME(double& ee) {
-    // State tracking (opt-in): density restraint towards the previous solution.
-    double moz_lambda = 0.0;
-    static std::vector<double> moz_p_ref;
-    {
-        const char* rl = std::getenv("MOPAC_MOZ_RESTRAINT");
-        if (rl != nullptr) moz_lambda = std::atof(rl);
-    }
+void iter_for_MOZYME(double& ee) {
+    // State tracking (opt-in): density restraint towards the previous solution.
+    double moz_lambda = 0.0;
+    int moz_polish = 0;
+    if (const char* pn = std::getenv("MOPAC_MOZ_POLISH")) moz_polish = std::atoi(pn);
+    int moz_okscf_niter = -1;
+    static std::vector<double> moz_p_ref;
+    {
+        const char* rl = std::getenv("MOPAC_MOZ_RESTRAINT");
+        if (rl != nullptr) moz_lambda = std::atof(rl);
+    }
 
     static char xchar = ' ';
     static bool prtpls = false, orthog = false, times = false, scf1 = false,
@@ -495,7 +498,8 @@ void iter_for_MOZYME(double& ee) {
         if (!bigscf && numcal == 1) {
             break;
         } else if (okscf && niter > 1 && (emin != 0.0 || niter > 3)) {
-            break;
+            if (moz_okscf_niter < 0) moz_okscf_niter = niter;
+            if (moz_polish == 0 || niter >= moz_okscf_niter + moz_polish) break;
         }
         if (use_three_point_extrap) {
             if (niter % 3 == 2 && std::abs(energy_diff) < 0.1) {
