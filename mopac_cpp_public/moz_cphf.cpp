@@ -299,6 +299,9 @@ void moz_cphf_run() {
   for (int i = 0; i < nvir; ++i) ev[i] = Fvv[(size_t)i * nvir + i];
 
   const auto t0 = std::chrono::steady_clock::now();
+  double cphf_ascale = 1.0;
+  if (const char* as = std::getenv("MOPAC_MOZ_CPHF_ASCALE"))
+    cphf_ascale = std::atof(as);
   const std::vector<double> psave = common_arrays_C::p;
   const double epsP = 1.0e-2;
 
@@ -334,7 +337,7 @@ void moz_cphf_run() {
     for (int i = 0; i < nocc; ++i)
       for (int j = 0; j < nvir; ++j) {
         const size_t k = (size_t)i * nvir + j;
-        Ax[k] = (ev[j] - eo[i]) * x[k] + (F2ov[k] - Fov[k]) / epsP;
+        Ax[k] = (ev[j] - eo[i]) * x[k] + cphf_ascale * (F2ov[k] - Fov[k]) / epsP;
       }
   };
 
@@ -346,7 +349,10 @@ void moz_cphf_run() {
 
   // RHS b = -2 F_ov
   std::vector<double> b(n), x(n, 0.0), r(n), pvec(n), Ax(n);
-  for (size_t k = 0; k < n; ++k) b[k] = -2.0 * Fov[k];
+  double cphf_lscale = 2.0;
+  if (const char* ls = std::getenv("MOPAC_MOZ_CPHF_LSCALE"))
+    cphf_lscale = std::atof(ls);
+  for (size_t k = 0; k < n; ++k) b[k] = -cphf_lscale * Fov[k];
   r = b;
   pvec = r;
   const double bnorm = std::sqrt(dot(b, b));
@@ -378,6 +384,44 @@ void moz_cphf_run() {
                "resid=%.3e |z|=%.3e time=%.0f ms\n",
                nocc, nvir, fov_rms, bnorm, it, std::sqrt(rsold),
                std::sqrt(dot(x, x)), elapsed);
+  if (const char* dd = std::getenv("MOPAC_MOZ_CPHF_DUMP_DIR")) {
+    const std::string dir(dd);
+    auto dump_vec = [&](const std::string& name, const std::vector<double>& v) {
+      FILE* fp = std::fopen((dir + "/" + name).c_str(), "w");
+      if (!fp) return;
+      std::fprintf(fp, "%zu\n", v.size());
+      for (double val : v) std::fprintf(fp, "%.16e\n", val);
+      std::fclose(fp);
+    };
+    dump_vec("cocc.dat", Cocc);
+    dump_vec("cvir.dat", Cvir);
+    dump_vec("fov.dat", Fov);
+    dump_vec("z.dat", x);
+    // packed index -> (mu, nu) 0-based map of the MOZYME density layout
+    if (FILE* fp = std::fopen((dir + "/layout.dat").c_str(), "w")) {
+      std::fprintf(fp, "%zu\n", common_arrays_C::p.size());
+      std::fprintf(fp, "0 0\n");
+      for (int a = 1; a <= molkst_C::numat; ++a) {
+        const int fa = common_arrays_C::nfirst[a];
+        for (int b = 1; b <= a; ++b) {
+          const int k = ijbo(a, b);
+          if (k < 0) continue;
+          const int fb = common_arrays_C::nfirst[b];
+          if (a == b) {
+            for (int mu = 1; mu <= iorbs[a]; ++mu)
+              for (int nu = 1; nu <= mu; ++nu)
+                std::fprintf(fp, "%d %d\n", fa - 1 + mu - 1, fb - 1 + nu - 1);
+          } else {
+            for (int mu = 1; mu <= iorbs[a]; ++mu)
+              for (int nu = 1; nu <= iorbs[b]; ++nu)
+                std::fprintf(fp, "%d %d\n", fa - 1 + mu - 1, fb - 1 + nu - 1);
+          }
+        }
+      }
+      std::fclose(fp);
+    }
+    std::fprintf(stderr, "CPHF dumps written to %s\n", dir.c_str());
+  }
   // ---- optional: response term dE_resp_k = z . dF_ov/dR_k ----------------
   if (std::getenv("MOPAC_MOZ_CPHF_GRAD") != nullptr) {
     const int nvar_c = molkst_C::nvar;
