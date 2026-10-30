@@ -324,6 +324,66 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
       for (int gi = 1; gi <= nvar; ++gi)
         std::fprintf(stderr, "GRADDBG %d %.12f\n", gi, grad[gi]);
     }
+    // ------------------------------------------------------------------
+    // Layer 1 of the exact-gradient module: frozen-density FD gradient.
+    // The energy is rebuilt with exactly the MOZYME machinery
+    // (hcore_for_MOZYME + buildf + helecz + PM7 post-SCF corrections) while
+    // the converged density P is kept fixed.  In NDDO S = I and the SCF
+    // stationarity residual is ~1e-4, so this is the exact fixed-density
+    // derivative of the computed energy (the factory dcart pair-FD uses a
+    // different integral machinery and carries a ~0.5% error).
+    // ------------------------------------------------------------------
+    if (mozyme && std::getenv("MOPAC_MOZ_FROZENFD") != nullptr) {
+      const std::vector<double> g_factory = grad;
+      const std::vector<std::vector<double>> geo_save = geo;
+      const std::vector<std::vector<double>> coord_save = coord;
+      const double hfd = 0.001;              // Angstrom
+      const bool dbg_fd = (std::getenv("MOPAC_MOZ_WDBG") != nullptr);
+      std::vector<double> gfd(nvar + 1, 0.0);
+      for (int kk = 1; kk <= nvar; ++kk) {
+        const int comp = loc[2][kk];
+        const int atom = loc[1][kk];
+        double e_plus = 0.0, e_minus = 0.0;
+        for (int sgn = -1; sgn <= 1; sgn += 2) {
+          geo = geo_save;
+          geo[comp][atom] += sgn * hfd;
+          gmetry(geo, coord);
+          if (moperr) return;
+          hcore_for_MOZYME();
+          if (moperr) return;
+          buildf(f, MOZYME_C::partf, 0);
+          const double el = helecz();
+          double e = (el + enuclr) * fpc_9 + atheat;
+          if (dh) {
+            double sum = 0.0;
+            post_scf_corrections(sum, false);
+            if (moperr) return;
+            e += sum;
+          }
+          if (sgn > 0) e_plus = e; else e_minus = e;
+        }
+        gfd[kk] = (e_plus - e_minus) / (2.0 * hfd);
+      }
+      // restore reference geometry and refresh h/f/energy at it
+      geo = geo_save;
+      gmetry(geo, coord);
+      if (moperr) return;
+      hcore_for_MOZYME();
+      buildf(f, MOZYME_C::partf, 0);
+      elect = helecz();
+      escf = (elect + enuclr) * fpc_9 + atheat;
+      if (dh) {
+        double sum = 0.0;
+        post_scf_corrections(sum, false);
+        if (moperr) return;
+        escf += sum;
+      }
+      if (dbg_fd) {
+        for (int kk = 1; kk <= nvar; ++kk)
+          std::fprintf(stderr, "FROZENFD %d %.6f %.6f\n", kk, g_factory[kk], gfd[kk]);
+      }
+      grad = gfd;
+    }
     if (std::getenv("P_DEBUG")) {
         double sump = 0.0;
         for (int j = 1; j <= norbs; ++j) sump += common_arrays_C::p[j];
