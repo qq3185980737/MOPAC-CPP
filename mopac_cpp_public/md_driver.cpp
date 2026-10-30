@@ -479,6 +479,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
   // dt^4 scaling of the energy drift.  3 force evaluations per MD step.
   // Elastic-wall box only; no PBC, no SURF, no PM7COMB, no jump retry.
   if (std::getenv("MOPAC_MD_ORDER4") != nullptr) {
+    const bool o4dbg = (std::getenv("MOPAC_MD_O4DBG") != nullptr);
     const double cbrt2 = std::cbrt(2.0);
     const double w1 = 1.0 / (2.0 - cbrt2);
     const double w0 = -cbrt2 / (2.0 - cbrt2);
@@ -499,14 +500,24 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     force_from_grad();
     const double f_vib4 = 3.0 * numat;
     for (int istep = 1; istep <= md_step_max; ++istep) {
+      const double e_pot_start = escf / (fpc_9 * HARTREE_TO_EV);
+      double ek_start = 0.0;
+      for (int ia = 1; ia <= numat; ++ia) {
+        const double m0 = ams[nat[ia]] * U_TO_ME;
+        for (int c = 1; c <= 3; ++c) ek_start += 0.5 * m0 * md_vel[c][ia] * md_vel[c][ia];
+      }
+      double work_step = 0.0;
       for (int si = 0; si < 3; ++si) {
         const double dts = dt_nominal * wsub[si];
         for (int ia = 1; ia <= numat; ++ia) {
           const double m = ams[nat[ia]] * U_TO_ME;
           for (int c = 1; c <= 3; ++c) md_vel[c][ia] += f4[c][ia] / m * dts * 0.5;
         }
-        for (int i = 1; i <= nvar; ++i)
-          x_new[i] += md_vel[loc[2][i]][loc[1][i]] * dts * BOHR_TO_ANG;
+        for (int i = 1; i <= nvar; ++i) {
+          const double dx_bohr = md_vel[loc[2][i]][loc[1][i]] * dts;
+          if (o4dbg) work_step += f4[loc[2][i]][loc[1][i]] * dx_bohr;
+          x_new[i] += dx_bohr * BOHR_TO_ANG;
+        }
         if (!use_pbc) {
           for (int i = 1; i <= nvar; ++i) {
             const int c = loc[2][i];
@@ -541,6 +552,12 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
                    e_pot_ha + Ek4);
       std::fprintf(stdout, " Instant Temperature = %10.2f K\n", T4);
       std::fprintf(stdout, " Total Kinetic Energy = %12.6f\n", Ek4);
+      if (o4dbg) {
+        const double dEpot = e_pot_ha - e_pot_start;
+        const double dEk = Ek4 - ek_start;
+        std::fprintf(stderr, "O4DBG %d %.10f %.10f %.10f\n", istep,
+                     dEpot, work_step, dEpot + dEk);
+      }
     }
     std::fprintf(stdout, "\n Actual simulated time = %.3f fs (Yoshida 4th order)\n",
                  md_step_max * dt_nominal * AU_TIME_FS);
