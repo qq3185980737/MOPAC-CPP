@@ -498,6 +498,24 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       else
         compfg(xs, true, e_out, true, g_out, true);
     };
+    int moz_path = 1;
+    if (const char* pth = std::getenv("MOPAC_MOZ_PATH")) moz_path = std::atoi(pth);
+    auto eval_force_path = [&](const std::vector<double>& x_from,
+                               const std::vector<double>& x_to, double& e_out,
+                               std::vector<double>& g_out) {
+      if (moz_path > 1) {
+        std::vector<double> xi = x_from;
+        std::vector<double> gdum(g_out.size(), 0.0);
+        double edum = 0.0;
+        for (int st = 1; st < moz_path; ++st) {
+          const double frac = (double)st / (double)moz_path;
+          for (std::size_t i = 1; i < xi.size(); ++i)
+            xi[i] = x_from[i] + frac * (x_to[i] - x_from[i]);
+          compfg(xi, true, edum, true, gdum, false);
+        }
+      }
+      eval_force4(x_to, e_out, g_out);
+    };
     std::vector<std::vector<double>> f4(4, std::vector<double>(numat + 1, 0.0));
     eval_force4(x_new, escf, grad4);
     auto force_from_grad = [&]() {
@@ -541,6 +559,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
           const double m = ams[nat[ia]] * U_TO_ME;
           for (int c = 1; c <= 3; ++c) md_vel[c][ia] += f4[c][ia] / m * dts * 0.5;
         }
+        const std::vector<double> x_before = x_new;
         for (int i = 1; i <= nvar; ++i) {
           const double dx_bohr = md_vel[loc[2][i]][loc[1][i]] * dts;
           if (o4dbg) work_step += f4[loc[2][i]][loc[1][i]] * dx_bohr;
@@ -558,7 +577,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
             }
           }
         }
-        eval_force4(x_new, escf, grad4);
+        eval_force_path(x_before, x_new, escf, grad4);
         force_from_grad();
         for (int ia = 1; ia <= numat; ++ia) {
           const double m = ams[nat[ia]] * U_TO_ME;
