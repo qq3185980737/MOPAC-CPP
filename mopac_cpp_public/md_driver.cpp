@@ -491,8 +491,15 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     std::fprintf(stdout, " Total MD steps = %6d, nominal dt = %.4f fs, box = [%.1f, %.1f] A\n",
                  md_step_max, dt_nominal * AU_TIME_FS, box_min_a, box_max_a);
     std::vector<double> grad4(nvar + 1, 0.0);
+    auto eval_force4 = [&](const std::vector<double>& xs, double& e_out,
+                           std::vector<double>& g_out) {
+      if (std::getenv("MOPAC_MOZ_NUMGRAD") != nullptr)
+        moz_numeric_gradient(xs, e_out, g_out, nvar, 0.001);
+      else
+        compfg(xs, true, e_out, true, g_out, true);
+    };
     std::vector<std::vector<double>> f4(4, std::vector<double>(numat + 1, 0.0));
-    compfg(x_new, true, escf, true, grad4, true);
+    eval_force4(x_new, escf, grad4);
     auto force_from_grad = [&]() {
       for (int i = 1; i <= nvar; ++i)
         f4[loc[2][i]][loc[1][i]] = -grad4[i] * f_to_ha;
@@ -551,7 +558,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
             }
           }
         }
-        compfg(x_new, true, escf, true, grad4, true);
+        eval_force4(x_new, escf, grad4);
         force_from_grad();
         for (int ia = 1; ia <= numat; ++ia) {
           const double m = ams[nat[ia]] * U_TO_ME;
