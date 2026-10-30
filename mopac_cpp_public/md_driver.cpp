@@ -497,9 +497,30 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       for (int i = 1; i <= nvar; ++i)
         f4[loc[2][i]][loc[1][i]] = -grad4[i] * f_to_ha;
     };
+    double e_tsym_start = 0.0, e_tsym_turn = 0.0;
     force_from_grad();
+    double ek0 = 0.0;
+    for (int ia = 1; ia <= numat; ++ia) {
+      const double m = ams[nat[ia]] * U_TO_ME;
+      for (int c = 1; c <= 3; ++c) ek0 += 0.5 * m * md_vel[c][ia] * md_vel[c][ia];
+    }
+    e_tsym_start = escf / (fpc_9 * HARTREE_TO_EV) + ek0;
     const double f_vib4 = 3.0 * numat;
-    for (int istep = 1; istep <= md_step_max; ++istep) {
+    const bool tsym = (std::getenv("MOPAC_O4_TSYM") != nullptr);
+    const int nsteps_total = tsym ? 2 * md_step_max : md_step_max;
+    for (int istep = 1; istep <= nsteps_total; ++istep) {
+      if (tsym && istep == md_step_max + 1) {
+        // time reversal point: negate all velocities
+        double ek = 0.0;
+        for (int ia = 1; ia <= numat; ++ia) {
+          const double m = ams[nat[ia]] * U_TO_ME;
+          for (int c = 1; c <= 3; ++c) {
+            md_vel[c][ia] = -md_vel[c][ia];
+            ek += 0.5 * m * md_vel[c][ia] * md_vel[c][ia];
+          }
+        }
+        e_tsym_turn = escf / (fpc_9 * HARTREE_TO_EV) + ek;
+      }
       const double e_pot_start = escf / (fpc_9 * HARTREE_TO_EV);
       double ek_start = 0.0;
       for (int ia = 1; ia <= numat; ++ia) {
@@ -561,6 +582,30 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     }
     std::fprintf(stdout, "\n Actual simulated time = %.3f fs (Yoshida 4th order)\n",
                  md_step_max * dt_nominal * AU_TIME_FS);
+    if (std::getenv("MOPAC_O4_TSYM") != nullptr) {
+      double ek_end = 0.0;
+      for (int ia = 1; ia <= numat; ++ia) {
+        const double m = ams[nat[ia]] * U_TO_ME;
+        for (int c = 1; c <= 3; ++c)
+          ek_end += 0.5 * m * md_vel[c][ia] * md_vel[c][ia];
+      }
+      const double e_end = escf / (fpc_9 * HARTREE_TO_EV) + ek_end;
+      std::fprintf(stderr, "TSYM E_start=%.10f E_turn=%.10f E_end=%.10f\n", e_tsym_start, e_tsym_turn, e_end);
+    }
+    if (std::getenv("MOPAC_O4_DUMPSTATE") != nullptr) {
+      for (int ia = 1; ia <= numat; ++ia) {
+        double px = 0.0, py = 0.0, pz = 0.0;
+        for (int i = 1; i <= nvar; ++i) {
+          if (loc[1][i] != ia) continue;
+          const int c = loc[2][i];
+          if (c == 1) px = x_new[i];
+          else if (c == 2) py = x_new[i];
+          else if (c == 3) pz = x_new[i];
+        }
+        std::fprintf(stderr, "O4STATE %d %.12f %.12f %.12f %.12f %.12f %.12f\n",
+                     ia, px, py, pz, md_vel[1][ia], md_vel[2][ia], md_vel[3][ia]);
+      }
+    }
     xparam = x_new;
     return;
   }
