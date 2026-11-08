@@ -10,3 +10,9 @@
 #pragma once
 void isitsc(double escf, double selcon, double emin, int& iemin,
             int& iemax, bool& okscf, int niter, int itrmax);
+// MOZYME+MD conservation fix: clears the file-scope SCF plateau history
+// (scf1/escf0[]) that isitsc keeps between calls.  Must be called from the
+// per-step reset block in iter_for_MOZYME (icalcn != step_num) so that every
+// MD frame starts SCF from a clean state instead of borrowing "plateau
+// credit" from a previous frame's converged energy.
+void isitsc_reset();

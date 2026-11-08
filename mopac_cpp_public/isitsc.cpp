@@ -15,11 +15,12 @@
 using namespace MOZYME_C;
 namespace molkst_C { extern int iscf; }
 using namespace molkst_C;
+// File-scope SCF convergence history.  Kept at file scope so that
+// isitsc_reset() can clear it at the start of every MD frame.
+static bool scf1 = false;
+static double escf0[6] = {0,0,0,0,0,0};
 void isitsc(double escf, double selcon, double emin, int& iemin, int& iemax, bool& okscf, int niter, int itrmax) {
-    static bool scf1 = false;
-    static double escf0[6] = {0,0,0,0,0,0};
-    double energy_test = selcon;
-    double fmo_test = selcon * 5.0;
+    double energy_test = selcon;    double fmo_test = selcon * 5.0;
     bool converged = (ovmax < fmo_test && std::abs(energy_diff) < energy_test && scf1) || (niter > itrmax);
     if (converged) {
         okscf = true;
@@ -52,4 +53,15 @@ void isitsc(double escf, double selcon, double emin, int& iemin, int& iemax, boo
         }
     }
     okscf = false;
+}
+
+void isitsc_reset() {
+    // Reset the energy-plateau history used by the iemin/iemax convergence
+    // branch.  The history (escf0[]/scf1) is intentionally static across SCF
+    // calls for geometry optimisation (monotone energy descent), but must be
+    // cleared at the start of every MD frame: the MD driver advances step_num
+    // per frame and a fresh frame must not be able to borrow "plateau
+    // credit" from a previous frame's converged energy.
+    scf1 = false;
+    for (int i = 0; i < 6; ++i) escf0[i] = 0.0;
 }

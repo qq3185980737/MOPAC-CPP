@@ -311,6 +311,11 @@ void compfg(const std::vector<double>& xparam, bool int_flag, double& escf,
     elect = 0.0;
   }
   escf = (elect + enuclr) * fpc_9 + atheat;
+  if (std::getenv("MOPAC_EDUMP") != nullptr) {
+    std::fprintf(stderr,
+                 "EDUMP elect=%.10f enuclr=%.10f atheat=%.10f fpc9=%.10f escf=%.10f\n",
+                 elect, enuclr, atheat_store, fpc_9, escf);
+  }
   if (useps && mozyme) escf += solv_energy * fpc_9;
   if (dh && !method_pm7) {
     double sum = 0.0;

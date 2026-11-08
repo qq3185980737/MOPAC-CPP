@@ -238,6 +238,20 @@ void iter_for_MOZYME(double& ee) {
         scfcri(selcon);
         idiagg = 0;
         tiny = 0.0;
+        // MOZYME+MD conservation fix: also reset the isitsc energy-plateau
+        // history here, once per MD frame (step_num now advances in the MD
+        // driver).  iemin/iemax/emin were previously kept across frames (emin
+        // was pinned to the all-time-low energy by compfg), which gave the
+        // iemin/iemax branch a huge tolerance 0.1*(emin-escf) ~ 34 kcal and let
+        // the hot start "converge" in ~4 iterations with ediff ~1 kcal.  emin=0
+        // makes isitsc return okscf=false on its first call of a frame (see
+        // isitsc.cpp), disabling the plateau branch; SCF must then satisfy the
+        // density-residual criterion ovmax<5*selcon && |ediff|<selcon, giving a
+        // strict 31-65 iterations/frame on the 168-atom ignition system.
+        iemin = 0;
+        iemax = 0;
+        emin = 0.0;
+        isitsc_reset();
     }
     //
     // Fill the array IDIAG pointing to the diagonal elements of P

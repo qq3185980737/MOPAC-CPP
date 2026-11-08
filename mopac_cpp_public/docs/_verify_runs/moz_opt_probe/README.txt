@@ -36,6 +36,24 @@ moz_opt_probe — MOZYME 几何优化可用性实测（2026-10-26）
 * `DCART` 打印的笛卡尔导数同样偏大 2 个数量级（水：O 266/−385/−252 vs
   0.05/0.0003/−3.10），定位到 dcart 的 MOZYME 分支。
 
+修复后复测（2026-11-03，commit a3f79e7 之后）
+----------------------------------------------
+结论反转：**MOZYME 几何优化现在可用**，首轮梯度与官方一致，水/苯优化收敛
+HOF 与官方逐位一致。根因即 SCF 平台假收敛：isitsc 跨帧 static 状态 + emin
+未按步重置 → 每步 SCF 提前"平台收敛"（okscf 宽松），密度/梯度噪声大 2 个
+数量级；MD 守恒修复（isitsc_reset/emin=0/step_num++，见
+../MOZYME_MD_conservation.md）使每步 SCF 真收敛后梯度即恢复正常。
+
+复测数据（交付态 exe，OMP/MKL 单线程，几何与上文同）：
+  水      PM7 MOZYME          g1=  3.818 (官方  3.82)   3 轮  HOF  -57.79909 (官方 -57.79909)  GN 0.779
+  苯      PM7 MOZYME          g1= 17.244 (官方 17.24)  11 轮  HOF   22.95671 (官方  22.95671)  GN 0.571
+  C12H26  PM7 MOZYME          g1=510.9   (官方 510.9)  177 轮  HOF  163.55162 (官方 162.75)    GN 0.968
+  水 COSMO PM7 MOZYME EPS=78.4 g1=  7.768 (官方  7.77)   3 轮  HOF  -65.21180 (官方 -65.21180)
+  甲醇 COSMO PM7 MOZYME EPS=78.4 9 轮  HOF  -54.01756 (官方 -54.01739, EF 端点精度级)
+MOZYME+COSMO 1SCF 六用例与官方逐位一致（见 ../cosmo_moz/README.txt）。
+C12H26 HOF 差 0.8 kcal：EF 长链轨迹对收敛判据/ULP 敏感（177 轮收敛，GN<1），
+属本文 README 已分类的 EF 轨迹敏感性，非 SCF 缺陷。
+
 下一步
 ------
 为 dcart 重建 Fortran dump 对照（复用 docs/_verify_runs 中 ifx 参考构建方法），

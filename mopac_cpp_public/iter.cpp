@@ -239,6 +239,12 @@ void iter(double& ee, bool fulscf, bool rand){
     long long _tf2 = 0, _tdiag = 0, _tdens = 0, _tpseudo = 0, _tfull = 0;
     int _n_pseudo = 0, _n_full = 0;
     bool diis_on = getenv("MOPAC_FAST") != nullptr;
+    // Optional UHF defect fixes (default OFF to preserve the bitwise path).
+    //   D1: beta density residual (plb) also enters the SCF exit test
+    //   D2: beta level-shift gap uses the beta spectrum (eigb), not alpha
+    //   D3: the beta diagonalization honours FULLDIAG / MOPAC_FULL_DIAG
+    //   D4: UHF gets the open-shell SCFCRT tightening (x0.01)
+    const bool uhf_fix = std::getenv("MOPAC_UHF_FIX") != nullptr;
     std::vector<std::vector<double>> diis_F, diis_E;  // DIIS window (Fock, residual)
     double diis_prev_norm = 1e30;
     int diis_bad = 0;
@@ -356,7 +362,7 @@ void iter(double& ee, bool fulscf, bool rand){
         if(gs) gs = !halfe && !ci;
         scfcrt=1e-4;
         if((keywrd.find(" NLLSQ")!=std::string::npos || keywrd.find(" SIGMA")!=std::string::npos || keywrd.find(" TS")!=std::string::npos) || force || keywrd.find(" THERMO_PREC")!=std::string::npos) scfcrt*=0.001;
-        else if(keywrd.find(" PRECISE")!=std::string::npos || nopen!=nclose) scfcrt*=0.01;
+        else if(keywrd.find(" PRECISE")!=std::string::npos || nopen!=nclose || (uhf_fix && uhf)) scfcrt*=0.01;
         if(keywrd.find(" POLAR")!=std::string::npos) scfcrt=std::min(1e-6,scfcrt);
         scfcrt=std::max(scfcrt,1e-12);
         int ii=keywrd.find(" SCFCRT"), jj=keywrd.find(" RELSCF");
@@ -443,6 +449,7 @@ L250:
             if(okpuly || std::abs(bshift-4.44)<1e-5){ shift=-8.0; if(newdg) shift=0; }
             if(uhf){
                 if(newdg && !(halfe||camkin)) shiftb=ten-tenold;
+                else if(uhf_fix) shiftb=ten+eigb[ihomob+1]-eigb[ihomob]+shiftb;
                 else shiftb=ten+eigs[ihomob+1]-eigs[ihomob]+shiftb;
                 if(diff>0) shiftb=std::min(4.0,shiftb);
                 shiftb=std::max(-20.0,std::min(shfmax,shiftb));
@@ -634,7 +641,8 @@ L410:
         if(diff>0) ten-=1.0; else ten=ten*0.975+0.05;
         sellim=std::max(selcon,1e-15*std::max(std::abs(ee),1.0));
     if (md_esellim > sellim) sellim = md_esellim;   // XL-BOMD-lite relaxed step
-        bool conv_nw = (niter>4 && (pl==0.0 || (pl<pltest && std::abs(diff)<sellim)) && ready);
+        bool conv_nw = (niter>4 && (pl==0.0 || (pl<pltest && std::abs(diff)<sellim)) && ready
+                        && (!uhf_fix || !uhf || plb<pltest));
         if(conv_nw){ goto L470; }
         goto L490;
 
@@ -740,7 +748,7 @@ L540:
             if(newdg){
                 if(okpuly && makeb && iredy>1)
                     pulay(fb,pb,norbs,pbold,pbold2,pbold3,jbet,ibet,6*mpack,bfrst,plb);
-                if(halfe||camkin) eigenvectors_LAPACK(cbflat,fb,eigb,norbs);
+                if(halfe||camkin||(uhf_fix && (std::getenv("MOPAC_FULL_DIAG")!=nullptr||keywrd.find(" FULLDIAG")!=std::string::npos))) eigenvectors_LAPACK(cbflat,fb,eigb,norbs);
                 else diag_for_GPU(fb,cbflat,nb1el,eigb,norbs,mpack);
             } else eigenvectors_LAPACK(cbflat,fb,eigb,norbs);
             if(prtvec) matout(cbflat,eigb,norbs,norbs,norbs);
@@ -783,6 +791,48 @@ L600:
             if(last==1) phase_lock(cbflat,norbs);
             for(int ii=1;ii<=mpack;++ii) pold[ii]=pa.data()[ii];;
         } else for(int ii=1;ii<=mpack;++ii) pold[ii]=p.data()[ii];;
+        // Opt-in: dump the converged UHF alpha/beta MO coefficients and orbital
+        // energies (text) for offline analysis (e.g. per-spin LMO localisation).
+        if (uhf) {
+            if (const char* _dump = std::getenv("MOPAC_DUMP_UHF")) {
+                if (FILE* fp = std::fopen(_dump, "w")) {
+                    // Self-check: is cflat an orthonormal column-major MO matrix?
+                    double _dev = 0.0, _pdev = 0.0;
+                    for (int s = 0; s < norbs; ++s)
+                        for (int t = 0; t < norbs; ++t) {
+                            double d = 0.0;
+                            for (int i = 0; i < norbs; ++i)
+                                d += cflat[i + s*norbs] * cflat[i + t*norbs];
+                            _dev = std::max(_dev, std::abs(d - (s==t?1.0:0.0)));
+                        }
+                    for (int i = 1; i <= norbs; ++i)
+                        for (int j = 1; j <= norbs; ++j) {
+                            double d = 0.0;
+                            for (int s = 0; s < na1el; ++s)
+                                d += cflat[(i-1) + s*norbs] * cflat[(j-1) + s*norbs];
+                            _pdev = std::max(_pdev, std::abs(d - pa[i*(i-1)/2 + (j<=i?j:i)]));
+                        }
+                    std::fprintf(stderr, "DUMPUHF: |C^T C-I|max=%.3e |Cocc Cocc^T-Pa|max=%.3e norbs=%d na=%d\n", _dev, _pdev, norbs, na1el);
+                    std::fprintf(fp, "%d %d %d\n", norbs, na1el, nb1el);
+                    for (int j = 1; j <= norbs; ++j)
+                        for (int i = 1; i <= norbs; ++i)
+                            std::fprintf(fp, "%.17g\n", cflat[(j-1)*norbs+(i-1)]);
+                    for (int j = 1; j <= norbs; ++j)
+                        for (int i = 1; i <= norbs; ++i)
+                            std::fprintf(fp, "%.17g\n", cbflat[(j-1)*norbs+(i-1)]);
+                    for (int i = 1; i <= norbs; ++i) std::fprintf(fp, "%.17g\n", eigs[i]);
+                    for (int i = 1; i <= norbs; ++i) std::fprintf(fp, "%.17g\n", eigb[i]);
+                    // packed lower-triangle densities (1-based, index i(i-1)/2+j)
+                    for (int i = 1; i <= norbs; ++i)
+                        for (int j = 1; j <= i; ++j)
+                            std::fprintf(fp, "%.17g\n", pa[i*(i-1)/2 + j]);
+                    for (int i = 1; i <= norbs; ++i)
+                        for (int j = 1; j <= i; ++j)
+                            std::fprintf(fp, "%.17g\n", pb[i*(i-1)/2 + j]);
+                    std::fclose(fp);
+                }
+            }
+        }
         if(ci||halfe){
             sum=meci();
             if(moperr) return;

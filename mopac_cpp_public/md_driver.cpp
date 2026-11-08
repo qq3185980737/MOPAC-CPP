@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // 闁靛棙鍔掗懙鎴﹀棘閸パ屽殼閻犲洦鐪归埀顒佸敥d_driver.cpp 闁炽儲鏌￠埀?MOPAC 2016 閻犱緤绱曢悾?鐎规悶鍎遍崣鍨熼垾铏仴
 // ----------------------------------------------------------------------------
 // 閻庣數鎳撶花?MOPAC 2016 md_driver.F90 闁?C++ 缂佸绮ˇ鏌ユ晬閸喎鐏楅柛姘湰缁喚鈧稒鍔楅埢鍏兼償韫囥儳绀嗛柕?// 缂佹拝绠戦悾楣冩晬濮橆偆绠介柟?Fortran 1-based 缂佷究鍨圭槐鈺呭Υ娴ｇ懓鈪甸柛鏍ф噸缁楀懏绋夋径搴健/闁告帗銇炵€靛本鎯旇箛鎾额伌閻忕偐鍋撻柨娑欑☉閸欐寧鎷呴幘宕囨澖闁绘粓顣︾粭?// 闁稿繑濞婇弫顓犫偓娑欘殔閸ㄥ酣寮ㄩ婵愭綄闁哄倸娲ｅ▎銏ゅ礃閸涱厼姣愰柡浣规緲瀵兘宕㈤悢鍛婄畳闁兼槒椴搁弸鍐ㄢ枖閵娾晛娅為柨娑欑〒瀹歌鲸寰?闁告濮崇紞鍛緞閸曨偄鍤掗悹浣规緲缂嶅秹宕?// docs/TRANSLATION_GAPS.md闁?// ============================================================================
@@ -272,6 +272,205 @@ static void moz_numeric_gradient(const std::vector<double>& x0, double& escf,
   }
 }
 
+
+// ======================= delta-ML correction (geometry-only MLP) ============
+// Optional potential: E_dml(R) = sum_i MLP(descriptor_i), forces by finite
+// differences. Enabled with MOPAC_DML_MODEL=/path/to/dml_model.bin.
+struct DmlMlp {
+  std::vector<double> W1, b1, W2, b2, W3, b3, W4, b4;
+  int din = 0, h1 = 0, h2 = 0, h3 = 0;
+  bool ok = false;
+};
+static DmlMlp g_dml;
+
+static bool dml_read_mat(std::FILE* f, std::vector<double>& A) {
+  int nd = 0;
+  if (std::fread(&nd, sizeof(int), 1, f) != 1) return false;
+  int dims[4] = {1, 1, 1, 1};
+  long long tot = 1;
+  for (int k = 0; k < nd; ++k) {
+    int d = 0;
+    if (std::fread(&d, sizeof(int), 1, f) != 1) return false;
+    dims[k] = d; tot *= d;
+  }
+  A.resize((size_t)tot);
+  return std::fread(A.data(), sizeof(double), (size_t)tot, f) == (size_t)tot;
+}
+
+static bool dml_load(const char* path) {
+  std::FILE* f = std::fopen(path, "rb");
+  if (!f) return false;
+  int n = 0;
+  if (std::fread(&n, sizeof(int), 1, f) != 1) { std::fclose(f); return false; }
+  bool ok = dml_read_mat(f, g_dml.W1) && dml_read_mat(f, g_dml.b1) &&
+            dml_read_mat(f, g_dml.W2) && dml_read_mat(f, g_dml.b2) &&
+            dml_read_mat(f, g_dml.W3) && dml_read_mat(f, g_dml.b3) &&
+            dml_read_mat(f, g_dml.W4) && dml_read_mat(f, g_dml.b4);
+  std::fclose(f);
+  if (!ok) return false;
+  g_dml.h1 = (int)g_dml.b1.size();
+  g_dml.din = (int)(g_dml.W1.size() / (size_t)g_dml.h1);
+  g_dml.h2 = (int)g_dml.b2.size();
+  g_dml.h3 = (int)g_dml.b3.size();
+  g_dml.ok = true;
+  return true;
+}
+
+static inline double dml_silu(double x) { return x / (1.0 + std::exp(-x)); }
+
+static void dml_layer(const std::vector<double>& W, const std::vector<double>& b,
+                      int nout, int nin, const std::vector<double>& x,
+                      std::vector<double>& y, bool act) {
+  y.resize((size_t)nout);
+  for (int o = 0; o < nout; ++o) {
+    double s = b[(size_t)o];
+    const double* row = &W[(size_t)o * nin];
+    for (int i = 0; i < nin; ++i) s += row[i] * x[(size_t)i];
+    y[(size_t)o] = act ? dml_silu(s) : s;
+  }
+}
+
+static double dml_atom_energy(const std::vector<double>& x214) {
+  std::vector<double> a, b, c, d;
+  dml_layer(g_dml.W1, g_dml.b1, g_dml.h1, g_dml.din, x214, a, true);
+  dml_layer(g_dml.W2, g_dml.b2, g_dml.h2, g_dml.h1, a, b, true);
+  dml_layer(g_dml.W3, g_dml.b3, g_dml.h3, g_dml.h2, b, c, true);
+  dml_layer(g_dml.W4, g_dml.b4, 1, g_dml.h3, c, d, false);
+  return d[0];
+}
+
+// Build 210-dim descriptors for all atoms from positions (Angstrom, [c][i]).
+static void dml_descriptors(const std::vector<std::vector<double>>& P,
+                            std::vector<std::vector<double>>& desc) {
+  const int N = numat;
+  const double RC = 5.0;
+  static const double RAD_ETAS[5] = {0.5, 1.0, 2.0, 4.0, 8.0};
+  static const double RAD_RS[12] = {0.5, 0.7, 0.9, 1.2, 1.5, 1.8,
+                                    2.2, 2.6, 3.0, 3.5, 4.0, 4.5};
+  static const double ANG_ETAS[2] = {0.05, 0.2};
+
+  std::vector<std::vector<double>> D(N + 1, std::vector<double>(N + 1, 0.0));
+  std::vector<std::vector<double>> fc(N + 1, std::vector<double>(N + 1, 0.0));
+  std::vector<std::vector<double>> dx(3, std::vector<double>(N + 1, 0.0));
+  for (int i = 1; i <= N; ++i)
+    for (int j = 1; j <= N; ++j)
+      for (int c = 0; c < 3; ++c) dx[c][i] = P[c][i];
+  for (int i = 1; i <= N; ++i) {
+    for (int j = i + 1; j <= N; ++j) {
+      double d0 = P[0][i] - P[0][j], d1 = P[1][i] - P[1][j], d2 = P[2][i] - P[2][j];
+      double r = std::sqrt(d0 * d0 + d1 * d1 + d2 * d2) + 1.0e-8;
+      D[i][j] = D[j][i] = r;
+      double f = (r < RC) ? 0.5 * (std::cos(3.14159265358979323846 * r / RC) + 1.0) : 0.0;
+      fc[i][j] = fc[j][i] = f;
+    }
+  }
+  auto elH = [&](int i) { return nat[i] == 1 ? 1.0 : 0.0; };
+  auto elO = [&](int i) { return nat[i] == 8 ? 1.0 : 0.0; };
+  desc.assign(N + 1, std::vector<double>(210, 0.0));
+  for (int i = 1; i <= N; ++i) {
+    std::vector<double>& f = desc[(size_t)i];
+    int idx = 0;
+    for (int pair = 0; pair < 3; ++pair) {
+      for (int ie = 0; ie < 5; ++ie) {
+        double eta = RAD_ETAS[ie];
+        for (int ir = 0; ir < 12; ++ir) {
+          double rs = RAD_RS[ir], sum = 0.0;
+          for (int j = 1; j <= N; ++j) {
+            if (j == i) continue;
+            double pm = 0.0;
+            if (pair == 0) pm = elH(i) * elH(j);
+            else if (pair == 1) pm = elH(i) * elO(j) + elO(i) * elH(j);
+            else pm = elO(i) * elO(j);
+            if (pm == 0.0) continue;
+            double r = D[i][j];
+            sum += pm * std::exp(-eta * (r - rs) * (r - rs)) * fc[i][j];
+          }
+          f[(size_t)idx++] = sum;
+        }
+      }
+    }
+    for (int pair = 0; pair < 3; ++pair) {
+      for (int ie = 0; ie < 2; ++ie) {
+        double eta = ANG_ETAS[ie];
+        for (int l = 0; l < 4; ++l) {
+          double sum = 0.0;
+          for (int j = 1; j <= N; ++j) {
+            for (int k = j + 1; k <= N; ++k) {
+              if (k == i) continue;
+              double pmjk = 0.0;
+              if (pair == 0) pmjk = elH(j) * elH(k);
+              else if (pair == 1) pmjk = elH(j) * elO(k) + elO(j) * elH(k);
+              else pmjk = elO(j) * elO(k);
+              if (pmjk == 0.0) continue;
+              double dik = D[i][k], djk = D[j][k], dij = D[i][j];
+              double vij[3], vik[3];
+              vij[0] = P[0][i] - P[0][j]; vij[1] = P[1][i] - P[1][j]; vij[2] = P[2][i] - P[2][j];
+              vik[0] = P[0][i] - P[0][k]; vik[1] = P[1][i] - P[1][k]; vik[2] = P[2][i] - P[2][k];
+              double dot = vij[0]*vik[0] + vij[1]*vik[1] + vij[2]*vik[2];
+              double cs = dot / (dij * dik);
+              cs = std::max(-1.0, std::min(1.0, cs));
+              double pl = (l == 0) ? 1.0 : (l == 1) ? cs
+                          : (l == 2) ? 0.5 * (3.0 * cs * cs - 1.0)
+                          : 0.5 * (5.0 * cs * cs * cs - 3.0 * cs);
+              double w = pmjk * fc[i][k] * fc[j][k] *
+                         std::exp(-eta * (dik * dik + djk * djk)) * pl;
+              sum += w;
+            }
+          }
+          f[(size_t)idx++] = sum;
+        }
+      }
+    }
+    // CN(H), CN(O)
+    double cnh = 0.0, cno = 0.0;
+    for (int j = 1; j <= N; ++j) {
+      if (j == i) continue;
+      cnh += fc[i][j] * elH(j);
+      cno += fc[i][j] * elO(j);
+    }
+    f[(size_t)idx++] = cnh;
+    f[(size_t)idx++] = cno;
+    f[(size_t)idx++] = 0.0;
+    f[(size_t)idx++] = 0.0;
+    f[(size_t)idx++] = elH(i);
+    f[(size_t)idx++] = elO(i);
+    // pad if needed
+    while (idx < 210) f[(size_t)idx++] = 0.0;
+  }
+}
+
+// Total delta energy (kcal/mol) at positions P (Angstrom, [c][i]).
+static double dml_energy(const std::vector<std::vector<double>>& P) {
+  std::vector<std::vector<double>> desc;
+  dml_descriptors(P, desc);
+  int nH = 0, nO = 0;
+  for (int i = 1; i <= numat; ++i) {
+    if (nat[i] == 1) ++nH;
+    else if (nat[i] == 8) ++nO;
+  }
+  double mult = 1.0;
+  if (nalpha > 0 && nbeta > 0) mult = (double)(nalpha - nbeta + 1);
+  std::vector<double> x(214);
+  double e = 0.0;
+  for (int i = 1; i <= numat; ++i) {
+    for (int k = 0; k < 210; ++k) x[(size_t)k] = desc[(size_t)i][(size_t)k];
+    x[210] = mult / 5.0;
+    x[211] = nH / 6.0;
+    x[212] = nO / 6.0;
+    x[213] = numat / 6.0;
+    if (std::getenv("MOPAC_DMLDBG") != nullptr && i == 1) {
+      for (int blk = 0; blk < 214; blk += 8) {
+        std::fprintf(stderr, "DMLVEC %d", blk);
+        for (int k = blk; k < blk + 8 && k < 214; ++k)
+          std::fprintf(stderr, " %.6f", x[(size_t)k]);
+        std::fprintf(stderr, "\n");
+      }
+    }
+    e += dml_atom_energy(x);
+  }
+  return e;
+}
+
 void run_md_velocity_verlet(const std::string& keywrd, int iw) {
   // ---- parse control keywords ----
   // T_target (K), default DEF_TTARGET
@@ -375,6 +574,9 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
   //   Outside the fitted range the correction is held constant (no force).
   //   Enabled with MOPAC_PM7COMB=1; the default path is unchanged.
   const bool use_pm7comb = (std::getenv("MOPAC_PM7COMB") != nullptr);
+  const char* dml_path = std::getenv("MOPAC_DML_MODEL");
+  const bool use_dml = (dml_path != nullptr) && dml_load(dml_path);
+  double e_dml_ev = 0.0;
   auto pm7comb_pot = [&](const std::vector<double>& xv,
                          std::vector<std::vector<double>>* fout, double& eout) {
     eout = 0.0;
@@ -448,6 +650,38 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
             (*fout)[c + 1][j] -= s * d[c];
           }
         }
+      }
+    }
+  };
+
+  // ---- delta-ML potential (optional, geometry-only MLP) --------------------
+  auto dml_pot = [&](const std::vector<double>& xv,
+                     std::vector<std::vector<double>>* fout, double& eout_ev) {
+    eout_ev = 0.0;
+    if (!use_dml || !g_dml.ok) return;
+    std::vector<double> xcopy = xv;
+    std::vector<std::vector<double>> P(3, std::vector<double>(numat + 1, 0.0));
+    for (int ia = 1; ia <= numat; ++ia) {
+      std::vector<double> p = atom_pos(xcopy, ia);
+      for (int c = 0; c < 3; ++c) P[c][ia] = p[c];
+    }
+    const double h = 0.002;                     // Angstrom
+    const double KCAL_PER_EV = 23.060529;
+    double e0 = dml_energy(P);
+    eout_ev = e0 / KCAL_PER_EV;
+    if (std::getenv("MOPAC_DMLDBG") != nullptr)
+      std::fprintf(stderr, "DMLDBG %.6f\n", e0);
+    if (fout == nullptr) return;
+    std::vector<std::vector<double>> Q = P;
+    for (int ia = 1; ia <= numat; ++ia) {
+      for (int c = 0; c < 3; ++c) {
+        Q[c][ia] = P[c][ia] + h; double ep = dml_energy(Q);
+        Q[c][ia] = P[c][ia] - h; double em = dml_energy(Q);
+        Q[c][ia] = P[c][ia];
+        double g = (ep - em) / (2.0 * h);              // kcal/mol/A
+        double force_ev_a = -g / KCAL_PER_EV;          // eV/A
+        double s = force_ev_a * BOHR_TO_ANG / HARTREE_TO_EV;  // Ha/bohr
+        (*fout)[c + 1][ia] += s;
       }
     }
   };
@@ -646,6 +880,18 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
   std::vector<double> grad_cache(nvar + 1, 0.0);
   bool have_force_cache = false;
   for (int istep = 1; istep <= md_step_max; ++istep) {
+    // MOZYME+MD conservation fix: advance step_num once per MD frame.
+    // step_num is otherwise advanced only by the non-MD callers (run_mopac,
+    // set_up_RAPID, big_swap), so during MD it stayed constant and the per-step
+    // SCF reset block in iter_for_MOZYME (`if (icalcn != step_num)`) fired only
+    // on the first frame.  The SCF convergence history (eold/ovmax/scfcri/
+    // emin/isitsc escf0[]) then leaked across frames: emin was pinned to the
+    // all-time-low energy, so the isitsc energy-plateau branch accepted the hot
+    // start after ~4 iterations (ediff ~1 kcal, ovmax ~0.1), injecting SCF noise
+    // into the forces.  Measured on the 168-atom ignition system (see
+    // docs/MOZYME_MD_conservation.md): drift -3.84 kcal/mol/fs (broken) ->
+    // -0.33 (fixed + SCFCRT=5e-4) -> -0.14 (fixed + 5e-4 + DT=0.1 fs).
+    step_num = step_num + 1;   // new electronic structure per MD frame
     std::vector<std::vector<int>> hit_flag(4, std::vector<int>(numat + 1, 0));
     // Phase-1: keep a copy of the step-start state so the step can be rejected
     // if the SCF at R_{t+dt} had to be restarted (inconsistent energy/force).
@@ -676,6 +922,37 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       grad_cache = grad;
     }
 
+    // ---- optional frame dump for Delta-ML training data ----
+    // MOPAC_MD_DUMPF=N : dump every N steps (plus step 1) the step index,
+    // potential energy (Hartree), Cartesian coordinates (Angstrom) and the
+    // Cartesian gradient (kcal/mol/Angstrom) to md_frames.bin (binary).
+    if (const char* dumpf = std::getenv("MOPAC_MD_DUMPF")) {
+      const int every = std::atoi(dumpf);
+      if (every > 0 && (istep == 1 || (istep % every) == 0)) {
+        static FILE* frame_fp = nullptr;
+        if (frame_fp == nullptr) frame_fp = std::fopen("md_frames.bin", "wb");
+        if (frame_fp != nullptr) {
+          const int nat = numat;
+          const double e_dump = escf / (fpc_9 * HARTREE_TO_EV);
+          std::fwrite(&istep, sizeof(int), 1, frame_fp);
+          std::fwrite(&nat, sizeof(int), 1, frame_fp);
+          std::fwrite(&e_dump, sizeof(double), 1, frame_fp);
+          std::vector<double> xyz_dump((size_t)3 * nat, 0.0);
+          std::vector<double> g_dump((size_t)3 * nat, 0.0);
+          for (int i = 1; i <= nvar; ++i) {
+            const int ia = loc[1][i];
+            const int ic = loc[2][i];
+            const size_t k = (size_t)3 * (ia - 1) + (ic - 1);
+            xyz_dump[k] = x_new[i];
+            g_dump[k] = grad[i];
+          }
+          std::fwrite(xyz_dump.data(), sizeof(double), (size_t)3 * nat, frame_fp);
+          std::fwrite(g_dump.data(), sizeof(double), (size_t)3 * nat, frame_fp);
+          std::fflush(frame_fp);
+        }
+      }
+    }
+
     // ---- SURF: capture the R_t active-state data for the coupling ----
     if (sh_C::surf_active && sh_C::lab_hop > 0 &&
         (int)sh_C::cur_eig.size() >= 2 &&
@@ -701,6 +978,10 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     if (use_pm7comb) {
       double e_dummy = 0.0;
       pm7comb_pot(x_new, &md_force, e_dummy);
+    }
+    if (use_dml) {
+      double e_dummy = 0.0;
+      dml_pot(x_new, &md_force, e_dummy);
     }
 
     // ---- positions in Bohr ----
@@ -790,6 +1071,7 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
       f_atom[loc[2][i]][loc[1][i]] =
           -grad[i] * BOHR_TO_ANG / (HARTREE_TO_EV * fpc_9);
     if (use_pm7comb) pm7comb_pot(x_new, &f_atom, e_pm7comb);
+    if (use_dml) dml_pot(x_new, &f_atom, e_dml_ev);
 
     // ---- 3. full velocity update ----
     for (int ia = 1; ia <= numat; ++ia) {
@@ -833,9 +1115,10 @@ void run_md_velocity_verlet(const std::string& keywrd, int iw) {
     // so the consistent potential energy is the full compfg energy escf.
     // MOPAC_MD_EPOT_OLD=1 restores the historical (elect+enuclr) accounting so
     // that the pre-fix Phase 2-4 datasets can still be reproduced.
-    double e_pot_ha = escf / (fpc_9 * HARTREE_TO_EV) + e_pm7comb * EV_TO_HARTREE;
+    double e_pot_ha = escf / (fpc_9 * HARTREE_TO_EV) +
+                      e_pm7comb * EV_TO_HARTREE + e_dml_ev * EV_TO_HARTREE;
     if (std::getenv("MOPAC_MD_EPOT_OLD") != nullptr)
-      e_pot_ha = (elect + enuclr + solv_energy + e_pm7comb) * EV_TO_HARTREE;
+      e_pot_ha = (elect + enuclr + solv_energy + e_pm7comb + e_dml_ev) * EV_TO_HARTREE;
     if (std::getenv("MOPAC_MDDBG") != nullptr) {
       // power = sum_i F_i . v_i   [Ha / au_time]
       double power = 0.0;

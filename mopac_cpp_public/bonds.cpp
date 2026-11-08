@@ -142,7 +142,12 @@ void bonds() {
     }
 
     std::printf("\n\n\n BOND ORDERS AND VALENCIES\n");
-    vecprt(bondab, numat);
+    // Print the symmetric bond-order matrix (lower triangle) in a parseable form.
+    for (i = 1; i <= numat; ++i) {
+        std::printf("%5d", i);
+        for (j = 1; j <= i; ++j) std::printf("%12.6f", aux[i][j]);
+        std::printf("\n");
+    }
     if (keywrd.find(" LARGE") == std::string::npos) return;
 
     // Spin population analysis.

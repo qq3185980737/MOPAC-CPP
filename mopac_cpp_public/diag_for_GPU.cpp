@@ -24,6 +24,7 @@
 #include "molkst_C.h"
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <vector>
 
 #ifdef MOPAC_USE_MKL
@@ -64,7 +65,11 @@ void diag_for_GPU(double* fao, double* vector, int nocc, double* eig,
     // Mirror official diag_for_GPU.F90 case(1): BLAS single-threaded.
     // Official sets mkl_set_num_threads(1) before the rotation loop; force
     // single-thread dgemm too for a clean bit-level experiment.
-    mkl_set_num_threads(1);
+    // Opt-in: MOPAC_DIAG_THREADS=<n> releases the clamp for the threaded
+    // experiment (not part of the bitwise path).
+    const char* _dthr = std::getenv("MOPAC_DIAG_THREADS");
+    if (_dthr) mkl_set_num_threads(std::max(1, std::atoi(_dthr)));
+    else mkl_set_num_threads(1);
 #endif
     int n = norbs, mdim = norbs, lumo = nocc + 1, nvirt = n - nocc;
     int norbs2 = norbs * norbs;
