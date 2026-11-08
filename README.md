@@ -42,3 +42,9 @@ governed by its own terms (see `mopac_cpp_public/UPSTREAM_NOTICE.md`).
 See `mopac_cpp_public/docs/` for the verification-pipeline figures and the
 OpenCL notes. Verification procedures and regression data are under
 `mopac_cpp_public/regression/` and `mopac_cpp_public/run_test/`.
+
+## Citation
+
+If you use this code, please cite the software record described in
+`CITATION.cff` and the accompanying manuscript (under review). The frozen
+release for the manuscript is tag `v1.2.0`.
