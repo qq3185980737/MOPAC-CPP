@@ -1,0 +1,34 @@
+﻿# Build outputs
+/x64/
+/mopac_cpp_public/x64/
+**/Debug/
+**/Release/
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.exp
+*.idb
+*.pch
+
+# Scratch / experiment outputs (keep the repo clean; summaries live in docs/)
+/experiments/
+/_bench_mozyme/
+/_fbdr_rep/
+/_fbdr_rep_v1008/
+/_mopac_gh_check/
+/_moz_reg/
+/_rerun_out/
+/_rerun_smoke/
+/_verify_routes/
+/_*_report.json
+/_check_repo_docs.txt
+/_sync_docs.txt
+/_rerun_log.txt
+/_rerun_smoke_result.txt
+
+# Python
+__pycache__/
+*.pyc
