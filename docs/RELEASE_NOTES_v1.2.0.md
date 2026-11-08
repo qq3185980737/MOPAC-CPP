@@ -2,6 +2,8 @@
 
 Date: 2026-11-09
 
+DOI: 10.5281/zenodo.24058229
+
 ## Scope
 
 This release freezes the state of the C++17 translation used for the SPE
@@ -37,3 +39,4 @@ documentation. The default execution path remains the bitwise-comparable one.
 - The UHF/MD/delta-ML paths are experimental and off by default.
 - Zenodo DOI is assigned after deposit; update the manuscript's data-availability
   statement with the DOI once available.
+

@@ -4,6 +4,7 @@ title: "MOPAC-CPP: Bitwise-Reproducible C++17 Translation of MOPAC2016"
 version: 1.2.0
 date-released: 2026-11-09
 license: MIT
+doi: 10.5281/zenodo.24058229
 repository-code: "https://github.com/qq3185980737/MOPAC-CPP"
 url: "https://github.com/qq3185980737/MOPAC-CPP"
 authors:
@@ -17,3 +18,4 @@ keywords:
   - Fortran-to-C++ translation
   - deterministic parallel reduction
   - scientific software verification
+

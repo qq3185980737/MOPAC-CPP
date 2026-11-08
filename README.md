@@ -1,4 +1,6 @@
-# MOPAC-CPP — Bitwise-Reproducible C++17 Translation of MOPAC2016
+﻿# MOPAC-CPP
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24058229.svg)](https://doi.org/10.5281/zenodo.24058229) — Bitwise-Reproducible C++17 Translation of MOPAC2016
 
 This repository hosts **MOPAC-CPP**, a complete, 1-based, bitwise-verified C++17
 translation of the MOPAC2016 semiempirical molecular-orbital package
@@ -48,3 +50,4 @@ OpenCL notes. Verification procedures and regression data are under
 If you use this code, please cite the software record described in
 `CITATION.cff` and the accompanying manuscript (under review). The frozen
 release for the manuscript is tag `v1.2.0`.
+
